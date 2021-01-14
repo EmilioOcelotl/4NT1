@@ -21,6 +21,15 @@ Exploraciones en torno a la antivigilancia.
 - Software que corre en GNU/Linux pero que puede ejecutarse en otras plataformas. 
 - Bibliotecas de aprendizaje automático y computadoras de placa reducida con GPU integrado (Jetson Nano).
 
+## Pendientes:
+
+- [ ] ¿face-landmarks-detection en jetson nano?
+- [ ] Camara usb vs integrada
+- [ ] Integración webgl threejs
+- [ ] Monitor externo pequeño
+- [ ] Probar alternativas: openCV + openFrameworks
+
 ## Recursos
 
-https://blog.tensorflow.org/2020/03/face-and-hand-tracking-in-browser-with-mediapipe-and-tensorflowjs.html
+- https://blog.tensorflow.org/2020/03/face-and-hand-tracking-in-browser-with-mediapipe-and-tensorflowjs.html
+- https://github.com/tensorflow/tfjs-models/tree/master/face-landmarks-detection
