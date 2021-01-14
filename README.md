@@ -1,5 +1,7 @@
 # Anti
 
+Exploraciones en torno a la antivigilancia. 
+
 ## Premisas
 
 - Composición audiovisual conducida por datos. 
