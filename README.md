@@ -1,6 +1,6 @@
 # Anti
 
-Exploraciones en torno a la antivigilancia. 
+Exploraciones en torno a la anti-vigilancia. 
 
 ## Premisas
 
@@ -18,16 +18,24 @@ Exploraciones en torno a la antivigilancia.
 ## Puesta en marcha
 
 - Sistema interactivo empaquetado en una computadora de placa reducida.
-- Software que corre en GNU/Linux pero que puede ejecutarse en otras plataformas. 
-- Bibliotecas de aprendizaje automático y computadoras de placa reducida con GPU integrado (Jetson Nano).
+- Software que corre en GNU/Linux pero que puede ejecutarse en otras plataformas.
+- Bibliotecas de visión computarizada .
+- Bibliotecas de aprendizaje automático. 
 
 ## Pendientes:
 
-- [ ] ¿face-landmarks-detection en jetson nano?
+- [x] ¿face-landmarks-detection en jetson nano?
 - [ ] Camara usb vs integrada
 - [ ] Integración webgl threejs
 - [ ] Monitor externo pequeño
 - [ ] Probar alternativas: openCV + openFrameworks
+
+## Observaciones
+
+- Jetson nano + tensorflow + chromium = max 8 fps
+- ofxFaceTracker solamente con ofv0.9.8. Problemas: openCV 4 y make 
+
+[Bitácora](https://github.com/EmilioOcelotl/anti/bitacora/README.md) 
 
 ## Recursos
 
