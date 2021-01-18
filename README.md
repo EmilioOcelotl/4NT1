@@ -7,7 +7,8 @@ Exploraciones en torno a la anti-vigilancia.
 - Composición audiovisual conducida por datos. 
 - Autorreferencialidad y retroalimentación con otros sistemas.
 - Pedazo de software que pueda ser de utilidad en un contexto cotidiano.
-- Desplazamiento de zona de confort (tecnológica). 
+- Desplazamiento de zona de confort (tecnológica).
+- Incertidumbre pandémica > Mudar el proyecto al navegador. Posible inconveniente: 
 - Proyecto global: sistemas interactivos en el navegador. Véase: [Tres Estudios Abiertos](https://github.com/EmilioOcelotl/tres-estudios-abiertos)  
 
 ## Motivaciones
@@ -15,27 +16,20 @@ Exploraciones en torno a la anti-vigilancia.
 - Respuesta a la instagramización.
 - Responsabilidad de datos. 
 
-## Puesta en marcha
+## Elementos
 
 - Sistema interactivo empaquetado en una computadora de placa reducida.
 - Software que corre en GNU/Linux pero que puede ejecutarse en otras plataformas.
 - Bibliotecas de visión computarizada .
 - Bibliotecas de aprendizaje automático. 
 
-## Pendientes:
+## Ejecución
 
-- [x] ¿face-landmarks-detection en jetson nano?
-- [ ] Camara usb vs integrada
-- [ ] Integración webgl threejs
-- [ ] Monitor externo pequeño
-- [ ] Probar alternativas: openCV + openFrameworks
+'cd face-landmarks-detection/anti
+'yarn
+'yarn watch 
 
-## Observaciones
-
-- Jetson nano + tensorflow + chromium = max 8 fps
-- ofxFaceTracker solamente con ofv0.9.8. Problemas: openCV 4 y make 
-
-[Bitácora](https://github.com/EmilioOcelotl/anti/bitacora/README.md) 
+[Bitácora](https://github.com/EmilioOcelotl/anti/tree/main/bitacora) 
 
 ## Recursos
 
