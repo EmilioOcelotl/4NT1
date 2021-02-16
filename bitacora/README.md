@@ -2,7 +2,7 @@
 
 ## Aspectos generales 
 
-Aspecto muy cercano al proyecto: Estetización de la resistencia  Maquillaje y wearables. 
+Aspecto muy cercano al proyecto: Estetización de la resistencia >  Maquillaje y wearables. 
 
 [ANTI-SURVEILLANCE MAKEUP TUTORIAL BY PUSSY RIOT / How to resist to the electronic police state?](https://www.youtube.com/watch?v=Seex9ayhIfc&ab_channel=PussyRiot)
 
@@ -33,6 +33,8 @@ En estos primeros pasos de exploración el punto de partida es el navegador.
 face-landmark-detection está basado en tensorflow.js
 
 Complementación del proyecto con three.js para los detalles visuales y Web Audio API para el sonido.
+
+Si el proyecto pudiera realizarse en términos técnicos desde la misma computadora para que pudiera funcionar como una app o una extensión, entonces no sería posible compilar el proyecto con web assembly para que tuviera las mismas consecuencias en la web pero no duplicar esfuerzos (versión web y versión local). 
 
 ## Panoramas
 

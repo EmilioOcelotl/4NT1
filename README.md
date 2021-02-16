@@ -1,22 +1,23 @@
 # Anti
 
-Exploraciones en torno a la anti-vigilancia. 
-
-## Premisas
+Software y anti-vigilancia. 
 
 - Composición audiovisual conducida por datos. 
 - Autorreferencialidad y retroalimentación con otros sistemas.
-- Pedazo de software que pueda ser de utilidad en un contexto cotidiano.
+- Transformación audiovisual a partir de síntesis granular.
+- Primeros estudios de reflexión tecno-social a partir de la noción escala de tiempo de Curtis Roads. 
+- Pedazo de software que pueda ser de utilidad en un contexto cotidiano. > Filtros y evasión
 - Desplazamiento de zona de confort (tecnológica).
-- Incertidumbre pandémica > Mudar el proyecto al navegador. Posible inconveniente: 
-- Proyecto global: sistemas interactivos en el navegador. Véase: [Tres Estudios Abiertos](https://github.com/EmilioOcelotl/tres-estudios-abiertos)  
+- Incertidumbre pandémica > Mudar el proyecto al navegador.
+- Forma parte de un proyecto más amplio de investigación: nuevas prácticas artísticas en el navegador. Véase: [Tres Estudios Abiertos](https://github.com/EmilioOcelotl/tres-estudios-abiertos) y [threecln](https://github.com/EmilioOcelotl/THREE.studies/tree/main/threecln) 
+- Último pendiente: hacer pruebas de detección / no-detección con una máquina 
 
 ## Motivaciones
 
 - Respuesta a la instagramización.
 - Responsabilidad de datos. 
 
-## Elementos
+## Elementos tecnológicos. 
 
 - Sistema interactivo empaquetado en una computadora de placa reducida.
 - Software que corre en GNU/Linux pero que puede ejecutarse en otras plataformas.
@@ -25,9 +26,9 @@ Exploraciones en torno a la anti-vigilancia.
 
 ## Ejecución
 
-'cd face-landmarks-detection/anti
-'yarn
-'yarn watch 
+'cd face-landmarks-detection/anti'
+'yarn'
+'yarn watch' 
 
 [Bitácora](https://github.com/EmilioOcelotl/anti/tree/main/bitacora) 
 
