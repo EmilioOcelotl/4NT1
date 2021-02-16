@@ -27,7 +27,9 @@ Software y anti-vigilancia.
 ## Ejecución
 
 `cd face-landmarks-detection/anti`
+
 `yarn`
+
 `yarn watch` 
 
 [Bitácora](https://github.com/EmilioOcelotl/anti/tree/main/bitacora) 
