@@ -2,6 +2,8 @@
 
 Software y anti-vigilancia. 
 
+> Donde el ingeniero consigue capturar todo lo que funciona para que todo funcione mejor, para ponerlo al servicio del sistema, el hacker se pregunta “¿cómo funciona?” para encontrarle fallas, pero también para inventarle otros usos, para experimentar. Experimentar significa entonces: vivir lo que implica éticamente tal o cual técnica. (Comité-invisible, 2014, p. 132)
+
 - Composición audiovisual conducida por datos. 
 - Autorreferencialidad y retroalimentación con otros sistemas.
 - Transformación audiovisual a partir de síntesis granular.
@@ -12,7 +14,8 @@ Software y anti-vigilancia.
 - Desplazamiento de zona de confort (tecnológica).
 - Incertidumbre pandémica > Mudar el proyecto al navegador.
 - Forma parte de un proyecto más amplio de investigación: nuevas prácticas artísticas en el navegador. Véase: [Tres Estudios Abiertos](https://github.com/EmilioOcelotl/tres-estudios-abiertos) y [threecln](https://github.com/EmilioOcelotl/THREE.studies/tree/main/threecln) 
-- Último pendiente: hacer pruebas de detección / no-detección con una máquina 
+- Último pendiente: hacer pruebas de detección / no-detección con una máquina
+- Modularidad > la programación, lectura, escritura y pensamiento con software. 
 
 ## Elementos tecnológicos. 
 
