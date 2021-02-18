@@ -1,7 +1,5 @@
 # Anti
 
-Software y anti-vigilancia. 
-
 > Donde el ingeniero consigue capturar todo lo que funciona para que todo funcione mejor, para ponerlo al servicio del sistema, el hacker se pregunta “¿cómo funciona?” para encontrarle fallas, pero también para inventarle otros usos, para experimentar. Experimentar significa entonces: vivir lo que implica éticamente tal o cual técnica. (Comité-invisible, 2014, p. 132)
 
 - Composición audiovisual conducida por datos. 
