@@ -8,6 +8,7 @@
 - Primeros estudios de reflexión tecno-social a partir de la noción escala de tiempo de Curtis Roads. 
 - Pedazo de software que pueda ser de utilidad en un contexto cotidiano. > Filtros y evasión
 - Politicas de la representación vs instagramización de la política.
+- Estudios de software y creación 
 - Responsabilidad de datos. 
 - Desplazamiento de zona de confort (tecnológica).
 - Incertidumbre pandémica > Mudar el proyecto al navegador.
@@ -15,7 +16,7 @@
 - Último pendiente: hacer pruebas de detección / no-detección con una máquina
 - Modularidad > la programación, lectura, escritura y pensamiento con software. 
 
-## Elementos tecnológicos. 
+## Elementos tecnológicos
 
 - Sistema interactivo empaquetado en una computadora de placa reducida.
 - Software que corre en GNU/Linux pero que puede ejecutarse en otras plataformas.
@@ -32,7 +33,10 @@
 
 [Bitácora](https://github.com/EmilioOcelotl/anti/tree/main/bitacora) 
 
-## Texto
+## Ensayo
+
+Ideas expresadas como texto.
+Estética del código y expresión política. 
 
 Pendiente. 
 
