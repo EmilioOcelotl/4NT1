@@ -36,6 +36,9 @@ Complementación del proyecto con three.js para los detalles visuales y Web Audi
 
 Si el proyecto pudiera realizarse en términos técnicos desde la misma computadora para que pudiera funcionar como una app o una extensión, entonces no sería posible compilar el proyecto con web assembly para que tuviera las mismas consecuencias en la web pero no duplicar esfuerzos (versión web y versión local). 
 
+Último pendiente: hacer pruebas de detección / no-detección con una máquina
+
+
 ## Panoramas
 
 - tensorflow.js + otras cosas + webGL > navegador

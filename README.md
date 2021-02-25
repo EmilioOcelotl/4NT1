@@ -2,19 +2,19 @@
 
 > Donde el ingeniero consigue capturar todo lo que funciona para que todo funcione mejor, para ponerlo al servicio del sistema, el hacker se pregunta “¿cómo funciona?” para encontrarle fallas, pero también para inventarle otros usos, para experimentar. Experimentar significa entonces: vivir lo que implica éticamente tal o cual técnica. (Comité-invisible, 2014, p. 132)
 
-- Composición audiovisual conducida por datos. 
-- Autorreferencialidad y retroalimentación con otros sistemas.
-- Transformación audiovisual a partir de síntesis granular.
-- Primeros estudios de reflexión tecno-social a partir de la noción escala de tiempo de Curtis Roads. 
-- Pedazo de software que pueda ser de utilidad en un contexto cotidiano. > Filtros y evasión
-- Politicas de la representación vs instagramización de la política.
-- Estudios de software y creación 
-- Responsabilidad de datos. 
-- Desplazamiento de zona de confort (tecnológica).
-- Incertidumbre pandémica > Mudar el proyecto al navegador.
-- Forma parte de un proyecto más amplio de investigación: nuevas prácticas artísticas en el navegador. Véase: [Tres Estudios Abiertos](https://github.com/EmilioOcelotl/tres-estudios-abiertos) y [threecln](https://github.com/EmilioOcelotl/THREE.studies/tree/main/threecln) 
-- Último pendiente: hacer pruebas de detección / no-detección con una máquina
-- Modularidad > la programación, lectura, escritura y pensamiento con software. 
+Anti busca problematizar las relaciones que existen entre usuarios y plataformas tecnológicas; es un paso hacia la realización de usuarixs que desdibujan las fronteras de la pasividad política y económica teniendo como epicentro lo sensible.
+
+El proyecto parte de la composición visual conducida por datos. Aprovecha la investigación y el desarrollo de [tres estudios abiertos](https://github.com/EmilioOcelotl/tres-estudios-abiertos), un proyecto doctoral sobre nuevas prácticas artísticas en el navegador y librerías de síntesis granular para audio y video. 
+
+La obra toma en cuenta la transformación de flujos de audio y video y se retroalimenta con la acción de agentes externos. Con técnicas de aprendizaje automático, detecta gestos faciales que son intepretados como un flujo de datos. El proyecto problematiza este flujo con el uso de tecnologías que pueden orientarse a la responsabilidad de datos. De esta manera el proyecto orbita y busca centrarse en una discusión que contrapone la política de la representación en contraposición a la instagramización de la política. 
+
+Anti es un pedazo de software que puede utilizarse en la vida cotidiana y que desplaza la ofuscación en el uso de tecnologías que funcionan como cajas negras al desarrollo de "filtros" de evasión.
+
+El proyecto es un primer estudio de reflexión tecno-social. Retoma la idea de modularidad y se adscribe a los estudios del software, la obra se complementa con la programación, lectura, escritura y pensamiento con software. 
+
+[Bitácora](https://github.com/EmilioOcelotl/anti/tree/main/bitacora) 
+
+## Boceto
 
 ## Elementos tecnológicos
 
@@ -31,7 +31,10 @@
 
 `yarn watch` 
 
-[Bitácora](https://github.com/EmilioOcelotl/anti/tree/main/bitacora) 
+## Recursos
+
+- https://blog.tensorflow.org/2020/03/face-and-hand-tracking-in-browser-with-mediapipe-and-tensorflowjs.html
+- https://github.com/tensorflow/tfjs-models/tree/master/face-landmarks-detection
 
 ## Ensayo
 
@@ -39,11 +42,6 @@ Ideas expresadas como texto.
 Estética del código y expresión política. 
 
 Pendiente. 
-
-## Recursos
-
-- https://blog.tensorflow.org/2020/03/face-and-hand-tracking-in-browser-with-mediapipe-and-tensorflowjs.html
-- https://github.com/tensorflow/tfjs-models/tree/master/face-landmarks-detection
 
 ## Referencias
 
