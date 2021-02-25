@@ -16,11 +16,9 @@ El proyecto es un primer estudio de reflexión tecno-social. Retoma la idea de m
 
 ## Boceto
 
-Posibles caminos. Hasta el momento hay ejercicios pequeños para cada ruta. 
+[Propuesta](https://github.com/EmilioOcelotl/anti/tree/main/pdf/flujo.pdf) para el flujo y análisis de datos. 
 
-[Propuesta](https://github.com/EmilioOcelotl/anti/tree/main/pdf/flujo.pdf) para el flujo y análisi de datos. 
-
-[Diagrama](https://github.com/EmilioOcelotl/anti/tree/main/pdf/fonca.pdf) del sistema
+[Posibles caminos](https://github.com/EmilioOcelotl/anti/tree/main/pdf/fonca.pdf) de resolución tecnológica. Hasta el momento hay ejercicios pequeños para cada ruta. 
 
 ## Elementos tecnológicos
 
