@@ -18,7 +18,9 @@ El proyecto es un primer estudio de reflexión tecno-social. Retoma la idea de m
 
 Posibles caminos. Hasta el momento hay ejercicios pequeños para cada ruta. 
 
-[Diagrama](https://github.com/EmilioOcelotl/anti/tree/main/pdf/fonca.pdf) 
+[Propuesta](https://github.com/EmilioOcelotl/anti/tree/main/pdf/flujo.pdf) para el flujo y análisi de datos. 
+
+[Diagrama](https://github.com/EmilioOcelotl/anti/tree/main/pdf/fonca.pdf) del sistema
 
 ## Elementos tecnológicos
 
