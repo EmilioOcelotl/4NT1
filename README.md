@@ -16,7 +16,7 @@ El proyecto es un primer estudio de reflexión tecno-social. Retoma la idea de m
 
 ## Boceto
 
-Posibles caminos. Hasta el momento hay ejercicios pequeños para las posibilidades planteadas. 
+Posibles caminos. Hasta el momento hay ejercicios pequeños para cada ruta. 
 
 [Diagrama](https://github.com/EmilioOcelotl/anti/tree/main/pdf/fonca.pdf) 
 
@@ -27,7 +27,9 @@ Posibles caminos. Hasta el momento hay ejercicios pequeños para las posibilidad
 - Bibliotecas de visión computarizada .
 - Bibliotecas de aprendizaje automático. 
 
-## Ejecución
+## Ejecución Provisional
+
+Para JS: 
 
 `cd face-landmarks-detection/anti`
 
