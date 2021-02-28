@@ -43,7 +43,6 @@ Si el proyecto pudiera realizarse en términos técnicos desde la misma computad
 
 - tensorflow.js + otras cosas + webGL > navegador
 - ofxFaceTracker + OF + openGL > ejecutable
-- ofxARToolkit + OF + openGL (para dispositivos móviles > app de iOS
 
 ## Pendientes
 
@@ -51,4 +50,8 @@ Si el proyecto pudiera realizarse en términos técnicos desde la misma computad
 - [ ] Camara usb vs integrada
 - [ ] Integración webgl threejs
 - [ ] Monitor externo pequeño
-- [ ] Probar alternativas: openCV + openFrameworks
+- [x] Probar alternativas: openCV + openFrameworks
+- [ ] ¿Prueba con OpenCV 4? 
+- [ ] Compilación en teléfonos 
+- [ ] Salida como webcam 
+- [ ] Hacer pruebas y calibrar 

@@ -6,9 +6,9 @@ Anti busca problematizar las relaciones que existen entre usuarios y plataformas
 
 El proyecto parte de la composición visual conducida por datos. Aprovecha la investigación y el desarrollo de [tres estudios abiertos](https://github.com/EmilioOcelotl/tres-estudios-abiertos), un proyecto doctoral sobre nuevas prácticas artísticas en el navegador y librerías de síntesis granular para audio y video. 
 
-La obra toma en cuenta la transformación de flujos de audio y video y se retroalimenta con la acción de agentes externos. Con técnicas de aprendizaje automático, detecta gestos faciales que son intepretados como un flujo de datos. El proyecto problematiza este flujo con el uso de tecnologías que pueden orientarse a la responsabilidad de datos. De esta manera el proyecto orbita y busca centrarse en una discusión que contrapone a la política de la representación con la instagramización de la política y la estetización de la resistencia. 
+La obra toma en cuenta la transformación de flujos de audio y video y se retroalimenta con la acción de agentes externos. Con técnicas de aprendizaje automático, detecta gestos faciales que son intepretados como un flujo de datos. El proyecto problematiza este flujo con el uso de tecnologías que pueden orientarse a la responsabilidad de datos. De esta manera el proyecto orbita y busca centrarse en una discusión que involucra a la política de la representación con la instagramización de la política y la estetización de la resistencia. 
 
-Anti es un pedazo de software que puede utilizarse en la vida cotidiana y que desplaza la ofuscación en el uso de tecnologías que funcionan como cajas negras al desarrollo de "filtros" de evasión.
+Anti es un pedazo de software que puede utilizarse en la vida cotidiana y que desplaza la ofuscación en el uso de tecnologías que funcionan como cajas negras al desarrollo de capas estéticas para la evasión. El proyecto contempla la comparación de dos caminos que permitan plantear una crítica al software como caja negra. 
 
 El proyecto es un primer estudio de reflexión tecno-social. Retoma la idea de modularidad y se adscribe a los estudios del software, esto quiere decir que la obra se complementa con la programación, lectura, escritura y pensamiento con software. 
 
@@ -20,16 +20,11 @@ El proyecto es un primer estudio de reflexión tecno-social. Retoma la idea de m
 
 [Posibles caminos](https://github.com/EmilioOcelotl/anti/tree/main/pdf/fonca.pdf) de resolución tecnológica. Hasta el momento hay ejercicios pequeños para cada ruta. 
 
-## Elementos tecnológicos
-
-- Sistema interactivo empaquetado en una computadora de placa reducida.
-- Software que corre en GNU/Linux pero que puede ejecutarse en otras plataformas.
-- Bibliotecas de visión computarizada .
-- Bibliotecas de aprendizaje automático. 
-
 ## Ejecución Provisional
 
-Para JS: 
+Dos posibles caminos. 
+
+### JS [Three.js + TS.js]: 
 
 `cd face-landmarks-detection/anti`
 
@@ -37,17 +32,28 @@ Para JS:
 
 `yarn watch` 
 
-## Recursos
+### c++ [OF + OpenCV]: 
 
-- https://blog.tensorflow.org/2020/03/face-and-hand-tracking-in-browser-with-mediapipe-and-tensorflowjs.html
-- https://github.com/tensorflow/tfjs-models/tree/master/face-landmarks-detection
+- Compilar OF 0.10.0 o menor
+- Clonar [ofxFaceTracker](https://github.com/kylemcdonald/ofxFaceTracker) 
+- Referencia a la carpeta compilada
+
+`cd ofanti`
+
+`make`
+
+`make RunRelease`
 
 ## Ensayo
 
 Ideas expresadas como texto.
 Estética del código y expresión política. 
 
-Pendiente. 
+## Recursos
+
+- https://blog.tensorflow.org/2020/03/face-and-hand-tracking-in-browser-with-mediapipe-and-tensorflowjs.html
+- https://github.com/tensorflow/tfjs-models/tree/master/face-landmarks-detection
+- https://github.com/kylemcdonald/ofxFaceTracker
 
 ## Referencias
 
