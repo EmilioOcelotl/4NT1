@@ -38,6 +38,14 @@ Si el proyecto pudiera realizarse en términos técnicos desde la misma computad
 
 Último pendiente: hacer pruebas de detección / no-detección con una máquina
 
+## Comentarios 3 mar 2021
+
+- ¿La pieza tendrá estructura? ¿Cómo usar esto sin que ese convierta en un mouseX, mouseY?
+- Captura y envío de datos: expresiones > investigar sobre información facial > problematización de los datos. 
+- Síntesis y análisis en el servidor, solo ciertos aspectos en el navegador.
+- Otro tipo de gestualidades por ejemplo las manos. 
+- Descartr la vía de openFrameworks. 
+- ¿ Multi-jugador ?
 
 ## Panoramas
 
@@ -48,10 +56,11 @@ Si el proyecto pudiera realizarse en términos técnicos desde la misma computad
 
 - [x] ¿face-landmarks-detection en jetson nano?
 - [ ] Camara usb vs integrada
-- [ ] Integración webgl threejs
+- [x] Integración webgl threejs
 - [ ] Monitor externo pequeño
 - [x] Probar alternativas: openCV + openFrameworks
-- [ ] ¿Prueba con OpenCV 4? 
-- [ ] Compilación en teléfonos 
+- [ ] ¿Prueba con OpenCV 4?  
 - [ ] Salida como webcam 
 - [ ] Hacer pruebas y calibrar 
+- [ ] Depurar / actualizar dependencias en JS
+- [ ] ScatterGL a Three.js

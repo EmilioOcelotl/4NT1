@@ -15,6 +15,8 @@
  * =============================================================================
  */
 
+// Liberías 
+
 import * as faceLandmarksDetection from '@tensorflow-models/face-landmarks-detection';
 import Stats from 'stats.js';
 import * as tf from '@tensorflow/tfjs-core';
@@ -23,12 +25,12 @@ import '@tensorflow/tfjs-backend-cpu';
 
 import * as tfjsWasm from '@tensorflow/tfjs-backend-wasm';
 
-import {TRIANGULATION} from './triangulation';
+import {TRIANGULATION} from './triangulation'; // Qué es esto 
 
 tfjsWasm.setWasmPaths(
     `https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@${tfjsWasm.version_wasm}/dist/`);
 
-const NUM_KEYPOINTS = 468;
+const NUM_KEYPOINTS = 468; // 468
 const NUM_IRIS_KEYPOINTS = 5;
 const GREEN = '#32EEDB';
 const RED = "#FF2C35";
@@ -44,8 +46,11 @@ function distance(a, b) {
   return Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2));
 }
 
-function drawPath(ctx, points, closePath) {
-  const region = new Path2D();
+// La función que dibuja
+// Pointcloud tiene la información necesaria 
+
+function drawPath(ctx, points, closePath) { 
+  const region = new Path2D(); // Este es el objeto que plotea los puntos.  
   region.moveTo(points[0][0], points[0][1]);
   for (let i = 1; i < points.length; i++) {
     const point = points[i];
@@ -61,7 +66,7 @@ function drawPath(ctx, points, closePath) {
 let model, ctx, videoWidth, videoHeight, video, canvas,
     scatterGLHasInitialized = false, scatterGL, rafID;
 
-const VIDEO_SIZE = 500;
+const VIDEO_SIZE = 800;
 const mobile = isMobile();
 // Don't render the point cloud on mobile in order to maximize performance and
 // to avoid crowding limited screen space.
@@ -71,12 +76,14 @@ const state = {
   backend: 'webgl',
   maxFaces: 1,
   triangulateMesh: true,
-  predictIrises: true
+  predictIrises: false
 };
 
 if (renderPointcloud) {
-  state.renderPointcloud = false; // para no renderear el point cloud
+  state.renderPointcloud = true; // para no renderear el point cloud
 }
+
+// GUI, tal vez quitarla o ajustarla a lo que me gustaría probar. 
 
 function setupDatGui() {
   const gui = new dat.GUI();
@@ -129,6 +136,7 @@ async function setupCamera() {
 async function renderPrediction() {
   // stats.begin();
 
+    // parece que todo biene de predictions 
   const predictions = await model.estimateFaces({
     input: video,
     returnTensors: false,
@@ -140,7 +148,7 @@ async function renderPrediction() {
 
   if (predictions.length > 0) {
     predictions.forEach(prediction => {
-      const keypoints = prediction.scaledMesh;
+      const keypoints = prediction.scaledMesh; // estos son los puntos que necesito. Parece que es un arreglo 
 
       if (state.triangulateMesh) {
         ctx.strokeStyle = GREEN;
@@ -150,9 +158,9 @@ async function renderPrediction() {
           const points = [
             TRIANGULATION[i * 3], TRIANGULATION[i * 3 + 1],
             TRIANGULATION[i * 3 + 2]
-          ].map(index => keypoints[index]);
+          ].map(index => keypoints[index]); //parece que los points, ya estan escalados ? 
 
-          drawPath(ctx, points, true);
+          drawPath(ctx, points, true); // aquí se dibuja el mesh triangulado 
         }
       } else {
         ctx.fillStyle = GREEN;
@@ -161,9 +169,9 @@ async function renderPrediction() {
           const x = keypoints[i][0];
           const y = keypoints[i][1];
 
-          ctx.beginPath();
-          ctx.arc(x, y, 1 /* radius */, 0, 2 * Math.PI);
-          ctx.fill();
+          //ctx.beginPath();
+          //ctx.arc(x, y, 1 /* radius */, 0, 2 * Math.PI);
+          //ctx.fill();
         }
       }
 
@@ -199,6 +207,8 @@ async function renderPrediction() {
       }
     });
 
+      // Esto si solamente queremos dibujar el pointcloud. No sale escaleados 
+
     if (renderPointcloud && state.renderPointcloud && scatterGL != null) {
       const pointsData = predictions.map(prediction => {
         let scaledMesh = prediction.scaledMesh;
@@ -209,7 +219,7 @@ async function renderPrediction() {
       for (let i = 0; i < pointsData.length; i++) {
         flattenedPointsData = flattenedPointsData.concat(pointsData[i]);
       }
-      const dataset = new ScatterGL.Dataset(flattenedPointsData);
+      const dataset = new ScatterGL.Dataset(flattenedPointsData); // dataset
 
       if (!scatterGLHasInitialized) {
         scatterGL.setPointColorer((i) => {
@@ -218,7 +228,7 @@ async function renderPrediction() {
           }
           return BLUE;
         });
-        scatterGL.render(dataset);
+        scatterGL.render(dataset); // Renderea el dataset
       } else {
         scatterGL.updateDataset(dataset);
       }

@@ -34,6 +34,8 @@ Dos posibles caminos.
 
 ### c++ [OF + OpenCV]: 
 
+Potencialmente descartable. 
+
 - Compilar OF 0.10.0 o menor
 - Clonar [ofxFaceTracker](https://github.com/kylemcdonald/ofxFaceTracker) 
 - Referencia a la carpeta compilada
@@ -53,6 +55,8 @@ Estética del código y expresión política.
 
 - https://blog.tensorflow.org/2020/03/face-and-hand-tracking-in-browser-with-mediapipe-and-tensorflowjs.html
 - https://github.com/tensorflow/tfjs-models/tree/master/face-landmarks-detection
+- https://threejs.org/
+- https://github.com/PAIR-code/scatter-gl
 - https://github.com/kylemcdonald/ofxFaceTracker
 
 ## Referencias
