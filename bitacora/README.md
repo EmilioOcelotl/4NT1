@@ -38,6 +38,8 @@ Si el proyecto pudiera realizarse en términos técnicos desde la misma computad
 
 Último pendiente: hacer pruebas de detección / no-detección con una máquina
 
+¿Una versión live ya está old? 
+
 ## Comentarios 3 mar 2021
 
 - ¿La pieza tendrá estructura? ¿Cómo usar esto sin que ese convierta en un mouseX, mouseY?
