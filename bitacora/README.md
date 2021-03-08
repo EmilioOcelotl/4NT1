@@ -49,6 +49,10 @@ Si el proyecto pudiera realizarse en términos técnicos desde la misma computad
 - Descartr la vía de openFrameworks. 
 - ¿ Multi-jugador ?
 
+## anti > phd
+
+- La nube como una especie de alegoría que va hacia la cuestión de la síntesis y del trabajo web con nodos
+
 ## Panoramas
 
 - tensorflow.js + otras cosas + webGL > navegador
@@ -57,12 +61,14 @@ Si el proyecto pudiera realizarse en términos técnicos desde la misma computad
 ## Pendientes
 
 - [x] ¿face-landmarks-detection en jetson nano?
-- [ ] Camara usb vs integrada
+- [x] Camara usb vs integrada
 - [x] Integración webgl threejs
-- [ ] Monitor externo pequeño
 - [x] Probar alternativas: openCV + openFrameworks
 - [ ] ¿Prueba con OpenCV 4?  
 - [ ] Salida como webcam 
 - [ ] Hacer pruebas y calibrar 
 - [ ] Depurar / actualizar dependencias en JS
 - [ ] ScatterGL a Three.js
+- [ ] Captura y envío de señales de audio desde el navegador
+- [ ] Captra y envío de datos 
+- [ ] Ampliar estado del arte
