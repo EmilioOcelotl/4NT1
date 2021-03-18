@@ -42,13 +42,13 @@ Potencialmente descartable.
 
 `make RunRelease`
 
-## Ensayo
+## Escritura
 
-Ideas expresadas como texto.
-Estética del código y expresión política. 
+Algunas ideas-reflexiones estarán en: Panorama. Escritura de espacios libres e inmersivos para el performance audiovisual. Dorian Sotomayor, Marianne Teixido y Emilio Ocelotl (en proceso). 
 
 ## Recursos
 
+- https://scsynth.org/t/tutorial-supercollider-server-plugins-in-c/
 - https://github.com/tensorflow/tfjs-models/tree/master/face-landmarks-detection
 - https://threejs.org/
 - https://supercollider.github.io/
