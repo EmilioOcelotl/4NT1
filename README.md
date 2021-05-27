@@ -2,7 +2,7 @@
 
 > Donde el ingeniero consigue capturar todo lo que funciona para que todo funcione mejor, para ponerlo al servicio del sistema, el hacker se pregunta “¿cómo funciona?” para encontrarle fallas, pero también para inventarle otros usos, para experimentar. Experimentar significa entonces: vivir lo que implica éticamente tal o cual técnica. (Comité-invisible, 2014, p. 132)
 
-*Anti* busca problematizar las relaciones que existen entre usuarios y plataformas tecnológicas; es un paso hacia la realización de usuarixs que desdibujan las fronteras de la pasividad política y económica teniendo como epicentro lo sensible. El proyecto parte de la composición visual conducida por datos. Aprovecha la investigación y el desarrollo de [tres estudios abiertos](https://github.com/EmilioOcelotl/tres-estudios-abiertos), un proyecto doctoral sobre nuevas prácticas artísticas en el navegador y librerías de síntesis granular para audio y video. 
+*Anti* busca problematizar las relaciones que existen entre usuarios y plataformas tecnológicas; es un paso hacia la realización de usuarixs que desdibujan las fronteras de la pasividad política y económica teniendo como epicentro lo sensible. El proyecto parte de la composición visual conducida por datos. Aprovecha la investigación y escritura de [tres estudios abiertos](https://github.com/EmilioOcelotl/tres-estudios-abiertos), un proyecto doctoral sobre nuevas prácticas artísticas en el navegador y librerías de síntesis granular para audio y video. 
 
 La obra toma en cuenta la transformación de flujos de audio y video y se retroalimenta con la acción de agentes externos. Con técnicas de aprendizaje automático, detecta gestos faciales que son intepretados como un flujo de datos. El proyecto problematiza este flujo con el uso de tecnologías que implican una responsabilidad de los datos de usuarixs. De esta manera el proyecto pplantea una discusión que parte de la instagramización de la política y la estetización de la resistencia para desembocar en la política de la representación. 
 
@@ -42,12 +42,45 @@ Potencialmente descartable.
 
 `make RunRelease`
 
+## Ruteo de video
+
+La manipulación de video puede transmitirse como una cámara virtual. Con las siguientes instrucciones es posible enviar ventanas personalizadas como si fuera una webcam conectada a la computadora. 
+
+### Windows
+
+[OBS-Studio](https://obsproject.com/es) ya tiene algunas soluciones incorporadas. En Win es posible utilizar una cámara virtual. 
+
+### Linux
+
+Se puede usar v4l2loopback y Ffmpeg. Por lo general es posible instalarlo con gestores de paquetes como pacman o apt-get. Es importante tener los headers de linux.
+
+En Arch: linux-headers
+
+Una vez instalado:
+
+`# modprobe v4l2loopback`
+
+En otra línea de comando 
+
+`ffmpeg -f x11grab -r 20 -s 1920x1080 -i :0.0+0,0 -vcodec rawvideo -pix_fmt yuv420p -threads 0 -f v4l2 /dev/video0`
+
+Se pueden variar parámetros como -r 20 (tasa de cuadros por segundo) y -s 1920x1080 (tamaño del lienzo capturado). Estos parámetros afectan el rendimiento de la computadora
+
+Mientras tanto es necesario capturar una ventana no obstruída por otra ventana.
+
+Queda pendiente ver si es posible capturar ventanas independientes. 
+
+### Mac
+
+Pendiente...
+
 ## Escritura
 
-Algunas ideas-reflexiones estarán en: Panorama. Escritura de espacios libres e inmersivos para el performance audiovisual. Dorian Sotomayor, Marianne Teixido y Emilio Ocelotl (en proceso). 
+Algunas ideas-reflexiones estarán en: **Panorama. Escritura de espacios libres e inmersivos para el performance audiovisual.** Dorian Sotomayor, Marianne Teixido y Emilio Ocelotl (en proceso). 
 
 ## Recursos
 
+- https://github.com/umlaeute/v4l2loopback
 - https://scsynth.org/t/tutorial-supercollider-server-plugins-in-c/
 - https://github.com/tensorflow/tfjs-models/tree/master/face-landmarks-detection
 - https://threejs.org/

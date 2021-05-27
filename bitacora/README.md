@@ -58,6 +58,28 @@ Si el proyecto pudiera realizarse en términos técnicos desde la misma computad
 - tensorflow.js + otras cosas + webGL > navegador
 - ofxFaceTracker + OF + openGL > ejecutable
 
+## anti > primer encuentro
+
+- Protocolos de comunicación (OSC, WebRTC, audio de algún tipo )
+- software artesanal vs plataformas de alto nivel
+- Centralidad del activismo ambiental en el uso de recursos tecnológicos.
+- Salidas, experiencia de usuario y campaña de difusión
+- Software como un arma de dos filos. 
+- Relación con otros proyectos > máscaras, ofuscación, visibilidad en web 
+- Comentario personal: ¿Dos instancias?
+
+Respuesta a: 
+
+https://expansion.mx/tecnologia/2021/03/31/el-padron-de-telefonia-es-inviable-y-atenta-contra-los-derechos-digitales
+
+La cuestión de la máscara como impostura y como evasión, como un dispositivo para difuminarse en pos de la seguridad o una causa común. 
+
+https://github.com/umlaeute/v4l2loopback/ usar v4l2loopback y ffmpeg
+
+ffmpeg -f x11grab -r 20 -s 1920x1080 -i :0.0+0,0 -vcodec rawvideo -pix_fmt yuv420p -threads 0 -f v4l2 /dev/video0
+
+Modulador de distorsión (ofuscación cotidiana y ofuscación experimental) 
+
 ## Pendientes
 
 - [x] ¿face-landmarks-detection en jetson nano?
