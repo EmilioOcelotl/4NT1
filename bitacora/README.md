@@ -80,6 +80,8 @@ ffmpeg -f x11grab -r 20 -s 1920x1080 -i :0.0+0,0 -vcodec rawvideo -pix_fmt yuv42
 
 Modulador de distorsión (ofuscación cotidiana y ofuscación experimental) 
 
+Prioridades 
+
 ## Pendientes
 
 - [x] ¿face-landmarks-detection en jetson nano?

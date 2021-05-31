@@ -76,7 +76,10 @@ Pendiente...
 
 ## Escritura
 
-Algunas ideas-reflexiones estarán en: **Panorama. Escritura de espacios libres e inmersivos para el performance audiovisual.** Dorian Sotomayor, Marianne Teixido y Emilio Ocelotl (en proceso). 
+Algunas ideas-reflexiones relacionadas con este proyecto se encuentran en:
+
+- [Panorama](https://piranhalab.github.io/panorama/). Escritura de espacios libres e inmersivos para el performance audiovisual - Dorian Sotomayor, Marianne Teixido y Emilio Ocelotl (en proceso). 
+- [Tres Estudios Abiertos](https://emilioocelotl.github.io/tres-estudios-abiertos/). Prácticas performáticas, audiovisuales y experimentales en el navegador - Emilio Ocelotl
 
 ## Recursos
 
