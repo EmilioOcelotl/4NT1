@@ -10,37 +10,15 @@ La obra toma en cuenta la transformación de flujos de audio y video y se retroa
 
 [Bitácora](https://github.com/EmilioOcelotl/anti/tree/main/bitacora) 
 
-## Boceto
+## Ejecución 
 
-[Propuesta](https://github.com/EmilioOcelotl/anti/tree/main/pdf/flujo.pdf) para el flujo y análisis de datos. 
-
-[Posibles caminos](https://github.com/EmilioOcelotl/anti/tree/main/pdf/fonca.pdf) de resolución tecnológica. Hasta el momento hay ejercicios pequeños para cada ruta. 
-
-## Ejecución Provisional
-
-Dos posibles caminos. 
-
-### JS [Three.js + TS.js]: 
+JS [Three.js + TS.js]: 
 
 `cd face-landmarks-detection/anti`
 
 `yarn`
 
 `yarn watch` 
-
-### c++ [OF + OpenCV]: 
-
-Potencialmente descartable. 
-
-- Compilar OF 0.10.0 o menor
-- Clonar [ofxFaceTracker](https://github.com/kylemcdonald/ofxFaceTracker) 
-- Referencia a la carpeta compilada
-
-`cd ofanti`
-
-`make`
-
-`make RunRelease`
 
 ## Ruteo de video
 
@@ -83,6 +61,7 @@ Algunas ideas-reflexiones relacionadas con este proyecto se encuentran en:
 
 ## Recursos
 
+- https://developers.google.com/web/updates/2017/12/audio-worklet
 - https://github.com/umlaeute/v4l2loopback
 - https://scsynth.org/t/tutorial-supercollider-server-plugins-in-c/
 - https://github.com/tensorflow/tfjs-models/tree/master/face-landmarks-detection

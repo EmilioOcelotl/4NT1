@@ -1,5 +1,12 @@
 # Bitácora
 
+## Boceto
+
+[Propuesta](https://github.com/EmilioOcelotl/anti/tree/main/pdf/flujo.pdf) para el flujo y análisis de datos. 
+
+[Posibles caminos](https://github.com/EmilioOcelotl/anti/tree/main/pdf/fonca.pdf) de resolución tecnológica. Hasta el momento hay ejercicios pequeños para cada ruta. 
+
+
 ## Aspectos generales 
 
 Aspecto muy cercano al proyecto: Estetización de la resistencia >  Maquillaje y wearables. 
@@ -81,6 +88,21 @@ ffmpeg -f x11grab -r 20 -s 1920x1080 -i :0.0+0,0 -vcodec rawvideo -pix_fmt yuv42
 Modulador de distorsión (ofuscación cotidiana y ofuscación experimental) 
 
 Prioridades 
+
+### c++ [OF + OpenCV]: 
+
+Potencialmente descartable. 
+
+- Compilar OF 0.10.0 o menor
+- Clonar [ofxFaceTracker](https://github.com/kylemcdonald/ofxFaceTracker) 
+- Referencia a la carpeta compilada
+
+`cd ofanti`
+
+`make`
+
+`make RunRelease`
+
 
 ## Pendientes
 
