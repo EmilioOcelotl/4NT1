@@ -10,7 +10,7 @@
 - [x] Actualizar librerías y vulnerabilidades graves en dependencias
 - [x] Agregar la librería threejs
 - [x] Usar una parte del escritorio como cámara web
-- [ ] Trasladar pointcloud de scatterGL a threejs
+- [x] Trasladar pointcloud de scatterGL a threejs
 - [ ] Mostrar una máscara que funcione con dos capas: el video y el mesh cubriendo / modificando el rostro
 - [ ] Diseño de interfaz de usuario > Aspectos visuales y de control ¿GUI? 
 - [ ] Prueba local con SuperCollider > Trasladar coordenadas como algún tipo de mensaje
@@ -34,4 +34,6 @@
 
 ## Apuntes generales
 
-- Concepto de nube de puntos es central para la realización visual y sonora. 
+- Concepto de nube de puntos es central para la realización visual y sonora.
+- Necesario enviar nubes de puntos a cualquier otro lado vía OSC. Esto permitiría tener un flujo de puntos para SC pero también para OF
+- Parece que el archivo triangulation ya tiene una estimación ¿podría ser esto la máscara, como mover el eje z  

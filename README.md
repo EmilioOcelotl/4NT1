@@ -24,9 +24,9 @@ JS [Three.js + TS.js]:
 
 La manipulación de video puede transmitirse como una cámara virtual. Con las siguientes instrucciones es posible enviar ventanas personalizadas como si fuera una webcam conectada a la computadora. 
 
-### Windows
+### Windows / Linux 
 
-[OBS-Studio](https://obsproject.com/es) ya tiene algunas soluciones incorporadas. En Win es posible utilizar una cámara virtual. 
+[OBS-Studio](https://obsproject.com/es) ya tiene algunas soluciones incorporadas. En Win/Linux es posible utilizar una cámara virtual. 
 
 ### Linux
 
