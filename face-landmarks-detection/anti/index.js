@@ -25,8 +25,6 @@ import * as THREE from 'three';
 
 import {TRIANGULATION} from './triangulation'; // Qué es esto 
 
-// Keypoints de la cara 
-
 let clight1, clight2, clight3, clight4; 
 
 let scene, camera, renderer, material, cube, geometryPoints; 
@@ -35,19 +33,10 @@ let cubos = [];
 let grupo; 
 
 const NUM_KEYPOINTS = 468; // 468
-// const NUM_IRIS_KEYPOINTS = 5; // Sin iris
 
-//const GREEN = '#32EEDB';
-//const RED = "#FF2C35";
-//const BLUE = "#157AB3";
-
-// Para optimizar en teléfonos 
-
-// let keypoints;
 let points = [];
 let normals = [];
 let keypoints = new Float32Array;  
-// var points = new Float32Array;
 let pointcloud; 
 
 let geometry = new THREE.BufferGeometry();
@@ -59,37 +48,11 @@ function isMobile() {
   return isAndroid || isiOS;
 }
 
-function distance(a, b) {
-  return Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2));
-}
-
-// La función que dibuja
-// Pointcloud tiene la información necesaria 
-
-/*
-
-function drawPath(ctx, points, closePath) { 
-  const region = new Path2D(); // Este es el objeto que plotea los puntos.  
-  region.moveTo(points[0][0], points[0][1]);
-  for (let i = 1; i < points.length; i++) {
-    const point = points[i];
-    region.lineTo(point[0], point[1]);
-  }
-
-  if (closePath) {
-    region.closePath();
-  }
-  ctx.stroke(region);
-}
-
-*/ 
-
-let model, ctx, videoWidth, videoHeight, video, canvas;
+let model, ctx, videoWidth, videoHeight, video;
 
 const VIDEO_SIZE = 800;
 const mobile = isMobile();
-// Don't render the point cloud on mobile in order to maximize performance and
-// to avoid crowding limited screen space.
+
 const renderPointcloud = mobile === false;
 
 async function setupCamera() {
@@ -114,12 +77,8 @@ async function setupCamera() {
     });
 }
 
-// Extraer predicciones pero no dibujarlas con scatterGL, pasar los puntos como puntos de open 
-
 async function renderPrediction() {
-  // stats.begin();
 
-    // parece que todo biene de predictions 
     const predictions = await model.estimateFaces({
 	input: video,
 	returnTensors: false,
@@ -144,23 +103,14 @@ async function renderPrediction() {
 			TRIANGULATION[i * 3], TRIANGULATION[i * 3 + 1],
 			TRIANGULATION[i * 3 + 2]
 		    ].map(index => keypoints[index]); //parece que los points, ya estan escalados ?
-		    // normals.push( 0, 0, 1 );
- 
 
-		    // geometry.computeVertexNormals();
-
-		    
-		    // necesitamos los points 
 		    //drawPath(ctx, points, true); // aquí se dibuja el mesh triangulado
-		    // console.log(points); 
 		    
 		}
-	    //}
+	    
 	});
     }
 
-  // stats.end();
-    // rafID = requestAnimationFrame(renderPrediction);
     requestAnimationFrame(renderPrediction); 
 };
 
@@ -177,17 +127,19 @@ async function init() {
 
     model = await faceLandmarksDetection.load(
 	faceLandmarksDetection.SupportedPackages.mediapipeFacemesh,
-	{maxFaces: 1}); // número de caras 
+	{maxFaces: 2}); // número de caras 
     renderPrediction();
-
 
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
-    // scene.background = new THREE.Color( 0xf0f0f0 ); // UPDATED
+    //const video = document.getElementById( 'video' );
+    //const texture = new THREE.VideoTexture( video );
 
+    // scene.background = texture; 
+    // scene.background = new THREE.Color( 0xf0f0f0 ); // UPDATED
     
-    renderer = new THREE.WebGLRenderer();
+    renderer = new THREE.WebGLRenderer({alpha:true});
     renderer.setSize( window.innerWidth, window.innerHeight );
     document.body.appendChild( renderer.domElement );
 
@@ -207,20 +159,23 @@ async function init() {
     scene.add( clight3 )
     scene.add( clight4 )
 
+    const geometryVideo = new THREE.PlaneGeometry( 50, 50 );
+    const materialVideo = new THREE.MeshBasicMaterial( {color: 0xffffff, map:texture, side: THREE.DoubleSide} );
+    const planeVideo = new THREE.Mesh( geometryVideo, materialVideo );
+    planeVideo.rotation.x = Math.PI;
+    planeVideo.position.z = -10; 
+    scene.add( planeVideo );
+    
     geometryC = new THREE.SphereGeometry( 0.75, 2, 2 );
-
-    // geometryC = new THREE.BoxGeometry(0.7, 0.7, 0.7);
-    //materialC = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-    // materialC = THREE.MeshPhongMaterial( { color: 0xdddddd, specular: 0x009900, shininess: 30, map: texture, transparent: true } ) ;
 
     let materialC = new THREE.MeshStandardMaterial( {
 	color: 0xffffff,
-	// envMap: scene.background,
+	// map: texture, 
 	// refractionRatio: 0.75
-	roughness: 0.2,
-	metalness: 0.4
+	roughness: 0.1,
+	metalness: 0.9
     } );
-    
+  
     cube = new THREE.Mesh( geometryC, materialC );
     // aqui me quedé ya están los puntos solamente hace falta plotearlos 
 
@@ -235,15 +190,15 @@ async function init() {
 	cubos[i].rotation.z = Math.random() * Math.PI ; 
 
 	escala = Math.random()* 1.5;
-	cubos[i].scale.x = 0.1 + (Math.random()*2); 
-	cubos[i].scale.y = 0.1 + (Math.random()*2); 
-	cubos[i].scale.z = 0.1 + (Math.random()*2); 
+	cubos[i].scale.x = 0.5 + (Math.random()*5); 
+	cubos[i].scale.y = 0.5 + (Math.random()*0.5); 
+	cubos[i].scale.z = 0.5 + (Math.random()*0.5); 
 		
 	scene.add( cubos[i] );
     }
 
 
-    camera.position.z = 20;
+    camera.position.z = 40;
     camera.rotation.z = Math.PI; 
     
     // scene.add( cube); 
@@ -262,7 +217,7 @@ async function animate () {
     
     requestAnimationFrame( animate );
     
-    await console.log(keypoints[12][0]);
+    // await console.log(keypoints[12][0]);
 
     clight1.position.x = Math.sin( time2 * 0.4 ) * 1400;
     clight1.position.y = Math.cos( time2 * 0.3 ) * 50;
@@ -287,16 +242,24 @@ async function animate () {
     cube.rotation.y += 0.01;
     // cube.position.x = keypoints[0][0] * 0.005; 
 
-
     for(let i = 0; i < NUM_KEYPOINTS; i++){
-	cubos[i].position.x = keypoints[i][0] * 0.05-25; 
+	cubos[i].position.x = keypoints[i][0] * 0.05-20; 
 	cubos[i].position.y = keypoints[i][1] * 0.05-20; 
 	cubos[i].position.z = keypoints[i][2] * 0.05;
-	// cubos[i].rotation.z = Math.PI / 2; 
+	// cubos[i].rotation.z = Math.PI / 2;
+	cubos[i].rotation.x += 0.05; 
     }
     
     renderer.render( scene, camera );
 };
 
-init(); 
+init();
+
+// Pasar lo siguiente a un objeto que se posicione exactamente al centro y que tenga 800 x 800
+
+video = document.getElementById( 'video' );
+const texture = new THREE.VideoTexture( video );
+//texture.wrapS = THREE.RepeatWrapping;
+//texture.repeat.x = - 1;
+//texture.rotation.y = Math.PI / 2; 
 //animate();
