@@ -25,6 +25,10 @@ import * as THREE from 'three';
 
 import {TRIANGULATION} from './triangulation'; // Qué es esto 
 
+const OSC = require('osc-js'); // pal osc 
+const osc = new OSC(); 
+// const osc = new OSC({ plugin: new OSC.WebsocketServerPlugin() })
+
 let clight1, clight2, clight3, clight4; 
 
 let scene, camera, renderer, material, cube, geometryPoints; 
@@ -41,6 +45,8 @@ let pointcloud;
 
 let geometry = new THREE.BufferGeometry();
 let mesh =  new THREE.Mesh(); 
+
+// const client = new Client('127.0.0.1', 3333); // para enviar 
 
 function isMobile() {
   const isAndroid = /Android/i.test(navigator.userAgent);
@@ -116,6 +122,12 @@ async function renderPrediction() {
 
 async function init() {
 
+    /*
+    client.send('/oscAddress', 200, () => {
+	client.close();
+    });
+    */
+    
     await tf.setBackend('webgl'); 
     await setupCamera();
     video.play(); 
@@ -208,7 +220,21 @@ async function init() {
     
     // renderPrediction();
     animate(); 
-    //console.log(points[0]); 
+    //console.log(points[0]);
+
+    
+     osc.open();
+
+    
+    osc.on('open', () => {
+	const message = new OSC.Message('/test', 12.221, 'hello')
+	osc.send(message)
+    })
+    
+
+//    var message = new OSC.Message('/test', Math.random());
+//     osc.send(message);
+
 }
 
 async function animate () {

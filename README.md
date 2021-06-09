@@ -20,11 +20,15 @@ JS [Three.js + TS.js]:
 
 `yarn watch` 
 
+Para activar la comunicación OSC
+
+`node bridge.js`
+
 ## Ruteo de video
 
 La manipulación de video puede transmitirse como una cámara virtual. Con las siguientes instrucciones es posible enviar ventanas personalizadas como si fuera una webcam conectada a la computadora. 
 
-### Windows / Linux 
+### Windows / Linux / Mac 
 
 [OBS-Studio](https://obsproject.com/es) ya tiene algunas soluciones incorporadas. En Win/Linux es posible utilizar una cámara virtual. 
 
@@ -48,10 +52,6 @@ Mientras tanto es necesario capturar una ventana no obstruída por otra ventana.
 
 Queda pendiente ver si es posible capturar ventanas independientes. 
 
-### Mac
-
-Pendiente...
-
 ## Escritura
 
 Algunas ideas-reflexiones relacionadas con este proyecto se encuentran en:
@@ -61,6 +61,9 @@ Algunas ideas-reflexiones relacionadas con este proyecto se encuentran en:
 
 ## Recursos
 
+- http://www.whole-play.com/post/chuck-browser-communication-with-osc/
+- https://github.com/adzialocha/osc-js
+- https://github.com/MylesBorins/node-osc
 - https://developers.google.com/web/updates/2017/12/audio-worklet
 - https://github.com/umlaeute/v4l2loopback
 - https://scsynth.org/t/tutorial-supercollider-server-plugins-in-c/

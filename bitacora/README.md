@@ -6,7 +6,6 @@
 
 [Posibles caminos](https://github.com/EmilioOcelotl/anti/tree/main/pdf/fonca.pdf) de resolución tecnológica. Hasta el momento hay ejercicios pequeños para cada ruta. 
 
-
 ## Aspectos generales 
 
 Aspecto muy cercano al proyecto: Estetización de la resistencia >  Maquillaje y wearables. 
