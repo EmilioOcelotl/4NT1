@@ -74,6 +74,7 @@ async function setupCamera() {
 	    height: mobile ? undefined : VIDEO_SIZE
 	},
     });
+    
     video.srcObject = stream;
     
     return new Promise((resolve) => {
@@ -90,6 +91,7 @@ async function renderPrediction() {
 	returnTensors: false,
 	flipHorizontal: false,
 	predictIrises: false
+
     });
     
   // ctx.drawImage(
@@ -117,17 +119,15 @@ async function renderPrediction() {
 	});
     }
 
-    requestAnimationFrame(renderPrediction); 
+    
+
+       
+    requestAnimationFrame(renderPrediction);
+    
 };
 
 async function init() {
 
-    /*
-    client.send('/oscAddress', 200, () => {
-	client.close();
-    });
-    */
-    
     await tf.setBackend('webgl'); 
     await setupCamera();
     video.play(); 
@@ -139,7 +139,7 @@ async function init() {
 
     model = await faceLandmarksDetection.load(
 	faceLandmarksDetection.SupportedPackages.mediapipeFacemesh,
-	{maxFaces: 2}); // número de caras 
+	{maxFaces: 1}); // número de caras 
     renderPrediction();
 
     scene = new THREE.Scene();
@@ -222,19 +222,81 @@ async function init() {
     animate(); 
     //console.log(points[0]);
 
-    
-     osc.open();
-
+    /*
+    osc.open();
     
     osc.on('open', () => {
 	const message = new OSC.Message('/test', 12.221, 'hello')
 	osc.send(message)
     })
-    
+    */    
 
 //    var message = new OSC.Message('/test', Math.random());
 //     osc.send(message);
 
+    /*
+    osc.open();
+    
+    setInterval(() => 
+    osc.on('open', () => {
+	const message = new OSC.Message('/keypoints0' )
+	
+	for (let i = 0; i < NUM_KEYPOINTS; i = i + 40){
+	    
+	    message.add( new Float32Array(keypoints) );
+	    
+	    }
+	
+	osc.send(message)
+    }), 100);
+    */ 
+
+    
+    
+}
+
+async function oscSend(){
+
+    osc.open();
+
+    // keypoints en x
+    
+    osc.on('open', () => {
+
+	setInterval(function(){
+	    const message = new OSC.Message('/kpx');
+	    for (let i = 0; i < NUM_KEYPOINTS; i++){
+		message.add( keypoints[i][0] );	
+	    }
+	    osc.send(message);
+	}, 1000);
+    })
+
+    // keypoints en y 
+
+    osc.on('open', () => {
+	setInterval(function(){
+	    const message = new OSC.Message('/kpy');
+	    for (let i = 0; i < NUM_KEYPOINTS; i++){
+		message.add( keypoints[i][1] );	
+	    }
+	    osc.send(message);
+	}, 1000);
+    })
+
+    // keypoints en z 
+
+    osc.on('open', () => {
+	setInterval(function(){
+	    const message = new OSC.Message('/kpz');
+	    for (let i = 0; i < NUM_KEYPOINTS; i++){
+		message.add( keypoints[i][2] );
+	    }
+	    osc.send(message);
+	}, 1000);
+    })
+
+    
 }
 
 async function animate () {
@@ -280,11 +342,13 @@ async function animate () {
 };
 
 init();
+oscSend(); 
 
 // Pasar lo siguiente a un objeto que se posicione exactamente al centro y que tenga 800 x 800
 
 video = document.getElementById( 'video' );
 const texture = new THREE.VideoTexture( video );
+
 //texture.wrapS = THREE.RepeatWrapping;
 //texture.repeat.x = - 1;
 //texture.rotation.y = Math.PI / 2; 

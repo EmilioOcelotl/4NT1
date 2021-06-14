@@ -2,5 +2,10 @@
 //////////// 4NT1 ///////////////
 /////////////////////////////////
 
-n = NetAddr( "127.0.0.1", 1234 ); // local machine
-OSCdef(\test, {|msg, time, addr, recvPort| msg.postln}, '/test', n); // def style
+p = ProxySpace.push(s.boot);
+
+(
+OSCdef(\kpx, {|msg, time, addr, recvPort| msg.postln}, '/kpx', nil);
+OSCdef(\kpy, {|msg, time, addr, recvPort| msg.postln}, '/kpy', nil);
+OSCdef(\kpz, {|msg, time, addr, recvPort| msg.postln}, '/kpz', nil);
+)
