@@ -1,19 +1,3 @@
-/**
- * @license
- * Copyright 2020 Google LLC. All Rights Reserved.
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * =============================================================================
- */
 
 // Librerías 
 
@@ -35,8 +19,11 @@ let scene, camera, renderer, material, cube, geometryPoints;
 let geometryC, materialC; 
 let cubos = [];
 let grupo; 
+let font; 
 
 const NUM_KEYPOINTS = 468; // 468
+
+
 
 let points = [];
 let normals = [];
@@ -46,20 +33,20 @@ let pointcloud;
 let geometry = new THREE.BufferGeometry();
 let mesh =  new THREE.Mesh(); 
 
-// const client = new Client('127.0.0.1', 3333); // para enviar 
-
+/*
 function isMobile() {
   const isAndroid = /Android/i.test(navigator.userAgent);
   const isiOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
   return isAndroid || isiOS;
 }
+*/
 
 let model, ctx, videoWidth, videoHeight, video;
 
 const VIDEO_SIZE = 800;
-const mobile = isMobile();
+// const mobile = isMobile();
 
-const renderPointcloud = mobile === false;
+// const renderPointcloud = mobile === false;
 
 async function setupCamera() {
     video = document.getElementById('video');
@@ -70,8 +57,8 @@ async function setupCamera() {
 	    facingMode: 'user',
 	    // Only setting the video to a specified size in order to accommodate a
 	    // point cloud, so on mobile devices accept the default size.
-	    width: mobile ? undefined : VIDEO_SIZE,
-	    height: mobile ? undefined : VIDEO_SIZE
+	    width: VIDEO_SIZE,
+	    height: VIDEO_SIZE
 	},
     });
     
@@ -94,40 +81,44 @@ async function renderPrediction() {
 
     });
     
-  // ctx.drawImage(
-  //     video, 0, 0, 800, 800, 0, 0, 800, canvas.height); // dibuja el video 
-
     if (predictions.length > 0) {
 	predictions.forEach(prediction => {
-	    keypoints = prediction.scaledMesh; // estos son los puntos que necesito. Parece que es un arreglo 
-
-	    //if (state.triangulateMesh) {
-		//ctx.strokeStyle = GREEN;
-		// ctx.lineWidth = 0.5;
-
+	    keypoints = prediction.scaledMesh; 
 		for (let i = 0; i < TRIANGULATION.length / 3; i++) {
-
 		    points = [
 			TRIANGULATION[i * 3], TRIANGULATION[i * 3 + 1],
 			TRIANGULATION[i * 3 + 2]
-		    ].map(index => keypoints[index]); //parece que los points, ya estan escalados ?
-
-		    //drawPath(ctx, points, true); // aquí se dibuja el mesh triangulado
-		    
+		    ].map(index => keypoints[index]); 
 		}
-	    
 	});
     }
 
-    
-
-       
     requestAnimationFrame(renderPrediction);
     
 };
 
 async function init() {
 
+
+    /*
+    var fontLoader = new THREE.FontLoader();
+    fontLoader.load("fonts/helvetiker_bold.typeface.json",function(tex){ 
+
+	var  textGeo = new THREE.TextGeometry('Test', {
+            size: 10,
+            height: 5,
+            curveSegments: 6,
+            font: tex,
+	});
+	
+	var  color = new THREE.Color();
+	color.setRGB(255, 250, 250);
+	var  textMaterial = new THREE.MeshBasicMaterial({ color: color });
+	var  text = new THREE.Mesh(textGeo , textMaterial);
+	scene.add(text);
+    })
+    */
+    
     await tf.setBackend('webgl'); 
     await setupCamera();
     video.play(); 
@@ -140,21 +131,12 @@ async function init() {
     model = await faceLandmarksDetection.load(
 	faceLandmarksDetection.SupportedPackages.mediapipeFacemesh,
 	{maxFaces: 1}); // número de caras 
+
     renderPrediction();
 
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-
-    //const video = document.getElementById( 'video' );
-    //const texture = new THREE.VideoTexture( video );
-
-    // scene.background = texture; 
-    // scene.background = new THREE.Color( 0xf0f0f0 ); // UPDATED
     
-    renderer = new THREE.WebGLRenderer({alpha:true});
-    renderer.setSize( window.innerWidth, window.innerHeight );
-    document.body.appendChild( renderer.domElement );
-
     let rojo = new THREE.Color( 0xaf43be );
     let verde = new THREE.Color( 0xfd8090 ); 
     let azul = new THREE.Color( 0xc4ffff); 
@@ -202,98 +184,136 @@ async function init() {
 	cubos[i].rotation.z = Math.random() * Math.PI ; 
 
 	escala = Math.random()* 1.5;
-	cubos[i].scale.x = 0.5 + (Math.random()*5); 
-	cubos[i].scale.y = 0.5 + (Math.random()*0.5); 
-	cubos[i].scale.z = 0.5 + (Math.random()*0.5); 
+	//cubos[i].scale.x = 0.5 + (Math.random()*5); 
+	//cubos[i].scale.y = 0.5 + (Math.random()*0.5); 
+	//ubos[i].scale.z = 0.5 + (Math.random()*0.5); 
 		
-	scene.add( cubos[i] );
+	 scene.add( cubos[i] );
     }
-
-
+    
+								      
     camera.position.z = 40;
     camera.rotation.z = Math.PI; 
     
-    // scene.add( cube); 
-
-    //cubos.geometry.computeBoundingBox();
-    //cubos.geometry.verticesNeedUpdate = true;
-    
-    // renderPrediction();
     animate(); 
-    //console.log(points[0]);
-
-    /*
-    osc.open();
     
-    osc.on('open', () => {
-	const message = new OSC.Message('/test', 12.221, 'hello')
-	osc.send(message)
-    })
-    */    
+    renderer = new THREE.WebGLRenderer({alpha:true});
+    renderer.setPixelRatio( window.devicePixelRatio );
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    document.body.appendChild( renderer.domElement );
+    window.addEventListener( 'resize', onWindowResize );
 
-//    var message = new OSC.Message('/test', Math.random());
-//     osc.send(message);
+       
+}
 
-    /*
-    osc.open();
-    
-    setInterval(() => 
-    osc.on('open', () => {
-	const message = new OSC.Message('/keypoints0' )
-	
-	for (let i = 0; i < NUM_KEYPOINTS; i = i + 40){
-	    
-	    message.add( new Float32Array(keypoints) );
-	    
-	    }
-	
-	osc.send(message)
-    }), 100);
-    */ 
+function onWindowResize() {
 
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
     
-    
+    renderer.setSize( window.innerWidth, window.innerHeight );
+
 }
 
 async function oscSend(){
 
     osc.open();
 
+    // Creo que cada mitad tiene 16 menos uno 15 - 30 puntos en total  
+    // 76 - 93 sin 79
+    // 310 - 327 sin 323 
+
     // keypoints en x
     
     osc.on('open', () => {
-
+	
 	setInterval(function(){
-	    const message = new OSC.Message('/kpx');
+	    
+	    const message = new OSC.Message('/kpxBoca');
+
+	    for(let i = 76; i < 93; i++){
+		if(i != 79){
+		    message.add( keypoints[i][0]);
+		}
+		if((i+234) != 323){
+		    message.add( keypoints[i+234][0]); 
+		}
+	    }
+	    
+	    /*
+	    
+	    // para enviar todos los valores 
+
 	    for (let i = 0; i < NUM_KEYPOINTS; i++){
 		message.add( keypoints[i][0] );	
 	    }
+	    */
+	    
 	    osc.send(message);
-	}, 1000);
+	}, 10);
     })
-
+    
     // keypoints en y 
 
     osc.on('open', () => {
+
 	setInterval(function(){
-	    const message = new OSC.Message('/kpy');
+
+	    const message = new OSC.Message('/kpyBoca');
+
+	    for(let i = 76; i < 93; i++){
+		if(i != 79){
+		    message.add( keypoints[i][1]);
+		}
+		if((i+234) != 323){
+		    message.add( keypoints[i+234][1]); 
+		}
+	    }
+	    
+	    
+	    /*
+
+	    //para enviar todos los valores 
+
 	    for (let i = 0; i < NUM_KEYPOINTS; i++){
 		message.add( keypoints[i][1] );	
 	    }
+
+	    */ 
+	    
 	    osc.send(message);
-	}, 1000);
+	}, 10);
     })
 
     // keypoints en z 
 
     osc.on('open', () => {
+	
 	setInterval(function(){
-	    const message = new OSC.Message('/kpz');
+
+	    const message = new OSC.Message('/kpzBoca');
+
+	    for(let i = 76; i < 93; i++){
+		if(i != 79){
+		    message.add( keypoints[i][2]);
+		}
+		if((i+234) != 323){
+		    message.add( keypoints[i+234][2]); 
+		}
+	    }
+	    
+	    
+	    /*
+
+	    // para enviar todos los valores
+
 	    for (let i = 0; i < NUM_KEYPOINTS; i++){
 		message.add( keypoints[i][2] );
 	    }
+	    */
+	    
 	    osc.send(message);
-	}, 1000);
+	}, 10);
     })
 
     
@@ -329,16 +349,53 @@ async function animate () {
     cube.rotation.x += 0.01;
     cube.rotation.y += 0.01;
     // cube.position.x = keypoints[0][0] * 0.005; 
-
+   
+    
     for(let i = 0; i < NUM_KEYPOINTS; i++){
 	cubos[i].position.x = keypoints[i][0] * 0.05-20; 
 	cubos[i].position.y = keypoints[i][1] * 0.05-20; 
-	cubos[i].position.z = keypoints[i][2] * 0.05;
+	cubos[i].position.z = keypoints[i][2] * 0.05 ;
 	// cubos[i].rotation.z = Math.PI / 2;
-	cubos[i].rotation.x += 0.05; 
+	// cubos[i].rotation.x += 0.03; 
     }
+
+    // mensajes de la boca
+
+    /*
+    
+    for(let i = 76; i < 93; i++){ 
+	cubos[i].scale.z = 4;
+	cubos[i].scale.y = 4; 
+	cubos[i].position.z = keypoints[i][2] * 0.05 + 10; 
+    }
+
+    for(let i = 310; i < 327; i++){
+	cubos[i].scale.z = 4;
+	cubos[i].scale.y = 4; 
+	cubos[i].position.z = keypoints[i][2] * 0.05 + 10; 
+    }
+
+    // mensajes que no son de la boca :v
+
+    let num = 79;
+    
+    cubos[num].scale.z = 1;
+    cubos[num].scale.y = 1;
+   
+    cubos[num].position.z = keypoints[num][2] * 0.05 ; 
+
+    let num2 = 323;
+
+    
+    cubos[num2].scale.z = 1;
+    cubos[num2].scale.y = 1;
+   
+    cubos[num2].position.z = keypoints[num2][2] * 0.05 ; 
+
+    */
     
     renderer.render( scene, camera );
+    
 };
 
 init();

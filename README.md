@@ -12,17 +12,17 @@ La obra toma en cuenta la transformación de flujos de audio y video y se retroa
 
 ## Ejecución 
 
-JS [Three.js + TS.js]: 
-
 `cd face-landmarks-detection/anti`
+
+Para activar la comunicación OSC:
+
+`node bridge.js`
+
+JS [Three.js + TS.js]: 
 
 `yarn`
 
 `yarn watch` 
-
-Para activar la comunicación OSC
-
-`node bridge.js`
 
 ## Ruteo de video
 
@@ -61,6 +61,7 @@ Algunas ideas-reflexiones relacionadas con este proyecto se encuentran en:
 
 ## Recursos
 
+- https://doc.sccode.org/Guides/FFT-Overview.html
 - http://www.whole-play.com/post/chuck-browser-communication-with-osc/
 - https://github.com/adzialocha/osc-js
 - https://github.com/MylesBorins/node-osc
