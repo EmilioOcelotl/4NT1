@@ -12,11 +12,10 @@
 - [x] Prueba local con SuperCollider > Trasladar coordenadas como algún tipo de mensaje OSC.
 - [x] Escribir Node app (puente entre UDP y clientes de WebSocket
 - [x] Enviar audio en modo dummy con supercollider
-- [ ] Rolas semiabiertas 
+- [ ] Composición sonora y visual semi-abierta 
 - [ ] Probar la granulación de Tone.js
-- [ ] Probar pvcalc y composición con data espectral 
-- [ ] Imprimir el indice de cada keypoint
-- [ ] Actualizar parcel para que funcionen las fuentes 
+- [x] Probar pvcalc y composición con data espectral 
+- [x] Resolver el dibujo de fuentes 
 
 ## Actividades realizadas
 
@@ -47,4 +46,6 @@
 - Keypoints y su comportamiento es el punto de partida, composición conducida por datos.
 - Si no es posible utilizar pvcalc no tiene caso usar sc para generar audio, mejor usar tone.js
 - facelandmark detection primero dibuja una mitad de la cara y luego la otra mitad. 234 es la mitad de la cara
-- Sonificar el comportamiento de los puntos de la boca, sintesis y rango vocal para resintetizar con FFT y la entrada del micrófono. 
+- Sonificar el comportamiento de los puntos de la boca, sintesis y rango vocal para resintetizar con FFT y la entrada del micrófono.
+- Los mismos datos como una fuente para la ofuscación.
+- Descubrimiento: no hay eje z, entonces que pasa con esa info? Tal vez hay que ajustarla 

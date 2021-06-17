@@ -1,6 +1,4 @@
 
-// Librerías 
-
 import * as faceLandmarksDetection from '@tensorflow-models/face-landmarks-detection'
 import * as tf from '@tensorflow/tfjs-core';
 import '@tensorflow/tfjs-backend-webgl'; 
@@ -20,10 +18,9 @@ let geometryC, materialC;
 let cubos = [];
 let grupo; 
 let font; 
+let text = new THREE.Mesh(); 
 
 const NUM_KEYPOINTS = 468; // 468
-
-
 
 let points = [];
 let normals = [];
@@ -32,14 +29,8 @@ let pointcloud;
 
 let geometry = new THREE.BufferGeometry();
 let mesh =  new THREE.Mesh(); 
-
-/*
-function isMobile() {
-  const isAndroid = /Android/i.test(navigator.userAgent);
-  const isiOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-  return isAndroid || isiOS;
-}
-*/
+let degree;
+let xMid; 
 
 let model, ctx, videoWidth, videoHeight, video;
 
@@ -93,31 +84,30 @@ async function renderPrediction() {
 	});
     }
 
-    requestAnimationFrame(renderPrediction);
+    if (predictions.length > 0) {
+	const { annotations } = predictions[0];
+
+	const [topX, topY] = annotations['midwayBetweenEyes'][0];
+
+	const [rightX, rightY] = annotations['rightCheek'][0];
+	const [leftX, leftY] = annotations['leftCheek'][0];
+	const bottomX = (rightX + leftX) / 2;
+	const bottomY = (rightY + leftY) / 2;
+
+	degree = Math.atan((topY - bottomY) / (topX - bottomX));
+
+	// console.log(degree);
+
+    }
+	
+	requestAnimationFrame(renderPrediction);
     
 };
 
 async function init() {
 
-
-    /*
-    var fontLoader = new THREE.FontLoader();
-    fontLoader.load("fonts/helvetiker_bold.typeface.json",function(tex){ 
-
-	var  textGeo = new THREE.TextGeometry('Test', {
-            size: 10,
-            height: 5,
-            curveSegments: 6,
-            font: tex,
-	});
-	
-	var  color = new THREE.Color();
-	color.setRGB(255, 250, 250);
-	var  textMaterial = new THREE.MeshBasicMaterial({ color: color });
-	var  text = new THREE.Mesh(textGeo , textMaterial);
-	scene.add(text);
-    })
-    */
+    // falta que init inicie otra cosa que luego inicie render y animate
+    // animate podría estarr en render 
     
     await tf.setBackend('webgl'); 
     await setupCamera();
@@ -132,7 +122,9 @@ async function init() {
 	faceLandmarksDetection.SupportedPackages.mediapipeFacemesh,
 	{maxFaces: 1}); // número de caras 
 
-    renderPrediction();
+    // renderPrediction();
+
+    // detonar(); 
 
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
@@ -167,7 +159,8 @@ async function init() {
 	// map: texture, 
 	// refractionRatio: 0.75
 	roughness: 0.1,
-	metalness: 0.9
+	metalness: 0.9,
+	side: THREE.DoubleSide
     } );
   
     cube = new THREE.Mesh( geometryC, materialC );
@@ -182,20 +175,51 @@ async function init() {
 	cubos[i].rotation.x = Math.random() * Math.PI ;
 	cubos[i].rotation.y = Math.random() * Math.PI ; 
 	cubos[i].rotation.z = Math.random() * Math.PI ; 
-
-	escala = Math.random()* 1.5;
-	//cubos[i].scale.x = 0.5 + (Math.random()*5); 
-	//cubos[i].scale.y = 0.5 + (Math.random()*0.5); 
-	//ubos[i].scale.z = 0.5 + (Math.random()*0.5); 
-		
-	 scene.add( cubos[i] );
+	escala = Math.random()* 1.5;	
+	scene.add( cubos[i] );
     }
     
 								      
     camera.position.z = 40;
     camera.rotation.z = Math.PI; 
+    	
+
+    var fontLoader = new THREE.FontLoader();
+
+    fontLoader.load("https://raw.githubusercontent.com/mrdoob/three.js/master/examples/fonts/helvetiker_regular.typeface.json", function(font ){ 
+
+	
+	let mFont  = new THREE.MeshStandardMaterial( {
+	    color: 0xffffff,
+	    // msap: texture, 
+	    // refractionRatio: 0.75
+	    roughness: 0.3,
+	    metalness: 0.9,
+
+	side: THREE.DoubleSide
+	
+    } );
+
+	const message = "4nti";
+	const shapes = font.generateShapes( message, 6 );
+
+	const geometry = new THREE.ShapeGeometry( shapes );
+
+	geometry.computeBoundingBox();
+
+	xMid = - 0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
+
+	geometry.translate( xMid, 0, 0 );
+
+	// make shape ( N.B. edge view not visible )
+	
+	text = new THREE.Mesh( geometry, mFont );
+	// text.position.z =  1;
+	text.rotation.z = Math.PI;	
+	scene.add( text );
+
+    })
     
-    animate(); 
     
     renderer = new THREE.WebGLRenderer({alpha:true});
     renderer.setPixelRatio( window.devicePixelRatio );
@@ -203,14 +227,15 @@ async function init() {
     document.body.appendChild( renderer.domElement );
     window.addEventListener( 'resize', onWindowResize );
 
-       
+    detonar(); 
+    // await animate(); 
+      
 }
 
 function onWindowResize() {
 
     camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    
+    camera.updateProjectionMatrix();    
     renderer.setSize( window.innerWidth, window.innerHeight );
 
 }
@@ -226,11 +251,8 @@ async function oscSend(){
     // keypoints en x
     
     osc.on('open', () => {
-	
 	setInterval(function(){
-	    
 	    const message = new OSC.Message('/kpxBoca');
-
 	    for(let i = 76; i < 93; i++){
 		if(i != 79){
 		    message.add( keypoints[i][0]);
@@ -239,28 +261,15 @@ async function oscSend(){
 		    message.add( keypoints[i+234][0]); 
 		}
 	    }
-	    
-	    /*
-	    
-	    // para enviar todos los valores 
-
-	    for (let i = 0; i < NUM_KEYPOINTS; i++){
-		message.add( keypoints[i][0] );	
-	    }
-	    */
-	    
 	    osc.send(message);
-	}, 10);
+	}, 100);
     })
     
     // keypoints en y 
 
     osc.on('open', () => {
-
 	setInterval(function(){
-
 	    const message = new OSC.Message('/kpyBoca');
-
 	    for(let i = 76; i < 93; i++){
 		if(i != 79){
 		    message.add( keypoints[i][1]);
@@ -269,30 +278,15 @@ async function oscSend(){
 		    message.add( keypoints[i+234][1]); 
 		}
 	    }
-	    
-	    
-	    /*
-
-	    //para enviar todos los valores 
-
-	    for (let i = 0; i < NUM_KEYPOINTS; i++){
-		message.add( keypoints[i][1] );	
-	    }
-
-	    */ 
-	    
 	    osc.send(message);
-	}, 10);
+	}, 100);
     })
 
     // keypoints en z 
 
     osc.on('open', () => {
-	
 	setInterval(function(){
-
 	    const message = new OSC.Message('/kpzBoca');
-
 	    for(let i = 76; i < 93; i++){
 		if(i != 79){
 		    message.add( keypoints[i][2]);
@@ -301,19 +295,8 @@ async function oscSend(){
 		    message.add( keypoints[i+234][2]); 
 		}
 	    }
-	    
-	    
-	    /*
-
-	    // para enviar todos los valores
-
-	    for (let i = 0; i < NUM_KEYPOINTS; i++){
-		message.add( keypoints[i][2] );
-	    }
-	    */
-	    
 	    osc.send(message);
-	}, 10);
+	}, 100);
     })
 
     
@@ -349,59 +332,42 @@ async function animate () {
     cube.rotation.x += 0.01;
     cube.rotation.y += 0.01;
     // cube.position.x = keypoints[0][0] * 0.005; 
-   
+
+    text.position.x = keypoints[0][0]* 0.05;
+    text.position.y = keypoints[0][1]* 0.05 -35;
+    text.position.z = keypoints[0][2] * 0.1;
+
+    if( degree < 0 ){
+	degree = degree - Math.PI ;
+    }
     
+    text.rotation.y = degree * 2 + Math.PI   ;
+
+    // console.log( degree ); 
+			      
     for(let i = 0; i < NUM_KEYPOINTS; i++){
 	cubos[i].position.x = keypoints[i][0] * 0.05-20; 
 	cubos[i].position.y = keypoints[i][1] * 0.05-20; 
-	cubos[i].position.z = keypoints[i][2] * 0.05 ;
+	cubos[i].position.z = keypoints[i][2] * 0.05;
 	// cubos[i].rotation.z = Math.PI / 2;
 	// cubos[i].rotation.x += 0.03; 
     }
 
-    // mensajes de la boca
-
-    /*
-    
-    for(let i = 76; i < 93; i++){ 
-	cubos[i].scale.z = 4;
-	cubos[i].scale.y = 4; 
-	cubos[i].position.z = keypoints[i][2] * 0.05 + 10; 
-    }
-
-    for(let i = 310; i < 327; i++){
-	cubos[i].scale.z = 4;
-	cubos[i].scale.y = 4; 
-	cubos[i].position.z = keypoints[i][2] * 0.05 + 10; 
-    }
-
-    // mensajes que no son de la boca :v
-
-    let num = 79;
-    
-    cubos[num].scale.z = 1;
-    cubos[num].scale.y = 1;
-   
-    cubos[num].position.z = keypoints[num][2] * 0.05 ; 
-
-    let num2 = 323;
-
-    
-    cubos[num2].scale.z = 1;
-    cubos[num2].scale.y = 1;
-   
-    cubos[num2].position.z = keypoints[num2][2] * 0.05 ; 
-
-    */
-    
     renderer.render( scene, camera );
     
 };
 
-init();
-oscSend(); 
+async function detonar(){
 
-// Pasar lo siguiente a un objeto que se posicione exactamente al centro y que tenga 800 x 800
+    await renderPrediction(); 
+    // render preduction y esperar
+    animate();
+    oscSend(); 
+    // oscSend 
+    
+}
+
+init();
 
 video = document.getElementById( 'video' );
 const texture = new THREE.VideoTexture( video );

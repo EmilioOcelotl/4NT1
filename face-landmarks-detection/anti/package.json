@@ -19,10 +19,11 @@
     "osc-js": "^2.1.2",
     "stats.js": "^0.17.0",
     "three": "^0.129.0",
+    "tone": "^14.7.77",
     "yarn": "^1.22.10"
   },
   "scripts": {
-    "watch": "cross-env NODE_ENV=development parcel index.html --no-hmr --target browser",
+    "watch": "cross-env NODE_ENV=development parcel index.html --no-hmr",
     "build": "cross-env NODE_ENV=production parcel build index.html --target browser --public-url ./",
     "lint": "eslint .",
     "link-local": "yalc link @tensorflow-models/face-landmarks-detection"
@@ -41,7 +42,6 @@
     "eslint": "^7.18.0",
     "eslint-config-google": "^0.14.0",
     "parcel": "^2.0.0-beta.3.1",
-    "parcel-bundler": "^1.12.4",
     "yalc": "^1.0.0-pre.49"
   },
   "eslintConfig": {
