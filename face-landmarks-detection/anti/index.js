@@ -7,6 +7,8 @@ import * as THREE from 'three';
 
 import {TRIANGULATION} from './triangulation'; // Qué es esto 
 
+import * as Tone from 'tone'; 
+
 const OSC = require('osc-js'); // pal osc 
 const osc = new OSC(); 
 // const osc = new OSC({ plugin: new OSC.WebsocketServerPlugin() })
@@ -34,10 +36,24 @@ let xMid;
 
 let model, ctx, videoWidth, videoHeight, video;
 
-const VIDEO_SIZE = 800;
-// const mobile = isMobile();
-
+const VIDEO_SIZE = 500;
 // const renderPointcloud = mobile === false;
+// const synth = new Tone.Synth().toDestination();
+
+
+const startButton = document.getElementById( 'startButton' );
+startButton.addEventListener( 'click', init  );
+
+/*
+function isMobile() {
+  const isAndroid = /Android/i.test(navigator.userAgent);
+  const isiOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+  return isAndroid || isiOS;
+}
+
+const mobile = isMobile();
+
+*/
 
 async function setupCamera() {
     video = document.getElementById('video');
@@ -48,9 +64,9 @@ async function setupCamera() {
 	    facingMode: 'user',
 	    // Only setting the video to a specified size in order to accommodate a
 	    // point cloud, so on mobile devices accept the default size.
-	    width: VIDEO_SIZE,
-	    height: VIDEO_SIZE
-	},
+	  
+      width : VIDEO_SIZE,
+      height: VIDEO_SIZE	},
     });
     
     video.srcObject = stream;
@@ -96,16 +112,27 @@ async function renderPrediction() {
 
 	degree = Math.atan((topY - bottomY) / (topX - bottomX));
 
-	// console.log(degree);
-
     }
-	
-	requestAnimationFrame(renderPrediction);
+    
+    requestAnimationFrame(renderPrediction);
     
 };
 
 async function init() {
 
+    const overlay = document.getElementById( 'overlay' );
+    overlay.remove();
+
+    /*
+    const blocker = document.getElementById( 'blocker' );
+    const instructions = document.getElementById( 'instructions' );
+    instructions.remove(); 
+    blocker.remove();
+    */
+    
+    await Tone.start();
+    console.log('tamos redy');
+    
     // falta que init inicie otra cosa que luego inicie render y animate
     // animate podría estarr en render 
     
@@ -154,46 +181,46 @@ async function init() {
     
     geometryC = new THREE.SphereGeometry( 0.75, 2, 2 );
 
+   
     let materialC = new THREE.MeshStandardMaterial( {
 	color: 0xffffff,
 	// map: texture, 
 	// refractionRatio: 0.75
 	roughness: 0.1,
 	metalness: 0.9,
+	//opacity: 0.25,
+	// transparent: true,
 	side: THREE.DoubleSide
     } );
-  
+    
     cube = new THREE.Mesh( geometryC, materialC );
     // aqui me quedé ya están los puntos solamente hace falta plotearlos 
 
     grupo = new THREE.Group();
 
-    let escala; 
-
     for(let i = 0; i < NUM_KEYPOINTS; i++){
 	cubos[i] = new THREE.Mesh(geometryC, materialC);
 	cubos[i].rotation.x = Math.random() * Math.PI ;
 	cubos[i].rotation.y = Math.random() * Math.PI ; 
-	cubos[i].rotation.z = Math.random() * Math.PI ; 
-	escala = Math.random()* 1.5;	
+	cubos[i].rotation.z = Math.random() * Math.PI ;
+	cubos[i].scale.x = Math.random() * 4.0;
+	cubos[i].scale.y = Math.random() * 2.0; 
+	cubos[i].scale.z = Math.random() * 2.0; 
 	scene.add( cubos[i] );
     }
-    
-								      
+    								      
     camera.position.z = 40;
     camera.rotation.z = Math.PI; 
     	
-
     var fontLoader = new THREE.FontLoader();
 
     fontLoader.load("https://raw.githubusercontent.com/mrdoob/three.js/master/examples/fonts/helvetiker_regular.typeface.json", function(font ){ 
 
-	
 	let mFont  = new THREE.MeshStandardMaterial( {
 	    color: 0xffffff,
 	    // msap: texture, 
 	    // refractionRatio: 0.75
-	    roughness: 0.3,
+	    roughness: 0.4,
 	    metalness: 0.9,
 
 	side: THREE.DoubleSide
@@ -201,25 +228,39 @@ async function init() {
     } );
 
 	const message = "4nti";
-	const shapes = font.generateShapes( message, 6 );
+	//const shapes = font.generateShapes( message, 6 );
+	
+	//const geometry = new THREE.ShapeGeometry( shapes );
 
-	const geometry = new THREE.ShapeGeometry( shapes );
+	
+	textGeo = new THREE.TextGeometry( message, {
 
-	geometry.computeBoundingBox();
+	    font: font,
+	    
+	    size: 10,
+	    height: 1,
+	    curveSegments: 4,
+	    
+	    bevelThickness: 1,
+	    bevelSize: 0.2,
+	    bevelEnabled: true
+	    
+	} );
 
-	xMid = - 0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
+	textGeo.computeBoundingBox();
 
-	geometry.translate( xMid, 0, 0 );
+	xMid = - 0.5 * ( textGeo.boundingBox.max.x - textGeo.boundingBox.min.x );
+
+	textGeo.translate( xMid, 0, 0 );
 
 	// make shape ( N.B. edge view not visible )
 	
-	text = new THREE.Mesh( geometry, mFont );
+	text = new THREE.Mesh( textGeo, mFont );
 	// text.position.z =  1;
 	text.rotation.z = Math.PI;	
 	scene.add( text );
 
     })
-    
     
     renderer = new THREE.WebGLRenderer({alpha:true});
     renderer.setPixelRatio( window.devicePixelRatio );
@@ -228,17 +269,10 @@ async function init() {
     window.addEventListener( 'resize', onWindowResize );
 
     detonar(); 
-    // await animate(); 
-      
+    // await animate();
+  
 }
 
-function onWindowResize() {
-
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();    
-    renderer.setSize( window.innerWidth, window.innerHeight );
-
-}
 
 async function oscSend(){
 
@@ -262,7 +296,10 @@ async function oscSend(){
 		}
 	    }
 	    osc.send(message);
-	}, 100);
+
+	    // synth.triggerAttackRelease("C4", "8n"); // para enviar una señal cada cierto tiempo
+	    
+	}, 1000);
     })
     
     // keypoints en y 
@@ -349,13 +386,22 @@ async function animate () {
 	cubos[i].position.x = keypoints[i][0] * 0.05-20; 
 	cubos[i].position.y = keypoints[i][1] * 0.05-20; 
 	cubos[i].position.z = keypoints[i][2] * 0.05;
-	// cubos[i].rotation.z = Math.PI / 2;
-	// cubos[i].rotation.x += 0.03; 
+	cubos[i].rotation.z = Math.PI / 2;
+	cubos[i].rotation.x += 0.01; 
     }
 
     renderer.render( scene, camera );
     
 };
+
+function onWindowResize() {
+
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();    
+    renderer.setSize( window.innerWidth, window.innerHeight );
+
+}
+
 
 async function detonar(){
 
@@ -364,13 +410,15 @@ async function detonar(){
     animate();
     oscSend(); 
     // oscSend 
-    
+
 }
 
-init();
 
 video = document.getElementById( 'video' );
 const texture = new THREE.VideoTexture( video );
+
+// init();
+
 
 //texture.wrapS = THREE.RepeatWrapping;
 //texture.repeat.x = - 1;

@@ -1,31 +1,105 @@
-<!-- Copyright 2020 Google LLC. All Rights Reserved.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-==============================================================================-->
-
+<!DOCTYPE html>
+<html lang="en">
+  
 <head>
+
+  <title>4NT1</title>
+  <meta charset="utf-8">
+
   <!-- Load three.js -->
-<script src="https://cdn.jsdelivr.net/npm/three@0.106.2/build/three.min.js"></script>
+<!--<script src="https://cdn.jsdelivr.net/npm/three@0.106.2/build/three.min.js"></script>-->
 <!-- Load scatter-gl.js -->
 <!--<script src="https://cdn.jsdelivr.net/npm/scatter-gl@0.0.1/lib/scatter-gl.min.js"></script>-->
 <style>
 
   body {
+      color: #fff;
       margin: 0;
       background-color: black;
-      overflow-y: hidden;    
+      overflow-y: hidden;
+      	font-family: Monospace;
+	
   }
 
+  #info {
+	position: absolute;
+	top: 40%;
+	width: 100%;
+	padding: 0px;
+	box-sizing: border-box;
+	text-align: center;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	pointer-events: none;
+	z-index: 2; /* TODO Solve this in HTML */
+	font-size: 14px;
+  }
+  
+  #blocker {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+  }
+
+  #instructions {
+      width: 100%;
+      height: 100%;
+      
+      display: -webkit-box;
+      display: -moz-box;
+      display: box;
+      
+      -webkit-box-orient: horizontal;
+      -moz-box-orient: horizontal;
+      box-orient: horizontal;
+      
+      -webkit-box-pack: center;
+      -moz-box-pack: center;
+      box-pack: center;
+
+      -webkit-box-align: center;
+      -moz-box-align: center;
+      box-align: center;
+      
+      color: #ffffff;
+      text-align: center;
+      font-size: 16px;
+      line-height: 24px;
+      
+      cursor: pointer;
+  }
+  
+  #overlay {
+      position: absolute;
+      font-size: 14px;
+      z-index: 2;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      background: rgba(0,0,0,0);
+      font-family: Monospace; 
+  }
+  
+  #overlay button {
+      background: transparent;
+      border: 0;
+      border: 1px solid rgb(255, 255, 255);
+      border-radius: 4px;
+      color: #ffffff;
+      padding: 12px 18px;
+      text-transform: uppercase;
+      cursor: pointer;
+  }
+  
+  
 </style>
 </head>
 <body>
@@ -43,26 +117,32 @@ limitations under the License.
 					height: auto;
 					">
   </video>
-  
-  <script src="index.js"></script>
 
   <!--
-<h1>4NT1</h1>
-  <div id="main">
-    <div class="container">
-      <div class="canvas-wrapper">
-        <canvas id="output"></canvas>
-        <video id="video" playsinline style="
-          -webkit-transform: scaleX(-1);
-          transform: scaleX(-1);
-          visibility: hidden;
-          width: auto;
-          height: auto;
-          ">
-        </video>
-      </div>
-      <div id="scatter-gl-container"></div>
+  <div id="blocker">    
+    <div id="instructions">
+      <span style="font-size:14px">4NT1</span>
+      
     </div>
-  </div>-->
+    
+  </div>
+  -->
+
+  <div id="info">
+    ANTI </br>
+    Realización de usuarixs que desdibujan las fronteras de la pasividad política y económica teniendo como epicentro lo sensible</br>
+    
+  </div>
+
+  <div id="overlay">
+    <button id="startButton">Iniciar</button>
+  </div>
+
+
+
+  
+  
+  <script src="index.js"></script>
+		  
 </body>
 <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.6/dat.gui.min.js"></script>-->
