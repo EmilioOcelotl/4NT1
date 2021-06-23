@@ -1,0 +1,16 @@
+
+* 4NT1
+
+Me imagino que el sitio puede ser una colección de estudios para la ofuscación de la información facial.
+La secuencia de las escenas se puede definir aleatoriamente al inicio de la interacción con el usuario.
+Para el segundo informe podría enviar una secuencia de 3 escenas como muestra
+El recorrido de las escenas podría tener dos modalidades: interactiva (modo online) fija (modo exhibición).
+Entonces podríamos pensar en dos pistas de secuencias controladas por arreglos y detonadores (setInterval). 
+
+* Escenas / estudios
+
+** Escena 1
+
+** Escena 2
+
+** Escena 3 

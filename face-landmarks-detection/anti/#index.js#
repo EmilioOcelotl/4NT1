@@ -393,7 +393,6 @@ async function sonido(){
     });
 
     // secuencias 
-
     
     setInterval(function(){
 	let al = Math.floor(Math.random()*5);
