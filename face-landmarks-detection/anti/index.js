@@ -25,12 +25,17 @@ let font;
 let text = new THREE.Mesh(); 
 let torus = []; 
 let matArray = []; 
+let prueba = 0; 
+
+const panner  = new Tone.Panner3D({
+	panningModel: "HRTF",
+    }).toDestination(); 
 
 const NUM_KEYPOINTS = 468; // 468
 
 let points = [];
 let normals = [];
-let keypoints = new Float32Array;  
+let keypoints = [];  
 let pointcloud; 
 
 let geometry = new THREE.BufferGeometry();
@@ -50,6 +55,7 @@ startButton.addEventListener( 'click', init  );
 let colores = []; 
 const stats = new Stats();
 
+let predictions = []; 
 let container; 
 
 // container.appendChild( stats.dom );
@@ -87,12 +93,11 @@ async function setupCamera() {
 
 async function renderPrediction() {
 
-    const predictions = await model.estimateFaces({
+    predictions = await model.estimateFaces({
 	input: video,
 	returnTensors: false,
 	flipHorizontal: false,
 	predictIrises: false
-
     });
     
     if (predictions.length > 0) {
@@ -108,7 +113,7 @@ async function renderPrediction() {
     }
 
     if (predictions.length > 0) {
-	const { annotations } = predictions[0];
+	const { annotations } = predictions[0]; // solo agarra una prediccion 
 	const [topX, topY] = annotations['midwayBetweenEyes'][0];
 	const [rightX, rightY] = annotations['rightCheek'][0];
 	const [leftX, leftY] = annotations['leftCheek'][0];
@@ -139,8 +144,6 @@ async function init() {
     await setupCamera();
     video.play();
 
-    stats.showPanel(0);  // 0: fps, 1: ms, 2: mb, 3+: custom
-
     videoWidth = video.videoWidth;
     videoHeight = video.videoHeight;
     video.width = videoWidth;
@@ -148,7 +151,7 @@ async function init() {
 
     model = await faceLandmarksDetection.load(
 	faceLandmarksDetection.SupportedPackages.mediapipeFacemesh,
-	{maxFaces: 3}); // número de caras, esto tal vez tiene que reiniciarse para funcionar 
+	{maxFaces: 2});
     
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
@@ -164,8 +167,6 @@ async function init() {
 	luces[i] = new THREE.PointLight(colores[i], 0.5);
 	scene.add( luces[i] ); 
     }
-    
-    // const geometryVideo = new THREE.CylinderGeometry( 25, 25, 0.2, 128, true );
 
     const geometryVideo = new THREE.PlaneGeometry( 50, 50 );
     const materialVideo = new THREE.MeshBasicMaterial( {color: 0xffffff, map:texture, side: THREE.DoubleSide} );
@@ -182,21 +183,8 @@ async function init() {
     for(var i = 0; i < 4; i++){
 	matArray[i] =  new THREE.MeshPhongMaterial( { color: 0x000000, specular: colores[i%2], emissive: colores[i], shininess: 80, opacity: 0.9, transparent: true } );
     }
-    
-        
-    // let materialC = new THREE.MeshPhongMaterial( { color: 0xdddddd, specular: 0x009900, shininess: 30, flatShading: true } )
-
-   /* 
-    let materialC = new THREE.MeshStandardMaterial( {
-	color: 0xffffff,
-	// map: texture, 
-	// refractionRatio: 0.75
-	roughness: 0,
-	metalness: 1,
-	side: THREE.DoubleSide
-	} );*/
-   
-    let materialC  = new THREE.MeshStandardMaterial( {
+       
+    materialC  = new THREE.MeshStandardMaterial( {
 	roughness: 0.6,
 	color: 0xffffff,
 	metalness: 0.1,
@@ -204,32 +192,7 @@ async function init() {
 	map: texture
     } );
    
-    
-  /*  
-    const materialC = new THREE.ShaderMaterial( {
-	uniforms: uniforms,
-	vertexShader: shader.vertexShader,
-	fragmentShader: shader.fragmentShader
-    } );
-;
-  */
-    
     grupo = new THREE.Group();
-
-    for(let i = 0; i < NUM_KEYPOINTS; i++){
-	const al = Math.random() * 4 + 1; 
-	// const geometryC = new THREE.CylinderGeometry( al, al, 0.3, 128, true, 0 );
-	//const geometry = new THREE.TorusGeometry( , 3, 16, 100 );
-
-	cubos[i] = new THREE.Mesh(geometryC, materialC);
-	cubos[i].rotation.x = Math.random() * Math.PI ;
-	cubos[i].rotation.y = Math.random() * Math.PI ; 
-	cubos[i].rotation.z = Math.random() * Math.PI ;
-	cubos[i].scale.x = Math.random() * 2+1;
-	cubos[i].scale.y = Math.random() * 1.5+1; 
-	//cubos[i].scale.z = Math.random() * 1.0; 
-	scene.add( cubos[i] );
-    }
     								      
     camera.position.z = 40;
     camera.rotation.z = Math.PI; 
@@ -284,10 +247,7 @@ async function init() {
     window.addEventListener( 'resize', onWindowResize );
 
     detonar(); 
-    // await animate();
-
-    container.appendChild( stats.dom );
-
+    container.appendChild( stats.dom ); 
     
 }
 
@@ -297,17 +257,35 @@ async function animate () {
 
     requestAnimationFrame( animate );
 
+    if (prueba != predictions.length){
+	dEsferas();
+    }
+
+    prueba = predictions.length; 
+
+    let vueltas = 0; 
+    
+    if (predictions.length > 0) {
+	predictions.forEach(prediction => {	    
+	    for(let i = 0; i < NUM_KEYPOINTS; i++){
+		cubos[vueltas].position.x = keypoints[i][0] * 0.05-20; 
+		cubos[vueltas].position.y = keypoints[i][1] * 0.05-20; 
+		cubos[vueltas].position.z = keypoints[i][2] * 0.05;
+		cubos[vueltas].rotation.z += 0.005;
+		cubos[vueltas].rotation.y += 0.0111;
+		// cubos[i].rotation.x += (degree*2 ) * Math.sin( time2 * 0.2 ) * 0.001 + (i * 0.0002); // aqui le quite lo de la transformación de degree 
+		// cubos[i].rotation.y += 0.002;
+		vueltas++; 
+	    }
+	})
+    }
+
     for(var i = 0; i < 4; i++){	
 	luces[i].position.x = Math.sin( time2 * 0.3 + (0.5 * i)) * 2400;
 	luces[i].position.y = Math.cos( time2 * 0.4 + (0.5*i)) * 2500-800;
 	luces[i].position.z = Math.sin( time2 * 0.2 + (0.5 * i)) * 2400-200 + 4000;
     }
     
-    cube.rotation.x += 0.04;
-    cube.rotation.y += 0.023;
-
-    // cube.position.x = keypoints[0][0] * 0.005; 
-
     text.position.x = keypoints[0][0]* 0.05;
     text.position.y = keypoints[0][1]* 0.05 -35;
     text.position.z = keypoints[0][2] * 0.1;
@@ -315,38 +293,60 @@ async function animate () {
     cube.position.x = keypoints[0][0]* 0.05- 40;
     cube.position.y = keypoints[0][1]* 0.05 -10;
     cube.position.z = keypoints[0][2] * 0.1;
-    
-    //torus.rotation.x += 0.01;
-    // torus.rotation.y += 0.02;
-  			      
-    for(let i = 0; i < NUM_KEYPOINTS; i++){
-	cubos[i].position.x = keypoints[i][0] * 0.05-20; 
-	cubos[i].position.y = keypoints[i][1] * 0.05-20; 
-	cubos[i].position.z = keypoints[i][2] * 0.05;
-	cubos[i].rotation.z += 0.005;
-	cubos[i].rotation.y += 0.0111;
-	// cubos[i].rotation.x += (degree*2 ) * Math.sin( time2 * 0.2 ) * 0.001 + (i * 0.0002); // aqui le quite lo de la transformación de degree 
-	// cubos[i].rotation.y += 0.002;
-    }
+    cube.rotation.x += 0.04;
+    cube.rotation.y += 0.023;
 
+    /*
     if( degree < 0 ){
 	degree = degree - Math.PI ;
     }
+    */ 
     
-    text.rotation.y = degree * 2 + Math.PI   ;
-
+    text.rotation.y = degree * 2 + (Math.PI )   ;
     for(var i = 0; i < 5; i++){
 	torus[i].rotation.y += 0.001 + (i * 0.0005); 
-	torus[i].rotation.x += (degree * 2 + Math.PI) * (i+1) * 0.001; 
+	torus[i].rotation.x += (degree ) * (i+1) * 0.0075; 
 	torus[i].rotation.z += 0.001 + (i * 0.0006);
     }
-
-    // Si no hay rostros no dibujes nada, si hay rostros dibuja la cantidad de rostros que haya 
-
+   
     stats.update(); 
     renderer.render( scene, camera );
+
+    // console.log( degree );
+
+    panner.positionX.value = degree  ; 
     
-};
+}
+
+
+function dEsferas() {
+    
+    let vueltas = 0; 
+    
+    for(let i = 0; i < cubos.length; i++){
+	cubos[i].material.dispose();
+	cubos[i].geometry.dispose(); 
+	scene.remove(cubos[i]); 
+    }
+    
+    if (predictions.length > 0) {
+	predictions.forEach(prediction => {	    
+	    for(let i = 0; i < NUM_KEYPOINTS; i++){		
+		const al = Math.random() * 4 + 1; 
+		cubos[vueltas] = new THREE.Mesh(geometryC, materialC);
+		cubos[vueltas].rotation.x = Math.random() * Math.PI ;
+		cubos[vueltas].rotation.y = Math.random() * Math.PI ; 
+		cubos[vueltas].rotation.z = Math.random() * Math.PI ;
+		cubos[vueltas].scale.x = Math.random() * 2+1;
+		cubos[vueltas].scale.y = Math.random() * 1.5+1; 
+		//cubos[i].scale.z = Math.random() * 1.0; 
+		scene.add( cubos[vueltas] );
+		vueltas++; 
+	    }
+	})
+    }
+
+}
 
 async function sonido(){
 
@@ -372,7 +372,9 @@ async function sonido(){
     // Generadores de audio
     
     await Tone.start();
-    const reverb = new Tone.JCReverb(0.5).toDestination();
+
+    
+    const reverb = new Tone.JCReverb(0.5).connect(panner);
     const pitchShift = new Tone.PitchShift().connect(reverb);
     const dist = new Tone.Distortion(0.2).connect(pitchShift);
     const player = new Tone.GrainPlayer({
