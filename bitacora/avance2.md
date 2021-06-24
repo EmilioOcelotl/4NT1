@@ -1,4 +1,3 @@
-
 # Segundo Informe
 
 ## Avances y pendientes
@@ -9,18 +8,18 @@
 - [x] Trasladar pointcloud de scatterGL a threejs
 - [x] Mostrar una máscara que funcione con dos capas: el video y el mesh cubriendo / modificando el rostro 
 - [x] Prueba local con SuperCollider > Trasladar coordenadas como algún tipo de mensaje OSC.
-- [x] Escribir Node app (puente entre UDP y clientes de WebSocket
+- [x] Escribir Node app (puente entre UDP y clientes de WebSocket)
 - [x] Enviar audio en modo dummy con supercollider
 - [x] Probar la granulación de Tone.js
 - [x] Probar pvcalc y composición con data espectral 
 - [x] Resolver el dibujo de fuentes
-- [x] Botón de inicio para iniciar el contexto de audio 
+- [x] Botón de inicio para iniciar el contexto de audio
+- [x] Construir el modelo localmente y carpeta antijs
+- [x] Platicar sobre el futuro
 - [ ] Diseño de interfaz de usuario > Interacción, aspectos visuales y de control ¿GUI?
 - [ ] Separar parte del código 
-- [x] Pruebas con más de un rostro 
-- [ ] Investigar sobre https 
+- [ ] Keypoints dobles  
 - [ ] Activar y probar jetson nano 
-- [ ] Platicar sobre el futuro
 - [ ] Escenas 
 
 ## Actividades realizadas
@@ -32,19 +31,21 @@
 - Espectativa en redes
 - Concierto interconectado
 
-## Posibles problemas
+## Problemas (posibles y que han surgido) 
 
 - Para el modo digital en servidor: ¿Qué pasa si se conecta más de una persona? 
 - Enviar tantos datos vía OSC es problemático.
 - Procesamiento sonoro y visual final
-- Equipo si es que se logra la versión presencial 
+- Equipo para la versión presencial
+- Diseño de interfaz tipo GUI queda pendiente a la confirmación del modo híbrido
 
 ## Pendientes para el informe final
 
-- [ ] Montar todo en un servidor (si la modalidad es digital o a distancia). 
+- [ ] Montar todo en un servidor (y resolver problemas laterales) 
 
 ## Apuntes generales
 
+- El proyecto puede construirse para un modo híbrido que priorice la modalidad online 
 - Concepto de nube de puntos es central para la realización visual y sonora.
 - Necesario enviar nubes de puntos a cualquier otro lado vía OSC. Esto permitiría tener un flujo de puntos para SC pero también para OF
 - Parece que el archivo triangulation ya tiene una estimación ¿podría ser esto la máscara, como mover el eje z'
@@ -66,4 +67,7 @@
 - setInterval como una forma de generar secuenciadores que puedan ajustarse a un tempo global pero que pueden utilizar unidades menores a 10 ms
 - Cuidado con setInterval para cada cierto tiempo generar un clearInterval().
 - Más caras > más elementos visuales y sonoros.
-- Sin audio.- Hasta 52 fps, Con audio sin sets.- Hasta 48 fps, con audio y sets 48 fps  
+- Sin audio.- Hasta 52 fps, Con audio sin sets.- Hasta 48 fps, con audio y sets 48 fps, el demo llega a 22
+- Si pensamos en equivalencias funcionales entonces podríamos concebir el setInterval() como una estructura similar al Demand en SuperCollider. Para el tratamiento de la lectura de arreglos ¿sería posible implementar un equivalente a Dseq, Drand etc para la lectura secuenciada de valores? ¿Es posible todavía extenderlo a la lógica de Pseq? > problemas de doc
+- El sueño: activar lo anterior en modo live coding
+- No está fácil construir el modelo localmente, necesito encontrar soluciones, tal vez el problema está en la actualización de parcel. 
