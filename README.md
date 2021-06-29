@@ -1,12 +1,14 @@
-# Anti
+![portada](https://github.com/EmilioOcelotl/4NT1/blob/main/img/banner.png)
+
+# ANT1
 
 > Donde el ingeniero consigue capturar todo lo que funciona para que todo funcione mejor, para ponerlo al servicio del sistema, el hacker se pregunta “¿cómo funciona?” para encontrarle fallas, pero también para inventarle otros usos, para experimentar. Experimentar significa entonces: vivir lo que implica éticamente tal o cual técnica. (Comité-invisible, 2014, p. 132)
 
-*Anti* busca problematizar las relaciones que existen entre usuarios y plataformas tecnológicas; es un paso hacia la realización de usuarixs que desdibujan las fronteras de la pasividad política y económica teniendo como epicentro lo sensible. El proyecto parte de la composición visual conducida por datos. Aprovecha la investigación y escritura de [tres estudios abiertos](https://github.com/EmilioOcelotl/tres-estudios-abiertos), un proyecto doctoral sobre nuevas prácticas artísticas en el navegador y librerías de síntesis granular para audio y video. 
+*ANT1* busca problematizar las relaciones que existen entre usuarios y plataformas tecnológicas; es un paso hacia la realización de usuarixs que desdibujan las fronteras de la pasividad política y económica teniendo como epicentro lo sensible. El proyecto parte de la composición visual conducida por datos. Aprovecha la investigación y escritura de [tres estudios abiertos](https://github.com/EmilioOcelotl/tres-estudios-abiertos), un proyecto doctoral sobre nuevas prácticas artísticas en el navegador y librerías de síntesis granular para audio y video. 
 
 La obra toma en cuenta la transformación de flujos de audio y video y se retroalimenta con la acción de agentes externos. Con técnicas de aprendizaje automático, detecta gestos faciales que son intepretados como un flujo de datos. El proyecto problematiza este flujo con el uso de tecnologías que implican una responsabilidad de los datos de usuarixs. De esta manera el proyecto pplantea una discusión que parte de la instagramización de la política y la estetización de la resistencia para desembocar en la política de la representación. 
 
-*Anti* es un pedazo de software que puede utilizarse en la vida cotidiana y que desplaza la ofuscación en el uso de tecnologías que funcionan como cajas negras al desarrollo de capas estéticas para la evasión. El proyecto contempla la comparación de dos caminos que permitan plantear una crítica al software como caja negra. Es un primer estudio de reflexión tecno-social. Retoma la idea de modularidad y se adscribe a los estudios del software, esto quiere decir que la obra se complementa con la programación, lectura, escritura y pensamiento con software. 
+*ANT1* es un pedazo de software que puede utilizarse en la vida cotidiana y que desplaza la ofuscación en el uso de tecnologías que funcionan como cajas negras al desarrollo de capas estéticas para la evasión. El proyecto contempla la comparación de dos caminos que permitan plantear una crítica al software como caja negra. Es un primer estudio de reflexión tecno-social. Retoma la idea de modularidad y se adscribe a los estudios del software, esto quiere decir que la obra se complementa con la programación, lectura, escritura y pensamiento con software. 
 
 [Bitácora](https://github.com/EmilioOcelotl/anti/tree/main/bitacora) 
 
@@ -14,15 +16,15 @@ La obra toma en cuenta la transformación de flujos de audio y video y se retroa
 
 `cd face-landmarks-detection/anti`
 
-Para activar la comunicación OSC:
-
-`node bridge.js`
-
 JS [Three.js + TS.js]: 
 
 `yarn`
 
-`yarn watch` 
+`yarn watch`
+
+Es posible activar la comunicación OSC. Para realizar esto es necesario descomentar algunas tripas y escribir: 
+
+`node bridge.js`
 
 ## Ruteo de video
 
@@ -34,7 +36,7 @@ La manipulación de video puede transmitirse como una cámara virtual. Con las s
 
 ### Linux
 
-Se puede usar v4l2loopback y Ffmpeg. Por lo general es posible instalarlo con gestores de paquetes como pacman o apt-get. Es importante tener los headers de linux.
+Se puede usar v4l2loopback y Ffmpeg. Por lo general es posible instalarlos con gestores de paquetes como pacman o apt-get. Es importante tener los headers de linux.
 
 En Arch: linux-headers
 
@@ -61,6 +63,7 @@ Algunas ideas-reflexiones relacionadas con este proyecto se encuentran en:
 
 ## Recursos
 
+- https://tonejs.github.io/
 - https://doc.sccode.org/Guides/FFT-Overview.html
 - http://www.whole-play.com/post/chuck-browser-communication-with-osc/
 - https://github.com/adzialocha/osc-js

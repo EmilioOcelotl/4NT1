@@ -1,12 +1,9 @@
-
 import * as faceLandmarksDetection from '@tensorflow-models/face-landmarks-detection'
 import * as tf from '@tensorflow/tfjs-core';
 import '@tensorflow/tfjs-backend-webgl'; 
 import '@tensorflow/tfjs-backend-cpu';
 import * as THREE from 'three';
-
 import {TRIANGULATION} from './triangulation'; // Qué es esto 
-
 import * as Tone from 'tone';
 import Stats from 'stats.js';
 
@@ -20,6 +17,7 @@ let clight1, clight2, clight3, clight4;
 let scene, camera, renderer, material, cube, geometryPoints; 
 let geometryC, materialC; 
 let cubos = [];
+let cuboGrande = new THREE.Mesh(); 
 let grupo; 
 let font; 
 let text = new THREE.Mesh(); 
@@ -28,28 +26,40 @@ let matArray = [];
 let prueba = 0; 
 let afft = [];
 const analyser = new Tone.Analyser( "fft", 128 ) ;
-   
+
+const pGeometry = new THREE.PlaneGeometry(8, 8, 21, 20);
+const position = pGeometry.attributes.position;
+position.usage = THREE.DynamicDrawUsage;
+
+// let position = []; 
+// const pGeometry = new THREE.BufferGeometry();
+
+let geometryB; 
+
+let  vertices = []; 
+
 const panner  = new Tone.Panner3D({
 	panningModel: "HRTF",
     }).toDestination(); 
 
-const NUM_KEYPOINTS = 468; // 468
+const NUM_KEYPOINTS = 468; 
 
 let points = [];
 let normals = [];
 let keypoints = [];  
-let pointcloud; 
 
 let laterales = []; 
 
 let geometry = new THREE.BufferGeometry();
-let mesh =  new THREE.Mesh(); 
+let mesh =  new THREE.Mesh();
+let meshB = new THREE.Mesh() ; 
 let degree;
 let xMid; 
 
 let model, ctx, videoWidth, videoHeight, video;
 
 const VIDEO_SIZE = 800;
+
 // const renderPointcloud = mobile === false;
 // const synth = new Tone.Synth().toDestination();
 
@@ -61,6 +71,7 @@ const stats = new Stats();
 
 let predictions = []; 
 let container; 
+let planeB;
 
 // container.appendChild( stats.dom );
 
@@ -83,7 +94,7 @@ async function setupCamera() {
 	'video': {
 	    facingMode: 'user',  
       width : 400,
-      height: 400	},
+      height: 400},
     });
     
     video.srcObject = stream;
@@ -107,7 +118,7 @@ async function renderPrediction() {
     });
 
     if (prueba != predictions.length){
-	dEsferas();
+	// dEsferas();
     }
 
     prueba = predictions.length; 
@@ -122,21 +133,49 @@ async function renderPrediction() {
 		points = [
 		    TRIANGULATION[i * 3], TRIANGULATION[i * 3 + 1],
 		    TRIANGULATION[i * 3 + 2]
-		].map(index => keypoints[index]); 
+		].map(index => keypoints[index]);
+
+		// estos points son los que necesito para hacer el mesh?
+		// console.log( points );
+		
 	    }
 
+	    /*
 	    for(let i = 0; i < NUM_KEYPOINTS; i++){
 		//const analisis = THREE.MathUtils.damp(Tone.dbToGain( analyser.getValue()[i%64] )* 200, 10000, 0.0001, 0.001) * 4  ;
 		const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 700; 
-		cubos[vueltas].position.x = keypoints[i][0] * 0.1 - 20 ; 
-		cubos[vueltas].position.y = keypoints[i][1] * 0.1 - 20; 
-		cubos[vueltas].position.z = keypoints[i][2] * 0.05 + analisis;
+		cubos[vueltas].position.x = keypoints[i][0] * 0.8 - 160 ; 
+		cubos[vueltas].position.y = keypoints[i][1] * 0.8 - 160; 
+		cubos[vueltas].position.z = keypoints[i][2] * 0.05 - 20  ;
 		cubos[vueltas].rotation.z += 0.02;
 		cubos[vueltas].rotation.y += 0.0111;
-		vueltas++; 
-	    } 
+		vueltas++;
+
+		// vertices.push( keypoints[i][0] * 0.1 -20,  keypoints[i][1] * 0.1 -20, keypoints[i][2] * 0.1 - 20);
+		// vertices.push( keypoints[i][3] * 0.1 -20,  keypoints[i][1] * 0.1 -20, keypoints[i][2] * 0.1 - 20);
+
+		// normals.push(1, 0, 0); 
+	    }
+
+	    */
+	    
 	});
     }
+
+    /*
+    if(predictions.length > 0 ){
+	console.log( vertices[0]);
+	
+	geometryB.verticesNeedUpdate = true;
+	geometryB.normalsNeedUpdate = true;
+	geometryB.setAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
+	geometryB.setAttribute( 'normals', new THREE.Float32BufferAttribute( normals, 2)); 
+	//  geometryB.computeVertexNormals(); 
+	// eometryB.computeBoundingSphere();
+    }
+
+    */
+    
     
     if (predictions.length > 0) {
 	const { annotations } = predictions[0]; // solo agarra una prediccion 
@@ -180,12 +219,11 @@ async function init() {
     
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-
    
-    colores = [new THREE.Color( 0x80e8dd ),
-	       new THREE.Color( 0x7cc2f6 ),
-	       new THREE.Color( 0xaf81e4 ),
-	       new THREE.Color( 0xe784ba ),
+    colores = [new THREE.Color( 0x711c91 ),
+	       new THREE.Color( 0xea00d9 ),
+	       new THREE.Color( 0x0adbc6 ),
+	       new THREE.Color( 0x133e7c ),
 	       new THREE.Color( 0x000000 ) ]; 
 
     for(let i = 0; i < 4; i++){
@@ -197,29 +235,34 @@ async function init() {
     const materialVideo = new THREE.MeshBasicMaterial( {color: 0xffffff, map:texture, side: THREE.DoubleSide} );
     const planeVideo = new THREE.Mesh( geometryVideo, materialVideo );
     planeVideo.rotation.x = Math.PI;
-    // planeVideo.rotation.x = -Math.PI / 2;
-    // planeVideo.rotation.y = -Math.PI / 2;
-    // planeVideo.rotation.z = Math.PI / 2;
     planeVideo.position.z = -10; 
     scene.add( planeVideo );
     
-    geometryC = new THREE.SphereGeometry( 0.75, 3, 3 );
-
-    /*
-    for(var i = 0; i < 4; i++){
-	matArray[i] =  new THREE.MeshPhongMaterial( { color: 0x000000, specular: colores[i%2], emissive: colores[i], shininess: 80, opacity: 0.5, transparent: true } );
-    }
-    */
-       
-    materialC  = new THREE.MeshStandardMaterial( {
-	roughness: 0.3,
-	color: 0xffffff,
-	metalness: 0.6,
-	bumpScale: 0.0005,
-	map: texture
-    } );
+    geometryC = new THREE.SphereGeometry( 0.75, 1, 2 );
 
     
+    for(var i = 0; i < 4; i++){
+	matArray[i] =  new THREE.MeshPhongMaterial( { color: 0x000000, specular: colores[i%2], emissive: colores[i], shininess: 80, opacity: 0.25, transparent: true } );
+    }
+   
+    materialC  = new THREE.MeshStandardMaterial( {
+	roughness: 0.1,
+	color: 0xffffff,
+	metalness: 0.2,
+	bumpScale: 0.0005,
+	side: THREE.DoubleSide,
+	// map: texture
+    } );
+       
+    materialC2  = new THREE.MeshStandardMaterial( {
+	roughness: 0.6,
+	color: 0xffffff,
+	metalness: 0.05,
+	bumpScale: 0.0005,
+	side: THREE.DoubleSide,
+    } );
+
+
     grupo = new THREE.Group();
     								      
     camera.position.z = 40;
@@ -243,7 +286,6 @@ async function init() {
 	textGeo.computeBoundingBox();
 	xMid = - 0.5 * ( textGeo.boundingBox.max.x - textGeo.boundingBox.min.x );
 	textGeo.translate( xMid, 0, 0 );
-	// make shape ( N.B. edge view not visible )
 	text = new THREE.Mesh( textGeo, materialC );
 	// text.position.z =  1;
 	text.rotation.z = Math.PI;	
@@ -251,13 +293,14 @@ async function init() {
 
     })
 
-    for(var i = 0; i < 5; i++){
+    for(var i = 0; i < 6; i++){
 	const al = Math.random() * 10 + 32; 
-	//const geometry = new THREE.CylinderGeometry( al, al, 0.4, 128, true, 0 );
+	// const geometry = new THREE.CylinderGeometry( al, al, 0.5, 128, true, 0 );
 	const geometry = new THREE.TorusGeometry( al, 0.2, 16, 150 );
-	torus[i] = new THREE.Mesh( geometry, materialC );
+	torus[i] = new THREE.Mesh( geometry, matArray[i%3] );
 	scene.add( torus[i] );
 	torus[i].position.z = -10;
+	torus[i].rotation.x = Math.PI * Math.random(); 
 	// torus[i].position.x = Math.random() * 4 + 10; 
     }
 
@@ -277,10 +320,21 @@ async function init() {
 	laterales[i].scale.x = Math.random() * 15 ;
 	laterales[i].scale.y = Math.random() * 15 ; 
 	laterales[i].scale.z = Math.random() * 15 ; 
-	scene.add( laterales[i] );
-	
+	scene.add( laterales[i] );	
     }
     */
+   
+    geometryB = new THREE.BufferGeometry();
+    geometryB.verticesNeedUpdate = true; 
+    planeB = new THREE.Mesh(pGeometry, materialC);
+    pGeometry.verticesNeedUpdate = true; 
+    scene.add( planeB );
+
+    cuboGrandeGeometry = new THREE.SphereGeometry( 200, 32, 32 );
+
+    // cuboGrandeGeometry = new THREE.BoxGeometry(480, 480, 480);
+    cuboGrande = new THREE.Mesh(cuboGrandeGeometry, materialC2 );
+    scene.add( cuboGrande ); 
     
     renderer = new THREE.WebGLRenderer({alpha:true, antialias: true});
     renderer.setPixelRatio( window.devicePixelRatio );
@@ -299,20 +353,26 @@ async function animate () {
 
     requestAnimationFrame( animate );
 
-    /*
-    for(let i = 0; i < NUM_KEYPOINTS; i++){
-	// const analisis = THREE.MathUtils.damp(Tone.dbToGain( analyser.getValue()[i%64] )* 1000, 10000, 0.00001, 0.01)  ; 
-	laterales[i].position.x = keypoints[i][0] * 3.2-640; 
-	laterales[i].position.y = keypoints[i][1] * 3.2-640; 
-	laterales[i].position.z = keypoints[i][2] * 0.01 - 100 ;
-	laterales[i].rotation.z += 0.02;
-	laterales[i].rotation.y += 0.0111;
-	// cubos[i].rotation.x += (degree*2 ) * Math.sin( time2 * 0.2 ) * 0.001 + (i * 0.0002); // aqui le quite lo de la transformación de degree 
-	// cubos[i].rotation.y += 0.002;
-    }
-    */
- 
+    // console.log( vertices ); 
 
+    for ( let i = 0; i < position.count; i ++ ) {	
+	const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 70;
+	//const y = 2 * Math.sin( i / 5 + ( time2 + i ) / 7 );
+	position.setX( i, (keypoints[i][0] * 0.1 - 20) * (1+analisis) );
+	position.setY( i, (keypoints[i][1] * 0.1 - 20) * (1+analisis) );
+	position.setZ( i, keypoints[i][2] * 0.05  * (1+ analisis) ); 
+    }
+    
+    planeB.geometry.computeVertexNormals(); 
+    planeB.geometry.attributes.position.needsUpdate = true;
+
+    // planeB.geometry.setDrawRange( 0, 8 );
+
+    position.needsUpdate = true;
+
+    //linesMesh.geometry.setDrawRange( 0, 10 * 2 );
+    //linesMesh.geometry.attributes.position.needsUpdate = true;
+    
     for(var i = 0; i < 4; i++){	
 	luces[i].position.x = Math.sin( time2 * 0.3 + (0.5 * i)) * 2400;
 	luces[i].position.y = Math.cos( time2 * 0.4 + (0.5*i)) * 2500-800;
@@ -329,26 +389,28 @@ async function animate () {
     cube.rotation.x += 0.04;
     cube.rotation.y += 0.023;
 
-    /*
-    if( degree < 0 ){
-	degree = degree - Math.PI ;
-    }
-    */ 
+    cuboGrande.rotation.x += 0.02; 
+
+    cuboGrande.rotation.y += 0.03;
     
     text.rotation.y = degree * 2 + (Math.PI )   ;
-    for(var i = 0; i < 5; i++){
+    
+    for(var i = 0; i < 6; i++){
 	torus[i].rotation.y += 0.001 + (i * 0.0005); 
-	torus[i].rotation.x += (degree ) * (i+1) * 0.005; 
+	torus[i].rotation.x += (degree ) * (i+1) * 0.0015; 
 	torus[i].rotation.z += 0.001 + (i * 0.0006);
     }
    
     stats.update(); 
     renderer.render( scene, camera );
 
-    // console.log( degree );
-
     panner.positionX.value = degree  ; 
-    // console.log( Tone.dbToGain(analyser.getValue()[0]) ); 
+    // console.log( Tone.dbToGain(analyser.getValue()[0]) );
+
+    vertices = [];
+
+    // linesMesh.geometry.attributes.position.needsUpdate = true;
+    
 }
 
 
@@ -359,7 +421,7 @@ function dEsferas() {
     for(let i = 0; i < cubos.length; i++){
 	cubos[i].material.dispose();
 	cubos[i].geometry.dispose(); 
-	scene.remove(cubos[i]); 
+	scene.remove( cubos[i] ); 
     }
     
     if (predictions.length > 0) {
@@ -370,15 +432,14 @@ function dEsferas() {
 		cubos[vueltas].rotation.x = Math.random() * Math.PI ;
 		cubos[vueltas].rotation.y = Math.random() * Math.PI ; 
 		cubos[vueltas].rotation.z = Math.random() * Math.PI ;
-		cubos[vueltas].scale.x = Math.random() * 2.5;
-		cubos[vueltas].scale.y = Math.random() * 1.5; 
-		cubos[vueltas].scale.z = Math.random() * 1.5; 
+		cubos[vueltas].scale.x = Math.random() * 4;
+		cubos[vueltas].scale.y = Math.random() * 4; 
+		cubos[vueltas].scale.z = Math.random() * 4; 
 		scene.add( cubos[vueltas] );
-		vueltas++; 
+		vueltas++;
 	    }
 	})
     }
-
 }
 
 async function sonido(){
@@ -429,7 +490,6 @@ async function sonido(){
     reverb.connect(analyser); 
 
     // secuencias 
-
     
     setInterval(function(){
 	let al = Math.floor(Math.random()*5);
@@ -448,15 +508,13 @@ async function sonido(){
 	player.reverse = reverseActual; 
 	scene.background = colores[al] ;
 	cambioC++; 
-    },300);
+    },1200);
 
     setInterval(function(){
 	startActual= start[startCambio%5]; 
 	startCambio++;
 	player.loopStart = startActual;
     }, 600);
-
-  
     
 }
 
@@ -468,7 +526,8 @@ function onWindowResize() {
 
 
 async function detonar(){
-    await renderPrediction(); 
+    await renderPrediction();
+    // linesMesh(); 
     animate();
     // oscSend();
     sonido(); 

@@ -17,10 +17,11 @@
 - [x] Construir el modelo localmente y carpeta antijs
 - [x] Platicar sobre el futuro
 - [ ] Diseño de interfaz de usuario > Interacción, aspectos visuales y de control ¿GUI?
-- [ ] Separar parte del código 
-- [ ] Keypoints dobles  
+- [x] Keypoints dobles  
 - [ ] Activar y probar jetson nano 
-- [ ] Escenas 
+- [ ] Pruebas con otras computadoras
+- [ ] Re-indexar vertices 
+- [ ] Diagrama de escenas 
 
 ## Actividades realizadas
 
@@ -42,6 +43,8 @@
 ## Pendientes para el informe final
 
 - [ ] Montar todo en un servidor (y resolver problemas laterales) 
+- [ ] Escenas con distintos estudios 
+- [ ] Separar parte del código
 
 ## Apuntes generales
 
@@ -70,4 +73,7 @@
 - Sin audio.- Hasta 52 fps, Con audio sin sets.- Hasta 48 fps, con audio y sets 48 fps, el demo llega a 22
 - Si pensamos en equivalencias funcionales entonces podríamos concebir el setInterval() como una estructura similar al Demand en SuperCollider. Para el tratamiento de la lectura de arreglos ¿sería posible implementar un equivalente a Dseq, Drand etc para la lectura secuenciada de valores? ¿Es posible todavía extenderlo a la lógica de Pseq? > problemas de doc
 - El sueño: activar lo anterior en modo live coding
-- No está fácil construir el modelo localmente, necesito encontrar soluciones, tal vez el problema está en la actualización de parcel. 
+- No está fácil construir el modelo localmente, necesito encontrar soluciones, tal vez el problema está en la actualización de parcel.
+- Ya es posible utilizar el modo multiplayer, hace falta asociar más sintetizadores a otras caras de manera independiente > ¿Será esto muy costoso?
+- Leer el ultimo capitulo del SuperCollider Book > csound ya esta compilado para web
+- Estándares industriales para el audio procesado en web 
