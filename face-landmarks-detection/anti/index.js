@@ -218,10 +218,10 @@ async function init() {
 	scene.add( luces[i] ); 
     }
 
-    var buscando = new THREE.TextureLoader().load( 'https://edges.piranhalab.cc/img/piranhalab.png' );
+    var buscando = new THREE.TextureLoader().load( 'img/antiareertvance.png' );
 
     const geometryVideo = new THREE.PlaneGeometry( 50, 50 );
-    const materialVideo = new THREE.MeshBasicMaterial( {color: 0xffffff, map:texture, side: THREE.DoubleSide} );
+    const materialVideo = new THREE.MeshBasicMaterial( {color: 0xffffff, map:buscando, side: THREE.DoubleSide} );
     const planeVideo = new THREE.Mesh( geometryVideo, materialVideo );
     planeVideo.rotation.x = Math.PI;
     planeVideo.position.z = -10; 
