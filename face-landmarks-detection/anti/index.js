@@ -1,11 +1,20 @@
+//////////////////////////////////
+/////////// 4NT1 /////////////////
+//////////////////////////////////
+
+
 import * as faceLandmarksDetection from '@tensorflow-models/face-landmarks-detection'
 import * as tf from '@tensorflow/tfjs-core';
 import '@tensorflow/tfjs-backend-webgl'; 
 import '@tensorflow/tfjs-backend-cpu';
 import * as THREE from 'three';
-import {TRIANGULATION} from './triangulation'; // Qué es esto 
+import {TRIANGULATION} from './js/triangulation'; // Qué es esto 
 import * as Tone from 'tone';
 import Stats from 'stats.js';
+// import {Reflector} from '/Reflector.js'; 
+import { EffectComposer } from './jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from './jsm/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from '/jsm/postprocessing/UnrealBloomPass.js';
 
 // const OSC = require('osc-js'); // pal osc 
 // const osc = new OSC(); 
@@ -26,11 +35,11 @@ let matArray = [];
 let prueba = 0; 
 let afft = [];
 const analyser = new Tone.Analyser( "fft", 128 ) ;
+let postB = false; 
 
 const pGeometry = new THREE.PlaneGeometry(8, 8, 21, 20);
 const position = pGeometry.attributes.position;
 position.usage = THREE.DynamicDrawUsage;
-
 // let position = []; 
 // const pGeometry = new THREE.BufferGeometry();
 
@@ -60,9 +69,7 @@ let model, ctx, videoWidth, videoHeight, video;
 
 const VIDEO_SIZE = 800;
 
-// const renderPointcloud = mobile === false;
-// const synth = new Tone.Synth().toDestination();
-
+const loaderHTML = document.getElementById("loaderHTML");
 const startButton = document.getElementById( 'startButton' );
 startButton.addEventListener( 'click', init  );
 
@@ -73,18 +80,9 @@ let predictions = [];
 let container; 
 let planeB;
 
-// container.appendChild( stats.dom );
+let composer;
 
-/*
-function isMobile() {
-  const isAndroid = /Android/i.test(navigator.userAgent);
-  const isiOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-  return isAndroid || isiOS;
-}
-
-const mobile = isMobile();
-
-*/
+///////////// Setupear la cámara
 
 async function setupCamera() {
     video = document.getElementById('video');
@@ -106,6 +104,8 @@ async function setupCamera() {
     });
 }
 
+////////////// Lectra de keypoints, detonación de escenas  
+
 async function renderPrediction() {
 
     var time2 = Date.now() * 0.01;
@@ -118,7 +118,7 @@ async function renderPrediction() {
     });
 
     if (prueba != predictions.length){
-	// dEsferas();
+	// sc1(); 
     }
 
     prueba = predictions.length; 
@@ -140,24 +140,8 @@ async function renderPrediction() {
 		
 	    }
 
-	    /*
-	    for(let i = 0; i < NUM_KEYPOINTS; i++){
-		//const analisis = THREE.MathUtils.damp(Tone.dbToGain( analyser.getValue()[i%64] )* 200, 10000, 0.0001, 0.001) * 4  ;
-		const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 700; 
-		cubos[vueltas].position.x = keypoints[i][0] * 0.8 - 160 ; 
-		cubos[vueltas].position.y = keypoints[i][1] * 0.8 - 160; 
-		cubos[vueltas].position.z = keypoints[i][2] * 0.05 - 20  ;
-		cubos[vueltas].rotation.z += 0.02;
-		cubos[vueltas].rotation.y += 0.0111;
-		vueltas++;
-
-		// vertices.push( keypoints[i][0] * 0.1 -20,  keypoints[i][1] * 0.1 -20, keypoints[i][2] * 0.1 - 20);
-		// vertices.push( keypoints[i][3] * 0.1 -20,  keypoints[i][1] * 0.1 -20, keypoints[i][2] * 0.1 - 20);
-
-		// normals.push(1, 0, 0); 
-	    }
-
-	    */
+	    // animsc1(); 
+	    
 	    
 	});
     }
@@ -175,8 +159,7 @@ async function renderPrediction() {
     }
 
     */
-    
-    
+        
     if (predictions.length > 0) {
 	const { annotations } = predictions[0]; // solo agarra una prediccion 
 	const [topX, topY] = annotations['midwayBetweenEyes'][0];
@@ -191,19 +174,23 @@ async function renderPrediction() {
     
 };
 
+///////////////////////// Inicialización.- desplazar a otros lados lo visual 
+
 async function init() {
 
+    ///////////////////// Iniciales generales /////////////////////////
+    
     const overlay = document.getElementById( 'overlay' );
     overlay.remove();
 
     const info = document.getElementById( 'info' );
     info.remove();
 
+    loaderHTML.style.display = "block"; 
+
     container = document.createElement( 'div' );
     document.body.appendChild( container );
-    
-    console.log('tamos redy');
-    
+
     await tf.setBackend('webgl'); // ajustar esto dependiendo de las capacidades de la chompu? 
     await setupCamera();
     video.play();
@@ -219,7 +206,7 @@ async function init() {
     
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-   
+    
     colores = [new THREE.Color( 0x711c91 ),
 	       new THREE.Color( 0xea00d9 ),
 	       new THREE.Color( 0x0adbc6 ),
@@ -231,6 +218,8 @@ async function init() {
 	scene.add( luces[i] ); 
     }
 
+    var buscando = new THREE.TextureLoader().load( 'https://edges.piranhalab.cc/img/piranhalab.png' );
+
     const geometryVideo = new THREE.PlaneGeometry( 50, 50 );
     const materialVideo = new THREE.MeshBasicMaterial( {color: 0xffffff, map:texture, side: THREE.DoubleSide} );
     const planeVideo = new THREE.Mesh( geometryVideo, materialVideo );
@@ -238,17 +227,14 @@ async function init() {
     planeVideo.position.z = -10; 
     scene.add( planeVideo );
     
-    geometryC = new THREE.SphereGeometry( 0.75, 1, 2 );
-
-    
     for(var i = 0; i < 4; i++){
-	matArray[i] =  new THREE.MeshPhongMaterial( { color: 0x000000, specular: colores[i%2], emissive: colores[i], shininess: 80, opacity: 0.25, transparent: true } );
+	matArray[i] =  new THREE.MeshPhongMaterial( { color: 0x000000, specular: colores[i%2], emissive: colores[i], shininess: 10 } );
     }
    
     materialC  = new THREE.MeshStandardMaterial( {
-	roughness: 0.1,
+	roughness: 0,
 	color: 0xffffff,
-	metalness: 0.2,
+	metalness: 0.7,
 	bumpScale: 0.0005,
 	side: THREE.DoubleSide,
 	// map: texture
@@ -262,7 +248,6 @@ async function init() {
 	side: THREE.DoubleSide,
     } );
 
-
     grupo = new THREE.Group();
     								      
     camera.position.z = 40;
@@ -270,29 +255,28 @@ async function init() {
     
     var fontLoader = new THREE.FontLoader();
     fontLoader.load("https://raw.githubusercontent.com/mrdoob/three.js/master/examples/fonts/helvetiker_regular.typeface.json", function(font ){ 
-
-	const message = "4nti";
-	
+	const message = "4nti";	
 	textGeo = new THREE.TextGeometry( message, {
 	    font: font,
 	    size: 6,
 	    height: 1,
 	    curveSegments: 4,
-	    bevelThickness: 0.5,
-	    bevelSize: 0.1,
+	    bevelThickness: 0.25,
+	    bevelSize: 0.5,
 	    bevelEnabled: true
 	} );
 
 	textGeo.computeBoundingBox();
 	xMid = - 0.5 * ( textGeo.boundingBox.max.x - textGeo.boundingBox.min.x );
 	textGeo.translate( xMid, 0, 0 );
-	text = new THREE.Mesh( textGeo, materialC );
+	text = new THREE.Mesh( textGeo, matArray[2] );
 	// text.position.z =  1;
 	text.rotation.z = Math.PI;	
 	scene.add( text );
 
     })
 
+    /* 
     for(var i = 0; i < 6; i++){
 	const al = Math.random() * 10 + 32; 
 	// const geometry = new THREE.CylinderGeometry( al, al, 0.5, 128, true, 0 );
@@ -303,12 +287,13 @@ async function init() {
 	torus[i].rotation.x = Math.PI * Math.random(); 
 	// torus[i].position.x = Math.random() * 4 + 10; 
     }
+   */
 
     const gCube = new THREE.TorusKnotGeometry( 5, 1, 100, 16 );
 
-    // const gCube = new THREE.BoxGeometry( 10, 10, 10 );
-    const mCube = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-    cube = new THREE.Mesh( gCube, materialC  );
+    //const gCube = new THREE.BoxGeometry( 10, 10, 10 );
+    //const mCube = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+    cube = new THREE.Mesh( gCube, matArray[2]  );
     scene.add( cube );
 
     /*
@@ -335,15 +320,47 @@ async function init() {
     // cuboGrandeGeometry = new THREE.BoxGeometry(480, 480, 480);
     cuboGrande = new THREE.Mesh(cuboGrandeGeometry, materialC2 );
     scene.add( cuboGrande ); 
-    
+
+    /*
+    geometryMirr = new THREE.PlaneGeometry( 80, 80 );
+
+    groundMirror = new Reflector( gCube, {
+	// clipBias: 0.003,
+	textureWidth: window.innerWidth * window.devicePixelRatio,
+	textureHeight: window.innerHeight * window.devicePixelRatio,
+	color: 0x889999
+    } );
+
+    // groundMirror.position.y = 10;
+    groundMirror.position.z = -20;
+    groundMirror.position.x = 30; 
+    groundMirror.rotateY( - Math.PI / 4 );
+    scene.add( groundMirror );
+
+    */ 
+
     renderer = new THREE.WebGLRenderer({alpha:true, antialias: true});
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
+    // renderer.toneMapping = THREE.ReinhardToneMapping;
     document.body.appendChild( renderer.domElement );
     window.addEventListener( 'resize', onWindowResize );
-
     detonar(); 
     container.appendChild( stats.dom ); 
+
+    if(postB){
+    const renderScene = new RenderPass( scene, camera );
+    
+    const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.4, 0.85 );
+    bloomPass.threshold = 0.75;
+    bloomPass.strength = 0.5;
+    bloomPass.radius = 0.5;
+    
+    composer = new EffectComposer( renderer );
+    composer.addPass( renderScene );
+    composer.addPass( bloomPass );
+    }
+
     
 }
 
@@ -381,25 +398,27 @@ async function animate () {
     
     text.position.x = keypoints[0][0]* 0.1;
     text.position.y = keypoints[0][1]* 0.1 -35;
-    text.position.z = keypoints[0][2] * 0.1;
+    text.position.z = keypoints[0][2] * 0.1 + 10;
 
     cube.position.x = keypoints[0][0]* 0.1- 40;
     cube.position.y = keypoints[0][1]* 0.1 -10;
-    cube.position.z = keypoints[0][2] * 0.1;
+    cube.position.z = keypoints[0][2] * 0.1 + 10;
     cube.rotation.x += 0.04;
     cube.rotation.y += 0.023;
-
+    
     cuboGrande.rotation.x += 0.02; 
 
     cuboGrande.rotation.y += 0.03;
     
     text.rotation.y = degree * 2 + (Math.PI )   ;
-    
+
+   /*
     for(var i = 0; i < 6; i++){
 	torus[i].rotation.y += 0.001 + (i * 0.0005); 
 	torus[i].rotation.x += (degree ) * (i+1) * 0.0015; 
 	torus[i].rotation.z += 0.001 + (i * 0.0006);
     }
+    */ 
    
     stats.update(); 
     renderer.render( scene, camera );
@@ -409,12 +428,23 @@ async function animate () {
 
     vertices = [];
 
+    if(postB){
+    composer.render();
+    }
+    
     // linesMesh.geometry.attributes.position.needsUpdate = true;
     
 }
 
+/// no hay rostros 
 
-function dEsferas() {
+function initsc0(){
+    // materialvideo.map = buscando; 
+}
+
+//////// objetos asociados a keypoints
+
+function initsc1(){
     
     let vueltas = 0; 
     
@@ -439,7 +469,39 @@ function dEsferas() {
 		vueltas++;
 	    }
 	})
-    }
+    } 
+
+}
+
+function animsc1(){
+
+      for(let i = 0; i < NUM_KEYPOINTS; i++){
+	  //const analisis = THREE.MathUtils.damp(Tone.dbToGain( analyser.getValue()[i%64] )* 200, 10000, 0.0001, 0.001) * 4  ;
+	  const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 700; 
+	  cubos[vueltas].position.x = keypoints[i][0] * 0.8 - 160 ; 
+	  cubos[vueltas].position.y = keypoints[i][1] * 0.8 - 160; 
+	  cubos[vueltas].position.z = keypoints[i][2] * 0.05 - 20  ;
+	  cubos[vueltas].rotation.z += 0.02;
+	  cubos[vueltas].rotation.y += 0.0111;
+	  vueltas++; 
+      }
+         
+}
+
+//////// Mesh desordenado 
+
+function sc2(){
+
+}
+
+//////// conexón de puntos por cercanía y bloom 
+
+function sc3(){
+
+}
+
+function dEsferas() {
+    
 }
 
 async function sonido(){
@@ -506,7 +568,7 @@ async function sonido(){
 	reverseActual= reverse[al]; 
 	reverseCambio++;
 	player.reverse = reverseActual; 
-	scene.background = colores[al] ;
+	// scene.background = colores[al] ;
 	cambioC++; 
     },1200);
 
@@ -530,7 +592,10 @@ async function detonar(){
     // linesMesh(); 
     animate();
     // oscSend();
-    sonido(); 
+    sonido();
+    loaderHTML.style.display = "none"; 
+    console.log('tamos redy');
+    
 }
 
 video = document.getElementById( 'video' );

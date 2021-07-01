@@ -2,6 +2,8 @@
 
 ## Avances y pendientes
 
+Objetivo general: Constuir el marco de trabajo para la realización de las escenas de la pieza. 
+
 - [x] Actualizar librerías y vulnerabilidades graves en dependencias
 - [x] Agregar la librería threejs
 - [x] Usar una parte del escritorio como cámara web
@@ -16,12 +18,19 @@
 - [x] Botón de inicio para iniciar el contexto de audio
 - [x] Construir el modelo localmente y carpeta antijs
 - [x] Platicar sobre el futuro
-- [ ] Diseño de interfaz de usuario > Interacción, aspectos visuales y de control ¿GUI?
-- [x] Keypoints dobles  
-- [ ] Activar y probar jetson nano 
-- [ ] Pruebas con otras computadoras
+- [x] Mínima interfaz 
+- [x] Keypoints dobles y triples
+- [x] Efectos para encadenar hacia un master final sonoro
+- [x] Bosquejo de escenas
+- [x] Post, Effect composer y jsm para encadenar hacia un master final visual
+- [x] Cargando
 - [ ] Re-indexar vertices 
-- [ ] Diagrama de escenas 
+- [ ] Separar escenas en funciones 
+- [ ] Asignar meshes y sonidos a personas
+- [ ] Transiciones y dispose 
+- [ ] Montaje provisional en un sitio web
+- [ ] Pruebas con otras computadoras
+- [ ] Layers para objetos con bloom y sin bloom 
 
 ## Actividades realizadas
 

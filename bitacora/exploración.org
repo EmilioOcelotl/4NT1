@@ -7,13 +7,38 @@ Para el segundo informe podría enviar una secuencia de 3 escenas como muestra
 El recorrido de las escenas podría tener dos modalidades: interactiva (modo online) fija (modo exhibición).
 Entonces podríamos pensar en dos pistas de secuencias controladas por arreglos y detonadores (setInterval). 
 
+* Interfaz general
+
+Una interfaz que visualice algunos datos y enmarque detalles
+La exploración podría suceder sin interacción de teclado o mouse
+"acumulación de interacción" para cambio entre escenas
+Marco de visualización de algunas frases que pueden acompañar visual y sonoramente
+Avisos de loading / en espera 
+Transiciones ¿aleatorias? podrían lograrse con post > glitch abrupto, dispose y si hay tiempo transiciones 
+
 * Escenas / estudios
+
+Cada escena tiene 3 posibles audios asociados a máximo 3 rostros. Hay sonido que acompaña estos sonidos y que en todo caso se detona cada cierto tiempo
+Detonadores: setInvtervals(). El objetivo: llegar a explorar a una exploración muy sencilla del pensamiento con patrones para el navegador.
+Cada escena tiene una paleta de colores 
+Paletas pastel y oscuras. Fresnel solo tiene iluminación 
 
 ** Escena 1
 
-Se me ocurre que podría ser un estudio de desfase y control con rotación de la cara
-Desfasar cilindros 
+Mesh desordenado con reindex
 
 ** Escena 2
 
-** Escena 3 
+Mesh en wireframe. Varias caras y bloom
+
+** Escena 3
+
+Mesh ordenado ¿Máscara dedicada? 
+
+** Escena 4
+
+Varios objetos sencillos como triangulos con posiciones de keypoints y transparencia 
+
+** Escena 5
+
+Estudio de fresnel y materiales holomorfos 

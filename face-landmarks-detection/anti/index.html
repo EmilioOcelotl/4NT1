@@ -97,8 +97,41 @@
       padding: 12px 18px;
       text-transform: uppercase;
       cursor: pointer;
+      
   }
-  
+
+  .loader {
+
+
+
+      border: 16px solid #808080;
+      border-top: 16px solid #fff;
+      border-radius: 50%;  
+      width: 120px;
+      height: 120px;
+      -webkit-animation: spin 2s linear infinite; /* Safari */
+      animation: spin 2s linear infinite;
+
+      
+    margin: -84px;
+    position: absolute;
+    top: 50% ;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+      
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
   
 </style>
 </head>
@@ -130,13 +163,15 @@
 
   <div id="info">
     4NT1 </br>
-    Mueve la cabeza</br>
+    Estudios de ofuscación facial</br>
   </div>
 
   <div id="overlay">
-    <button id="startButton">Iniciar</button>
+    <button id="startButton" >Iniciar</button>
   </div>
 
+  <div id="loaderHTML" class="loader" style="display:none"></div>
+  
   <script src="index.js"></script>
 		  
 </body>
