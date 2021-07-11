@@ -24,13 +24,19 @@ Objetivo general: Constuir el marco de trabajo para la realización de las escen
 - [x] Bosquejo de escenas
 - [x] Post, Effect composer y jsm para encadenar hacia un master final visual
 - [x] Cargando
+- [x] Montaje provisional en un sitio web y pruebas con otras computadoras
+- [x] Certificado de seguridad para abrir cámara
 - [ ] Re-indexar vertices 
 - [ ] Separar escenas en funciones 
-- [ ] Asignar meshes y sonidos a personas
+- [ ] Asignar meshes y sonidos a más de una persona 
 - [ ] Transiciones y dispose 
-- [ ] Montaje provisional en un sitio web
-- [ ] Pruebas con otras computadoras
 - [ ] Layers para objetos con bloom y sin bloom 
+- [ ] Framebuffer para algo de magia 
+- [ ] Indicadores de lo que está pasando 
+- [ ] Actualizar package.json en repositorio 
+- [ ] Arreglar texturas 
+- [ ] Optimización para cel y compus de placa reducida: esperar a que el render términe de cargar 
+- [ ] Desplegar un mensaje si no hay cámara
 
 ## Actividades realizadas
 
@@ -51,9 +57,12 @@ Objetivo general: Constuir el marco de trabajo para la realización de las escen
 
 ## Pendientes para el informe final
 
-- [ ] Montar todo en un servidor (y resolver problemas laterales) 
+- [x] Montar todo en un servidor (y resolver problemas laterales) 
 - [ ] Escenas con distintos estudios 
-- [ ] Separar parte del código
+
+## Pendientes largo plazo
+
+- [ ] Servidor autónomo 
 
 ## Apuntes generales
 

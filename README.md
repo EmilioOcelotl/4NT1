@@ -63,6 +63,8 @@ Algunas ideas-reflexiones relacionadas con este proyecto se encuentran en:
 
 ## Recursos
 
+- https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-18-04
+- https://nicknetvideos.com/blog/post/how-to-run-a-website-in-a-subdomain-in-digital-ocean
 - https://tonejs.github.io/
 - https://doc.sccode.org/Guides/FFT-Overview.html
 - http://www.whole-play.com/post/chuck-browser-communication-with-osc/
