@@ -37,6 +37,7 @@ Objetivo general: Constuir el marco de trabajo para la realización de las escen
 - [ ] Arreglar texturas 
 - [ ] Optimización para cel y compus de placa reducida: esperar a que el render términe de cargar 
 - [ ] Desplegar un mensaje si no hay cámara
+- [ ] Corregir coordenadas de la máscara en Firefox
 
 ## Actividades realizadas
 

@@ -1,180 +1,199 @@
 <!DOCTYPE html>
 <html lang="en">
-  
+
 <head>
 
-  <title>4NT1</title>
-  <meta charset="utf-8">
+<title>4NT1</title>
+<meta charset="utf-8">
 
-  <!-- Load three.js -->
+<!-- Load three.js -->
 <!--<script src="https://cdn.jsdelivr.net/npm/three@0.106.2/build/three.min.js"></script>-->
 <!-- Load scatter-gl.js -->
 <!--<script src="https://cdn.jsdelivr.net/npm/scatter-gl@0.0.1/lib/scatter-gl.min.js"></script>-->
 <style>
 
-  body {
-      color: #fff;
-      margin: 0;
-      background-color: black;
-      overflow-y: hidden;
-      	font-family: Monospace;
-	
-  }
+body {
+color: #fff;
+margin: 0;
+background-color: black;
+overflow-y: hidden;
+font-family: Monospace;
 
-  #info {
-	position: absolute;
-	top: 40%;
-	width: 100%;
-	padding: 0px;
-	box-sizing: border-box;
-	text-align: center;
-	-moz-user-select: none;
-	-webkit-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-	pointer-events: none;
-	z-index: 2; /* TODO Solve this in HTML */
-	font-size: 14px;
-  }
-  
-  #blocker {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.5);
-  }
+}
 
-  #instructions {
-      width: 100%;
-      height: 100%;
-      
-      display: -webkit-box;
-      display: -moz-box;
-      display: box;
-      
-      -webkit-box-orient: horizontal;
-      -moz-box-orient: horizontal;
-      box-orient: horizontal;
-      
-      -webkit-box-pack: center;
-      -moz-box-pack: center;
-      box-pack: center;
+#info {
+position: absolute;
+top: 40%;
+width: 100%;
+padding: 0px;
+box-sizing: border-box;
+text-align: center;
+-moz-user-select: none;
+-webkit-user-select: none;
+-ms-user-select: none;
+user-select: none;
+pointer-events: none;
+z-index: 2; /* TODO Solve this in HTML */
+font-size: 14px;
+}
 
-      -webkit-box-align: center;
-      -moz-box-align: center;
-      box-align: center;
-      
-      color: #ffffff;
-      text-align: center;
-      font-size: 16px;
-      line-height: 24px;
-      
-      cursor: pointer;
-  }
-  
-  #overlay {
-      position: absolute;
-      font-size: 14px;
-      z-index: 2;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      background: rgba(0,0,0,0);
-      font-family: Monospace; 
-  }
-  
-  #overlay button {
-      background: transparent;
-      border: 0;
-      border: 1px solid rgb(255, 255, 255);
-      border-radius: 4px;
-      color: #ffffff;
-      padding: 12px 18px;
-      text-transform: uppercase;
-      cursor: pointer;
-      
-  }
+#blocker {
+position: absolute;
+width: 100%;
+height: 100%;
+background-color: rgba(0,0,0,0.5);
+}
 
-  .loader {
+#instructions {
+width: 100%;
+height: 100%;
+
+display: -webkit-box;
+display: -moz-box;
+display: box;
+
+-webkit-box-orient: horizontal;
+-moz-box-orient: horizontal;
+box-orient: horizontal;
+
+-webkit-box-pack: center;
+-moz-box-pack: center;
+box-pack: center;
+
+-webkit-box-align: center;
+-moz-box-align: center;
+box-align: center;
+
+color: #ffffff;
+text-align: center;
+font-size: 16px;
+line-height: 24px;
+
+cursor: pointer;
+}
+
+#overlay {
+position: absolute;
+font-size: 14px;
+z-index: 2;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+display: flex;
+align-items: center;
+justify-content: center;
+flex-direction: column;
+background: rgba(0,0,0,0);
+font-family: Monospace;
+}
+
+#overlay button {
+background: transparent;
+border: 0;
+border: 1px solid rgb(255, 255, 255);
+border-radius: 4px;
+color: #ffffff;
+padding: 12px 18px;
+text-transform: uppercase;
+cursor: pointer;
+
+}
+
+.loader {
 
 
 
-      border: 16px solid #808080;
-      border-top: 16px solid #fff;
-      border-radius: 50%;  
-      width: 120px;
-      height: 120px;
-      -webkit-animation: spin 2s linear infinite; /* Safari */
-      animation: spin 2s linear infinite;
+border: 16px solid #808080;
+border-top: 16px solid #fff;
+border-radius: 50%;
+width: 120px;
+height: 120px;
+-webkit-animation: spin 2s linear infinite; /* Safari */
+animation: spin 2s linear infinite;
 
-      
-    margin: -84px;
-    position: absolute;
-    top: 50% ;
-    left: 50%;
-    transform: translate(-50%, -50%);
 
-      
+margin: -84px;
+position: absolute;
+top: 50% ;
+left: 50%;
+transform: translate(-50%, -50%);
+
+
 }
 
 /* Safari */
 @-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
+0% { -webkit-transform: rotate(0deg); }
+100% { -webkit-transform: rotate(360deg); }
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+0% { transform: rotate(0deg); }
+100% { transform: rotate(360deg); }
 }
-  
+
+#myProgress {
+position:absolute;
+left: 50%;
+margin-right: -50%;
+transform: translate(-50%, -50%);
+width: 655px;
+background-color: #808080;
+bottom: 100px;
+opacity: 0.4; 
+}
+
+#myBar {
+width: 1%;
+height: 30px;
+background-color: #fff;
+opacity: 0.4
+}
+
 </style>
 </head>
 <body>
 
-  <!--
-  <video id="video" style="display:none" autoplay playsinline></video>
+  <div id="myProgress" style="display:none">
+    <div id="myBar"></div>
+  </div>
+  
+<!--
+<video id="video" style="display:none" autoplay playsinline></video>
 -->
 
-  <video id="video" vplaysinline style="
-					display:none;
-					transform: rotateY(180deg);
-					-webkit-transform:rotateY(180deg);
-					-moz-transform:rotateY(180deg);
-					width: auto;
-					height: auto;
-					">
-  </video>
-  
-  <!--
-  <div id="blocker">    
-    <div id="instructions">
-      <span style="font-size:14px">4NT1</span>
-      
-    </div>
-    
-  </div>
-  -->
+<video id="video" vplaysinline style="
+				      display:none;
+				      transform: rotateY(180deg);
+				      -webkit-transform:rotateY(180deg);
+				      -moz-transform:rotateY(180deg);
+				      ">
+</video>
 
-  <img style="display:none" src="img/buscando.png" alt="buscando">
-  
-  <div id="info">
-    4NT1 </br>
-    Estudios de ofuscación facial</br>
-  </div>
+<!--
+<div id="blocker">
+<div id="instructions">
+<span style="font-size:14px">4NT1</span>
 
-  <div id="overlay">
-    <button id="startButton" >Iniciar</button>
-  </div>
+</div>
 
-  <div id="loaderHTML" class="loader" style="display:none"></div>
-  
-  <script src="index.js"></script>
-		  
+</div>
+-->
+
+<div id="info">
+4NT1 </br>
+Estudios de ofuscación facial</br>
+</div>
+
+<div id="overlay">
+<button id="startButton" >Iniciar</button>
+</div>
+
+<div id="loaderHTML" class="loader" style="display:none"></div>
+
 </body>
+
+<script src="index.js"></script>
+
 <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.6/dat.gui.min.js"></script>-->

@@ -2,6 +2,15 @@
 /////////// 4NT1 /////////////////
 //////////////////////////////////
 
+/*
+
+Para el cambio de escenas:
+
+- inicializar
+- transformar
+- eliminar 
+
+*/ 
 
 import * as faceLandmarksDetection from '@tensorflow-models/face-landmarks-detection'
 import * as tf from '@tensorflow/tfjs-core';
@@ -34,7 +43,7 @@ let torus = [];
 let matArray = []; 
 let prueba = 0; 
 let afft = [];
-const analyser = new Tone.Analyser( "fft", 128 ) ;
+const analyser = new Tone.Analyser( "fft", 64 ) ;
 let postB = false; 
 
 const pGeometry = new THREE.PlaneGeometry(8, 8, 21, 20);
@@ -71,6 +80,9 @@ const VIDEO_SIZE = 800;
 
 const loaderHTML = document.getElementById("loaderHTML");
 const startButton = document.getElementById( 'startButton' );
+const myProgress = document.getElementById( "myProgress" );
+const myBar = document.getElementById( "myBar" );
+
 startButton.addEventListener( 'click', init  );
 
 let colores = []; 
@@ -85,7 +97,10 @@ let planeVideo;
 let planeBuscando; 
 let materialVideo;
 
-let escena; 
+let escena = 0;
+
+let rendereo; 
+let buscando = false;
 
 ///////////// Setupear la cámara
 
@@ -120,9 +135,9 @@ async function renderPrediction() {
     });
 
     if (prueba != predictions.length){
-	initsc0(); 
+	initsc0();
     }
-
+    
     prueba = predictions.length;
     materialVideo.needsUpdate = true;
     
@@ -137,7 +152,6 @@ async function renderPrediction() {
 		    TRIANGULATION[i * 3], TRIANGULATION[i * 3 + 1],
 		    TRIANGULATION[i * 3 + 2]
 		].map(index => keypoints[index]);
-
 	    }
 
 	    // aquí tendríq que ir un switcher para la inicialización de los objetos en escena 
@@ -156,7 +170,7 @@ async function renderPrediction() {
 	const bottomY = (rightY + leftY) / 2;
 	degree = Math.atan((topY - bottomY) / (topX - bottomX));
     }
-    
+
     requestAnimationFrame(renderPrediction);
     
 };
@@ -173,15 +187,15 @@ async function init() {
     const info = document.getElementById( 'info' );
     info.remove();
 
-    loaderHTML.style.display = "block"; 
-
+    loaderHTML.style.display = "block";
+   
     container = document.createElement( 'div' );
     document.body.appendChild( container );
 
     await tf.setBackend('webgl'); // ajustar esto dependiendo de las capacidades de la chompu? 
     await setupCamera();
     video.play();
-
+    
     videoWidth = video.videoWidth;
     videoHeight = video.videoHeight;
     video.width = videoWidth;
@@ -293,8 +307,8 @@ async function init() {
 	const renderScene = new RenderPass( scene, camera );
 	
 	const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.4, 0.85 );
-	bloomPass.threshold = 0.75;
-	bloomPass.strength = 0.5;
+	bloomPass.threshold = 0.25;
+	bloomPass.strength = 0.25;
 	bloomPass.radius = 0.5;
 	
 	composer = new EffectComposer( renderer );
@@ -364,15 +378,19 @@ async function animate () {
 	composer.render();
     }
 
-    animsc1(); 
+    if(buscando){
+	// switch de animación 
+	animsc1();
+    }
     
 }
 
 /// no hay rostros 
 
 function initsc0(){
-    // materialvideo.map = buscando;
+   
     if ( predictions.length < 1 ) {
+
 	materialVideo.map = new THREE.TextureLoader().load( 'https://emilioocelotl.github.io/4NT1/face-landmarks-detection/anti/img/buscando.png' );
 	materialVideo.map.wrapS = THREE.RepeatWrapping;
 	materialVideo.map.repeat.x = - 1;
@@ -382,15 +400,31 @@ function initsc0(){
 	scene.remove( cube );
 	scene.remove( text );
 	scene.remove( planeB ); // este si tendría que ir en otro lado  
+
+	// switch de eliminación 
+	
+	rmsc1();
+
+	buscando = false;
+	myProgress.style.display = "none";
 	
     } else {
+
 	materialVideo.map = new THREE.VideoTexture( video );
 	// revisar si lo siguiente van en escenas y no en marco general 
 	scene.add( cuboGrande );
 	scene.add( cube );
 	scene.add( text );
-	// scene.add( planeB ); 
-	initsc1(); 
+
+	// switch de incialización
+	
+	initsc1();
+
+	buscando = true; 
+	// scene.add( planeB ); // escena específica 
+	// initsc1();
+	myProgress.style.display = "block";
+	
     }
 }
 
@@ -401,24 +435,30 @@ function initsc1(){
     let vueltas = 0; 
     
     for(let i = 0; i < cubos.length; i++){
+
 	cubos[i].material.dispose();
 	cubos[i].geometry.dispose(); 
-	scene.remove( cubos[i] ); 
+	scene.remove( cubos[i] );
+	
     }
+    
+    const geometryC = new THREE.SphereGeometry( 0.5, 2, 2 );
     
     if (predictions.length > 0) {
 	predictions.forEach(prediction => {	    
 	    for(let i = 0; i < NUM_KEYPOINTS; i++){		
+
 		const al = Math.random() * 4 + 1; 
 		cubos[vueltas] = new THREE.Mesh(geometryC, materialC);
 		cubos[vueltas].rotation.x = Math.random() * Math.PI ;
 		cubos[vueltas].rotation.y = Math.random() * Math.PI ; 
 		cubos[vueltas].rotation.z = Math.random() * Math.PI ;
-		cubos[vueltas].scale.x = Math.random() * 4;
-		cubos[vueltas].scale.y = Math.random() * 4; 
-		cubos[vueltas].scale.z = Math.random() * 4; 
+		cubos[vueltas].scale.x = 1+(Math.random() * 1);
+		cubos[vueltas].scale.y = 1+(Math.random() * 1); 
+		cubos[vueltas].scale.z = 1+(Math.random() * 3); 
 		scene.add( cubos[vueltas] );
 		vueltas++;
+		
 	    }
 	})
     } 
@@ -429,17 +469,32 @@ function animsc1(){
 
     let vueltas = 0;
     
-      for(let i = 0; i < NUM_KEYPOINTS; i++){
-	  //const analisis = THREE.MathUtils.damp(Tone.dbToGain( analyser.getValue()[i%64] )* 200, 10000, 0.0001, 0.001) * 4  ;
-	  const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 700; 
-	  cubos[vueltas].position.x = keypoints[i][0] * 0.1 - 20 ; 
-	  cubos[vueltas].position.y = keypoints[i][1] * 0.1 - 20; 
-	  cubos[vueltas].position.z = keypoints[i][2] * 0.05 - 20  ;
-	  cubos[vueltas].rotation.z += 0.02;
-	  cubos[vueltas].rotation.y += 0.0111;
-	  vueltas++; 
+    for(let i = 0; i < NUM_KEYPOINTS; i++){
+	
+	const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 300;
+	//const analisis = THREE.MathUtils.damp(Tone.dbToGain( analyser.getValue()[i%64] )* 200, 10000, 0.0001, 0.001) * 4  ;
+	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 700; 
+	cubos[vueltas].position.x = keypoints[i][0] * 0.1 - 20 ; 
+	cubos[vueltas].position.y = keypoints[i][1] * 0.1 - 20; 
+	cubos[vueltas].position.z = keypoints[i][2] * 0.05 * (1+analisis) ;
+	cubos[vueltas].rotation.z += 0.02;
+	cubos[vueltas].rotation.y += 0.0111;
+	vueltas++;
+	
       }
-         
+    
+}
+
+function rmsc1(){
+  
+    for(let i = 0; i < cubos.length; i++){
+
+	cubos[i].material.dispose();
+	cubos[i].geometry.dispose(); 
+	scene.remove( cubos[i] );
+	
+    }
+    
 }
 
 //////// Mesh desordenado 
@@ -481,6 +536,30 @@ function texto() {
     })
 
 }
+
+function htmlBar(){
+    var i = 0;
+	if (i == 0) {
+	    i = 1;
+	    var elem = document.getElementById("myBar");
+	    var width = 1;
+	    var id = setInterval(frame, 10);
+	    function frame() {
+		if (width >= 100) {
+		    clearInterval(id);
+		    i = 0;
+		    // cambiar de escena
+		    htmlBar();
+		    escena++; 
+		    console.log(escena%2); 
+		} else {
+		    width+= 0.2;
+		    elem.style.width = width + "%";
+		}
+	    }
+	}
+}
+
 
 async function sonido(){
 
@@ -564,15 +643,14 @@ function onWindowResize() {
     renderer.setSize( window.innerWidth, window.innerHeight );
 }
 
-
 async function detonar(){
     await renderPrediction();
-    // linesMesh(); 
     animate();
-    // oscSend();
-    sonido();
-    loaderHTML.style.display = "none"; 
-    console.log('tamos redy');
+    sonido() 
+    htmlBar(); 
+    loaderHTML.style.display = "none";
+    myProgress.style.display = "block";  
+    console.log('t4m0s r3dy');
     
 }
 
