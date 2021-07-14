@@ -16,7 +16,7 @@ La obra toma en cuenta la transformación de flujos de audio y video y se retroa
 
 `cd face-landmarks-detection/anti`
 
-JS [Three.js + TS.js]: 
+JS [Three.js + TS.js] en modo local: 
 
 `yarn`
 

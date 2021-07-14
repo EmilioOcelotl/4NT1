@@ -27,14 +27,14 @@ Objetivo general: Constuir el marco de trabajo para la realización de las escen
 - [x] Montaje provisional en un sitio web y pruebas con otras computadoras
 - [x] Certificado de seguridad para abrir cámara
 - [ ] Re-indexar vertices 
-- [ ] Separar escenas en funciones 
+- [x] Separar escenas en funciones y dispose
 - [ ] Asignar meshes y sonidos a más de una persona 
-- [ ] Transiciones y dispose 
+- [ ] Transiciones
 - [ ] Layers para objetos con bloom y sin bloom 
 - [ ] Framebuffer para algo de magia 
 - [ ] Indicadores de lo que está pasando 
-- [ ] Actualizar package.json en repositorio 
-- [ ] Arreglar texturas 
+- [x] Actualizar package.json en repositorio 
+- [x] Arreglar texturas 
 - [ ] Optimización para cel y compus de placa reducida: esperar a que el render términe de cargar 
 - [ ] Desplegar un mensaje si no hay cámara
 - [ ] Corregir coordenadas de la máscara en Firefox

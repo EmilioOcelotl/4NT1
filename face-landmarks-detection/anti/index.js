@@ -6,9 +6,11 @@
 
 Para el cambio de escenas:
 
-- inicializar
-- transformar
-- eliminar 
+- inicializar (cuando hay - no hay rostro )
+- inicializar ( cuando cambia la escena )
+- transformar ( solo si no hay rostro
+- eliminar ( cuando no hay rostro )
+- eliminar ( cuando cambia la escena ) 
 
 */ 
 
@@ -178,8 +180,6 @@ async function renderPrediction() {
 ///////////////////////// Inicialización.- desplazar a otros lados lo visual 
 
 async function init() {
-
-    ///////////////////// Iniciales generales /////////////////////////
     
     const overlay = document.getElementById( 'overlay' );
     overlay.remove();
@@ -264,14 +264,14 @@ async function init() {
     }
    */
 
+    planeB = new THREE.Mesh(pGeometry, materialC);
+    pGeometry.verticesNeedUpdate = true; 
+    
     const gCube = new THREE.TorusKnotGeometry( 5, 1, 100, 16 );
     cube = new THREE.Mesh( gCube, materialC );
 
     geometryB = new THREE.BufferGeometry();
     geometryB.verticesNeedUpdate = true; 
-    planeB = new THREE.Mesh(pGeometry, materialC);
-    pGeometry.verticesNeedUpdate = true; 
-    // scene.add( planeB );
 
     cuboGrandeGeometry = new THREE.SphereGeometry( 200, 32, 32 );
     cuboGrande = new THREE.Mesh(cuboGrandeGeometry, materialC2 );
@@ -324,21 +324,8 @@ async function animate () {
 
     var time2 = Date.now() * 0.0005;
 
-    requestAnimationFrame( animate );
-
-    for ( let i = 0; i < position.count; i ++ ) {	
-	const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 70;
-	// const analisis = 0; // para desactivar la audio reactividad 
-	position.setX( i, (keypoints[i][0] * 0.1 - 20) * (1+analisis) );
-	position.setY( i, (keypoints[i][1] * 0.1 - 20) * (1+analisis) );
-	position.setZ( i, keypoints[i][2] * 0.05  * (1+ analisis) ); 
-    }
+    // animsc2();
     
-    planeB.geometry.computeVertexNormals(); 
-    planeB.geometry.attributes.position.needsUpdate = true;
-
-    position.needsUpdate = true;
-
     for(var i = 0; i < 4; i++){	
 	luces[i].position.x = Math.sin( time2 * 0.3 + (0.5 * i)) * 2400;
 	luces[i].position.y = Math.cos( time2 * 0.4 + (0.5*i)) * 2500-800;
@@ -379,9 +366,18 @@ async function animate () {
     }
 
     if(buscando){
-	// switch de animación 
-	animsc1();
+	// switch de animación
+	switch(escena%2){
+	case 0:
+	    animsc1(); 
+	    break;
+	case 1:
+	    animsc2(); 
+	    break; 
+	}	
     }
+
+    requestAnimationFrame( animate );
     
 }
 
@@ -395,15 +391,21 @@ function initsc0(){
 	materialVideo.map.wrapS = THREE.RepeatWrapping;
 	materialVideo.map.repeat.x = - 1;
 	materialVideo.map.rotation.y = Math.PI / 2;
-	// revisar si lo siguiente va en escenas y no en marco general 
+ 
 	scene.remove( cuboGrande );
 	scene.remove( cube );
 	scene.remove( text );
-	scene.remove( planeB ); // este si tendría que ir en otro lado  
 
 	// switch de eliminación 
-	
-	rmsc1();
+
+	switch(escena%2){
+	case 0:
+	    rmsc1();
+	    break;
+	case 1:
+	    rmsc2();
+	    break; 
+	}
 
 	buscando = false;
 	myProgress.style.display = "none";
@@ -411,18 +413,22 @@ function initsc0(){
     } else {
 
 	materialVideo.map = new THREE.VideoTexture( video );
-	// revisar si lo siguiente van en escenas y no en marco general 
 	scene.add( cuboGrande );
 	scene.add( cube );
 	scene.add( text );
 
 	// switch de incialización
 	
-	initsc1();
-
+	switch(escena%2){
+	case 0:
+	    initsc1();
+	    break;
+	case 1:
+	    initsc2(); 
+	    break; 
+	}
+	
 	buscando = true; 
-	// scene.add( planeB ); // escena específica 
-	// initsc1();
 	myProgress.style.display = "block";
 	
     }
@@ -489,7 +495,7 @@ function rmsc1(){
   
     for(let i = 0; i < cubos.length; i++){
 
-	cubos[i].material.dispose();
+ 	cubos[i].material.dispose();
 	cubos[i].geometry.dispose(); 
 	scene.remove( cubos[i] );
 	
@@ -499,7 +505,34 @@ function rmsc1(){
 
 //////// Mesh desordenado 
 
-function sc2(){
+function initsc2(){
+
+    scene.add( planeB );
+  
+}
+
+function animsc2(){
+    
+    for ( let i = 0; i < position.count; i ++ ) {	
+	const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 70;
+	// const analisis = 0; // para desactivar la audio reactividad 
+	position.setX( i, (keypoints[i][0] * 0.1 - 20) * (1+analisis) );
+	position.setY( i, (keypoints[i][1] * 0.1 - 20) * (1+analisis) );
+	position.setZ( i, keypoints[i][2] * 0.05  * (1+ analisis) ); 
+    }
+    
+    planeB.geometry.computeVertexNormals(); 
+    planeB.geometry.attributes.position.needsUpdate = true;
+    
+    position.needsUpdate = true;
+    
+}
+
+function rmsc2(){
+
+    // planeB.material.dispose();
+    // planeB.geometry.dispose(); 
+    scene.remove( planeB );
 
 }
 
@@ -507,10 +540,6 @@ function sc2(){
 
 function sc3(){
 
-}
-
-function dEsferas() {
-    
 }
 
 function texto() {
@@ -550,8 +579,23 @@ function htmlBar(){
 		    i = 0;
 		    // cambiar de escena
 		    htmlBar();
-		    escena++; 
-		    console.log(escena%2); 
+		    escena++;
+
+		    rmsc1();
+		    rmsc2();
+		   
+		    switch(escena%2){
+		    case 0:
+			initsc1();
+			//console.log("caso 0 escena 1"); 
+			break;
+		    case 1:
+			initsc2(); 
+			//console.log("caso 1 escena 2");
+			break; 
+		    }
+		    
+		    // console.log(escena%2); 
 		} else {
 		    width+= 0.2;
 		    elem.style.width = width + "%";
@@ -650,7 +694,7 @@ async function detonar(){
     htmlBar(); 
     loaderHTML.style.display = "none";
     myProgress.style.display = "block";  
-    console.log('t4m0s r3dy');
+    console.log('t4m0sr3dy');
     
 }
 
@@ -660,8 +704,6 @@ video = document.getElementById( 'video' );
 //texture.wrapS = THREE.RepeatWrapping;
 //texture.repeat.x = - 1;
 //texture.rotation.y = Math.PI / 2; 
-
-/// Para osc, queda pendiente la activación 
 
 /*
 
