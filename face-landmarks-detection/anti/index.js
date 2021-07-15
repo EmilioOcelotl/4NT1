@@ -690,11 +690,11 @@ async function sonido(){
     let reverseActual;
     let reverseCambio = 0; 
 
-    let pitch = [0, -12, 0, 24, 12];
+    let pitch = [0, -12, 0, -12, 12];
     let pitchActual;
     let pitchCambio = 0; 
 
-    let start = [0.1, 0.5 ,0.7, 0.3, 0.9];
+    let start = [0.1, 0.5 ,0.7, 0.3, 0.9, 1.5, 2.0 ];
     let startActual;
     let startCambio = 0; 
 
@@ -705,20 +705,23 @@ async function sonido(){
     await Tone.start();
     
     const reverb = new Tone.JCReverb(0.5).connect(panner);
+
     const pitchShift = new Tone.PitchShift().connect(reverb);
-    const dist = new Tone.Distortion(0.2).connect(pitchShift);
+
+    const dist = new Tone.Distortion(0.1).connect(pitchShift);
 
     // modificar - trasladar las características a escenas? 
-    
+
+    /*
     const player1 = new Tone.GrainPlayer({
 
 
-	url: "https://emilioocelotl.github.io/4NT1/audio/geom.mp3",
+	url: "https://emilioocelotl.github.io/4NT1/audio/geom2.mp3",
 	loopStart: 0.5,
-	loopEnd: 1.0, 
+	loopEnd: 4.0, 
 	detune: 0.2, 
-	grainSize: 0.1,
-	overlap: 0.5,
+	grainSize: 0.01,
+	overlap: 0.2,
 	playbackRate: 1, 
 	reverse: true,
 	loop: true,
@@ -727,12 +730,18 @@ async function sonido(){
 	
     }).connect(dist);
 
+    */
+
+    const player = new Tone.Player("https://emilioocelotl.github.io/4NT1/audio/geom1.mp3").connect(dist) ;
+
+    player.loop = true; 
     Tone.loaded().then(() => {
-	player1.start();
+	player.start();
     });
     
     reverb.connect(analyser);
 
+    /*
         // secuencias chiecar lo del clear interval - revisar más arriba 
     
     setInterval(function(){
@@ -743,13 +752,13 @@ async function sonido(){
 	pitchShift.pitch = pitchActual; 
 	wetActual = wet[al]; 
 	reverb.wet = wetActual;
-    }, 300); // esto podría secuenciarse también ? 
+    }, 1200); // esto podría secuenciarse también ? 
 
     setInterval(function(){
 	let al = Math.floor(Math.random()*5)
 	reverseActual= reverse[al]; 
 	reverseCambio++;
-	player1.reverse = reverseActual; 
+	player.reverse = reverseActual; 
 	// scene.background = colores[al] ;
 	cambioC++; 
     },1200);
@@ -757,10 +766,10 @@ async function sonido(){
     setInterval(function(){
 	startActual= start[startCambio%5]; 
 	startCambio++;
-	player1.loopStart = startActual;
-    }, 300);
+	player.loopStart = startActual;
+    }, 600);
 
-    
+    */
 }
 
 
