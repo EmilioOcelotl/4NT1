@@ -231,7 +231,6 @@ async function init() {
 		new THREE.Color( 0xE93479 ),
 		new THREE.Color( 0x000000 ) ];
 
-
     for(let i = 0; i < 4; i++){
 	luces[i] = new THREE.PointLight(colores[i], 0.5);
 	scene.add( luces[i] ); 
@@ -432,7 +431,6 @@ function initsc0(){
 
 	buscando = false;
 	myProgress.style.display = "none";
-
 	
 	scene.remove( cuboGrande );
 	scene.remove( cube );
@@ -563,7 +561,6 @@ function initsc2(){
 	scene.remove( luces[i] );
 	luces[i].dispose(); 
     }
-
     
     for(let i = 0; i < 4; i++){
 	luces[i] = new THREE.PointLight(colores2[i], 0.5);
@@ -684,7 +681,7 @@ function htmlBar(){
 
 async function sonido(){
 
-    // variables
+    // variables y secuencias 
     
     let wet = [0.1, 0.2, 0, 0.04];
     let wetActual;
@@ -703,14 +700,19 @@ async function sonido(){
 
     let cambioC = 0;
 
-    // Generadores de audio
+    // Init
     
     await Tone.start();
     
     const reverb = new Tone.JCReverb(0.5).connect(panner);
     const pitchShift = new Tone.PitchShift().connect(reverb);
     const dist = new Tone.Distortion(0.2).connect(pitchShift);
-    const player = new Tone.GrainPlayer({
+
+    // modificar - trasladar las características a escenas? 
+    
+    const player1 = new Tone.GrainPlayer({
+
+
 	url: "https://tonejs.github.io/audio/drum-samples/breakbeat.mp3",
 	loopStart: 0.5,
 	loopEnd: 1.0, 
@@ -721,15 +723,17 @@ async function sonido(){
 	reverse: true,
 	loop: true,
 	volume: 0.25
+
+	
     }).connect(dist);
 
     Tone.loaded().then(() => {
-	player.start();
+	player1.start();
     });
     
-    reverb.connect(analyser); 
+    reverb.connect(analyser);
 
-    // secuencias 
+        // secuencias chiecar lo del clear interval - revisar más arriba 
     
     setInterval(function(){
 	let al = Math.floor(Math.random()*5);
@@ -739,13 +743,13 @@ async function sonido(){
 	pitchShift.pitch = pitchActual; 
 	wetActual = wet[al]; 
 	reverb.wet = wetActual;
-    }, 300);
+    }, 300); // esto podría secuenciarse también ? 
 
     setInterval(function(){
 	let al = Math.floor(Math.random()*5)
 	reverseActual= reverse[al]; 
 	reverseCambio++;
-	player.reverse = reverseActual; 
+	player1.reverse = reverseActual; 
 	// scene.background = colores[al] ;
 	cambioC++; 
     },1200);
@@ -753,10 +757,12 @@ async function sonido(){
     setInterval(function(){
 	startActual= start[startCambio%5]; 
 	startCambio++;
-	player.loopStart = startActual;
+	player1.loopStart = startActual;
     }, 600);
+
     
 }
+
 
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
