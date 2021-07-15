@@ -690,7 +690,7 @@ async function sonido(){
     let reverseActual;
     let reverseCambio = 0; 
 
-    let pitch = [0, -12, 0, -12, 12];
+    let pitch = [0, -12, 0, 24, 12];
     let pitchActual;
     let pitchCambio = 0; 
 
@@ -713,7 +713,7 @@ async function sonido(){
     const player1 = new Tone.GrainPlayer({
 
 
-	url: "https://tonejs.github.io/audio/drum-samples/breakbeat.mp3",
+	url: "https://emilioocelotl.github.io/4NT1/audio/geom.mp3",
 	loopStart: 0.5,
 	loopEnd: 1.0, 
 	detune: 0.2, 
@@ -758,7 +758,7 @@ async function sonido(){
 	startActual= start[startCambio%5]; 
 	startCambio++;
 	player1.loopStart = startActual;
-    }, 600);
+    }, 300);
 
     
 }
