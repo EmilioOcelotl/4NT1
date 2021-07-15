@@ -3,7 +3,7 @@
 //////////////////////////////////
 
 /*
-
+ 
 Para el cambio de escenas:
 
 - inicializar (cuando hay - no hay rostro )
@@ -26,6 +26,8 @@ import Stats from 'stats.js';
 import { EffectComposer } from './jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from './jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from '/jsm/postprocessing/UnrealBloomPass.js';
+import { GlitchPass } from '/jsm/postprocessing/GlitchPass.js';
+
 
 // const OSC = require('osc-js'); // pal osc 
 // const osc = new OSC(); 
@@ -46,7 +48,7 @@ let matArray = [];
 let prueba = 0; 
 let afft = [];
 const analyser = new Tone.Analyser( "fft", 64 ) ;
-let postB = false; 
+let postB = true; 
 
 const pGeometry = new THREE.PlaneGeometry(8, 8, 21, 20);
 const position = pGeometry.attributes.position;
@@ -87,7 +89,7 @@ const myBar = document.getElementById( "myBar" );
 
 startButton.addEventListener( 'click', init  );
 
-let colores = []; 
+let colores = [], colores2 = []; 
 const stats = new Stats();
 
 let predictions = []; 
@@ -177,7 +179,7 @@ async function renderPrediction() {
     
 };
 
-///////////////////////// Inicialización.- desplazar a otros lados lo visual 
+///////////////////////// Inicialización
 
 async function init() {
     
@@ -206,7 +208,14 @@ async function init() {
 	{maxFaces: 2});
     
     scene = new THREE.Scene();
+    // scene.background = new THREE.Color( 0x000000 ); // UPDATED
+    
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+    // camera.position.set(0, 0, 10);
+
+    // para activar capas
+    
     camera.position.z = 40;
     camera.rotation.z = Math.PI; 
     
@@ -214,7 +223,14 @@ async function init() {
 	       new THREE.Color( 0xea00d9 ),
 	       new THREE.Color( 0x0adbc6 ),
 	       new THREE.Color( 0x133e7c ),
-	       new THREE.Color( 0x000000 ) ]; 
+	       new THREE.Color( 0x000000 ) ];
+
+    colores2 = [new THREE.Color( 0x153CB4 ),
+		new THREE.Color( 0xF62E97 ),
+		new THREE.Color( 0xF9AC53 ),
+		new THREE.Color( 0xE93479 ),
+		new THREE.Color( 0x000000 ) ];
+
 
     for(let i = 0; i < 4; i++){
 	luces[i] = new THREE.PointLight(colores[i], 0.5);
@@ -225,7 +241,7 @@ async function init() {
     materialVideo = new THREE.MeshBasicMaterial( {color: 0xffffff, side: THREE.DoubleSide} );
     planeVideo = new THREE.Mesh( geometryVideo, materialVideo );
     planeVideo.rotation.x = Math.PI;
-    planeVideo.position.z = -10; 
+    planeVideo.position.z = -10;
     scene.add( planeVideo );
   
     for(var i = 0; i < 4; i++){
@@ -235,7 +251,7 @@ async function init() {
     materialC  = new THREE.MeshStandardMaterial( {
 	roughness: 0,
 	color: 0xffffff,
-	metalness: 0.7,
+	metalness: 0.8,
 	bumpScale: 0.0005,
 	side: THREE.DoubleSide,
 	// map: texture
@@ -275,7 +291,7 @@ async function init() {
 
     cuboGrandeGeometry = new THREE.SphereGeometry( 200, 32, 32 );
     cuboGrande = new THREE.Mesh(cuboGrandeGeometry, materialC2 );
-
+    
     /*
     geometryMirr = new THREE.PlaneGeometry( 80, 80 );
 
@@ -294,27 +310,33 @@ async function init() {
 
     */ 
 
-    renderer = new THREE.WebGLRenderer({alpha:true, antialias: true});
+    renderer = new THREE.WebGLRenderer({antialias: true});
+
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
+    // renderer.autoClear = false;
     // renderer.toneMapping = THREE.ReinhardToneMapping;
     document.body.appendChild( renderer.domElement );
+    // renderer.setClearColor( 0x101000 );
+    
     window.addEventListener( 'resize', onWindowResize );
 
     container.appendChild( stats.dom ); 
     
-    if(postB){
-	const renderScene = new RenderPass( scene, camera );
+    const renderScene = new RenderPass( scene, camera );
 	
-	const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.4, 0.85 );
-	bloomPass.threshold = 0.25;
-	bloomPass.strength = 0.25;
-	bloomPass.radius = 0.5;
-	
-	composer = new EffectComposer( renderer );
-	composer.addPass( renderScene );
-	composer.addPass( bloomPass );
-    }
+    const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.4, 0.85 );
+    bloomPass.threshold = 0.21;
+    bloomPass.strength = 1.25;
+    bloomPass.radius = 0.55;
+    // bloomPass.renderToScreen = true;
+    
+    composer = new EffectComposer( renderer );
+    composer.addPass( renderScene );
+
+    // composer.addPass( bloomPass );
+
+    glitchPass = new GlitchPass();
     
     detonar(); 
     
@@ -322,6 +344,8 @@ async function init() {
 
 async function animate () {
 
+    requestAnimationFrame( animate );
+        
     var time2 = Date.now() * 0.0005;
 
     // animsc2();
@@ -332,11 +356,11 @@ async function animate () {
 	luces[i].position.z = Math.sin( time2 * 0.2 + (0.5 * i)) * 2400-200 + 4000;
     }
     
-    text.position.x = keypoints[0][0]* 0.1;
+    text.position.x = keypoints[0][0]* 0.1 -10;
     text.position.y = keypoints[0][1]* 0.1 -35;
     text.position.z = keypoints[0][2] * 0.1 + 10;
 
-    cube.position.x = keypoints[0][0]* 0.1- 40;
+    cube.position.x = keypoints[0][0]* 0.1- 30;
     cube.position.y = keypoints[0][1]* 0.1 -10;
     cube.position.z = keypoints[0][2] * 0.1 + 10;
     cube.rotation.x += 0.04;
@@ -360,10 +384,15 @@ async function animate () {
     panner.positionX.value = degree  ; 
 
     vertices = [];
+    
+    //renderer.clear();
+    
+    //camera.layers.set(1);
+    composer.render();
 
-    if(postB){
-	composer.render();
-    }
+    // renderer.clearDepth();
+    // camera.layers.set(0);
+    // renderer.render(scene, camera);
 
     if(buscando){
 	// switch de animación
@@ -377,8 +406,6 @@ async function animate () {
 	}	
     }
 
-    requestAnimationFrame( animate );
-    
 }
 
 /// no hay rostros 
@@ -392,10 +419,6 @@ function initsc0(){
 	materialVideo.map.repeat.x = - 1;
 	materialVideo.map.rotation.y = Math.PI / 2;
  
-	scene.remove( cuboGrande );
-	scene.remove( cube );
-	scene.remove( text );
-
 	// switch de eliminación 
 
 	switch(escena%2){
@@ -409,13 +432,16 @@ function initsc0(){
 
 	buscando = false;
 	myProgress.style.display = "none";
+
+	
+	scene.remove( cuboGrande );
+	scene.remove( cube );
+	scene.remove( text );
+
 	
     } else {
 
 	materialVideo.map = new THREE.VideoTexture( video );
-	scene.add( cuboGrande );
-	scene.add( cube );
-	scene.add( text );
 
 	// switch de incialización
 	
@@ -427,6 +453,13 @@ function initsc0(){
 	    initsc2(); 
 	    break; 
 	}
+
+	// cuboGrande.layers.enable(0); 
+	scene.add( cuboGrande );
+	scene.add( cube );
+	
+	// text.layers.enable(0);
+	scene.add( text );
 	
 	buscando = true; 
 	myProgress.style.display = "block";
@@ -437,6 +470,18 @@ function initsc0(){
 //////// objetos asociados a keypoints
 
 function initsc1(){
+
+    for(let i = 0; i < 4; i++){
+	//luces[i] = new THREE.PointLight(colores[i], 0.5);
+	scene.remove( luces[i] );
+	luces[i].dispose(); 
+    }
+   
+    for(let i = 0; i < 4; i++){
+	luces[i] = new THREE.PointLight(colores[i], 0.5);
+	scene.add( luces[i] );
+	// luces[i].dispose(); 
+    }
     
     let vueltas = 0; 
     
@@ -460,8 +505,8 @@ function initsc1(){
 		cubos[vueltas].rotation.y = Math.random() * Math.PI ; 
 		cubos[vueltas].rotation.z = Math.random() * Math.PI ;
 		cubos[vueltas].scale.x = 1+(Math.random() * 1);
-		cubos[vueltas].scale.y = 1+(Math.random() * 1); 
-		cubos[vueltas].scale.z = 1+(Math.random() * 3); 
+		cubos[vueltas].scale.y = 1+(Math.random() * 2); 
+		cubos[vueltas].scale.z = 1+(Math.random() * 4); 
 		scene.add( cubos[vueltas] );
 		vueltas++;
 		
@@ -492,6 +537,12 @@ function animsc1(){
 }
 
 function rmsc1(){
+
+    for(let i = 0; i < 4; i++){
+	//luces[i] = new THREE.PointLight(colores[i], 0.5);
+	scene.remove( luces[i] );
+	luces[i].dispose(); 
+    }
   
     for(let i = 0; i < cubos.length; i++){
 
@@ -506,6 +557,19 @@ function rmsc1(){
 //////// Mesh desordenado 
 
 function initsc2(){
+
+    for(let i = 0; i < 4; i++){
+	//luces[i] = new THREE.PointLight(colores[i], 0.5);
+	scene.remove( luces[i] );
+	luces[i].dispose(); 
+    }
+
+    
+    for(let i = 0; i < 4; i++){
+	luces[i] = new THREE.PointLight(colores2[i], 0.5);
+	scene.add( luces[i] );
+	// luces[i].dispose(); 
+    }
 
     scene.add( planeB );
   
@@ -530,6 +594,12 @@ function animsc2(){
 
 function rmsc2(){
 
+      for(let i = 0; i < 4; i++){
+	//luces[i] = new THREE.PointLight(colores[i], 0.5);
+	scene.remove( luces[i] );
+	luces[i].dispose(); 
+    }
+  
     // planeB.material.dispose();
     // planeB.geometry.dispose(); 
     scene.remove( planeB );
@@ -587,18 +657,25 @@ function htmlBar(){
 		    switch(escena%2){
 		    case 0:
 			initsc1();
-			//console.log("caso 0 escena 1"); 
 			break;
 		    case 1:
 			initsc2(); 
-			//console.log("caso 1 escena 2");
 			break; 
 		    }
 		    
-		    // console.log(escena%2); 
 		} else {
 		    width+= 0.2;
 		    elem.style.width = width + "%";
+
+		    if(width.toFixed(2) == 97.0){ 
+			composer.addPass( glitchPass );
+			glitchPass.goWild = true; 
+		    }
+
+		    if(width.toFixed(2) == 2.0){
+			composer.removePass( glitchPass ); 
+		    }
+		    
 		}
 	    }
 	}

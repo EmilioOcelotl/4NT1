@@ -26,15 +26,15 @@ Objetivo general: Constuir el marco de trabajo para la realización de las escen
 - [x] Cargando
 - [x] Montaje provisional en un sitio web y pruebas con otras computadoras
 - [x] Certificado de seguridad para abrir cámara
-- [ ] Re-indexar vertices 
-- [x] Separar escenas en funciones y dispose
-- [ ] Asignar meshes y sonidos a más de una persona 
-- [ ] Transiciones
-- [ ] Layers para objetos con bloom y sin bloom 
-- [ ] Framebuffer para algo de magia 
-- [ ] Indicadores de lo que está pasando 
 - [x] Actualizar package.json en repositorio 
-- [x] Arreglar texturas 
+- [x] Arreglar texturas
+- [x] Separar escenas en funciones y dispose
+- [x] Transiciones
+- [x] Layers para objetos con bloom y sin bloom - No es tan fácil 
+- [ ] Re-indexar vertices 
+- [ ] Asignar meshes y sonidos a más de una persona 
+- [ ] Framebuffer para algo de magia 
+- [ ] Indicadores de lo que está pasando  
 - [ ] Optimización para cel y compus de placa reducida: esperar a que el render términe de cargar 
 - [ ] Desplegar un mensaje si no hay cámara
 - [ ] Corregir coordenadas de la máscara en Firefox
@@ -95,4 +95,6 @@ Objetivo general: Constuir el marco de trabajo para la realización de las escen
 - No está fácil construir el modelo localmente, necesito encontrar soluciones, tal vez el problema está en la actualización de parcel.
 - Ya es posible utilizar el modo multiplayer, hace falta asociar más sintetizadores a otras caras de manera independiente > ¿Será esto muy costoso?
 - Leer el ultimo capitulo del SuperCollider Book > csound ya esta compilado para web
-- Estándares industriales para el audio procesado en web 
+- Estándares industriales para el audio procesado en web
+- Exceso de efectos y capas ¿afectará el desempeño en algunas compus?
+- Ludificación e interacción - Si todo esto se presenta en físico que exista una interfaz de interacción que no dependa del tacto 
