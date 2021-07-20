@@ -15,6 +15,8 @@ import { EffectComposer } from './jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from './jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from '/jsm/postprocessing/UnrealBloomPass.js';
 import { GlitchPass } from '/jsm/postprocessing/GlitchPass.js';
+//import { SVGLoader } from '/jsm/loaders/SVGLoader.js';
+import { TTFLoader } from '/jsm/loaders/TTFLoader.js';
 
 // const OSC = require('osc-js'); // pal osc 
 // const osc = new OSC(); 
@@ -108,6 +110,7 @@ let seq1, seq2, seq3;
 
 let flow, curve, curveHandles = []; 
 
+let textMesh1; 
 ///////////// Retro
 
 const dpr = window.devicePixelRatio;
@@ -727,6 +730,7 @@ function materiales(){
 }
     
 function texto() {
+    /*
     var fontLoader = new THREE.FontLoader();
     fontLoader.load("https://raw.githubusercontent.com/mrdoob/three.js/master/examples/fonts/helvetiker_regular.typeface.json", function(font ){ 
 	const message = "4nti";	
@@ -749,7 +753,45 @@ function texto() {
 	text.rotation.z = Math.PI;
 
     })
+    */
 
+    loader.load( 'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/fonts/ttf/kenpixel.ttf', function ( json ) {
+
+	let font = new THREE.Font( json );
+	// createText();
+	
+	let textGeo = new THREE.TextGeometry( text, {
+	    
+	    font: font,
+	    
+	    size: size,
+	    height: height,
+	    curveSegments: curveSegments,
+	    
+	    bevelThickness: bevelThickness,
+	    bevelSize: bevelSize,
+	    bevelEnabled: true
+	    
+	} );
+
+	textGeo.computeBoundingBox();
+	textGeo.computeVertexNormals();
+	
+	const centerOffset = - 0.5 * ( textGeo.boundingBox.max.x - textGeo.boundingBox.min.x );
+	
+	textMesh1 = new THREE.Mesh( textGeo, material );
+	
+	textMesh1.position.x = centerOffset;
+	textMesh1.position.y = hover;
+	textMesh1.position.z = 0;
+	
+	textMesh1.rotation.x = 0;
+	textMesh1.rotation.y = Math.PI * 2;
+	
+	group.add( textMesh1 );
+	
+    } );
+    
 }
 
 function htmlBar(){
