@@ -2,18 +2,6 @@
 /////////// 4NT1 /////////////////
 //////////////////////////////////
 
-/*
- 
-Para el cambio de escenas:
-
-- inicializar (cuando hay - no hay rostro )
-- inicializar ( cuando cambia la escena )
-- transformar ( solo si no hay rostro
-- eliminar ( cuando no hay rostro )
-- eliminar ( cuando cambia la escena ) 
-
-*/ 
-
 import * as faceLandmarksDetection from '@tensorflow-models/face-landmarks-detection'
 import * as tf from '@tensorflow/tfjs-core';
 import '@tensorflow/tfjs-backend-webgl'; 
@@ -27,7 +15,6 @@ import { EffectComposer } from './jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from './jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from '/jsm/postprocessing/UnrealBloomPass.js';
 import { GlitchPass } from '/jsm/postprocessing/GlitchPass.js';
-
 
 // const OSC = require('osc-js'); // pal osc 
 // const osc = new OSC(); 
@@ -105,6 +92,21 @@ let escena = 0;
 
 let rendereo; 
 let buscando = false;
+let numsc = 3; 
+let ofTexture;
+    
+let wet = [0.1, 0.2, 0, 0.04];let wetActual;
+let reverse = [true, false, false, true, false];let reverseActual;let reverseCambio = 0; 
+let pitch = [0, -12, 0, -12, 12, 7, -7];let pitchActual;let pitchCambio = 0; 
+let start = [0.1, 0.5 ,0.7, 0.3, 0.9, 1.5, 2.0];let startActual;let startCambio = 0; 
+let cambioC = 0;
+
+let pitchShift, reverb, dist;
+let player, antiKick;
+
+let seq1, seq2, seq3; 
+
+let flow, curve, curveHandles = []; 
 
 ///////////// Setupear la cámara
 
@@ -157,8 +159,6 @@ async function renderPrediction() {
 		    TRIANGULATION[i * 3 + 2]
 		].map(index => keypoints[index]);
 	    }
-
-	    // aquí tendríq que ir un switcher para la inicialización de los objetos en escena 
 	    
 	});
     }
@@ -194,7 +194,7 @@ async function init() {
     container = document.createElement( 'div' );
     document.body.appendChild( container );
 
-    await tf.setBackend('webgl'); // ajustar esto dependiendo de las capacidades de la chompu? 
+    await tf.setBackend('webgl'); 
     await setupCamera();
     video.play();
     
@@ -211,26 +211,12 @@ async function init() {
     // scene.background = new THREE.Color( 0x000000 ); // UPDATED
     
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-
-    // camera.position.set(0, 0, 10);
-
-    // para activar capas
     
     camera.position.z = 40;
     camera.rotation.z = Math.PI; 
+
+    cols(); 
     
-    colores = [new THREE.Color( 0x711c91 ),
-	       new THREE.Color( 0xea00d9 ),
-	       new THREE.Color( 0x0adbc6 ),
-	       new THREE.Color( 0x133e7c ),
-	       new THREE.Color( 0x000000 ) ];
-
-    colores2 = [new THREE.Color( 0x153CB4 ),
-		new THREE.Color( 0xF62E97 ),
-		new THREE.Color( 0xF9AC53 ),
-		new THREE.Color( 0xE93479 ),
-		new THREE.Color( 0x000000 ) ];
-
     for(let i = 0; i < 4; i++){
 	luces[i] = new THREE.PointLight(colores[i], 0.5);
 	scene.add( luces[i] ); 
@@ -242,29 +228,8 @@ async function init() {
     planeVideo.rotation.x = Math.PI;
     planeVideo.position.z = -10;
     scene.add( planeVideo );
-  
-    for(var i = 0; i < 4; i++){
-	matArray[i] =  new THREE.MeshPhongMaterial( { color: 0x000000, specular: colores[i%2], emissive: colores[i], shininess: 10 } );
-    }
-   
-    materialC  = new THREE.MeshStandardMaterial( {
-	roughness: 0,
-	color: 0xffffff,
-	metalness: 0.8,
-	bumpScale: 0.0005,
-	side: THREE.DoubleSide,
-	// map: texture
-    } );
-       
-    materialC2  = new THREE.MeshStandardMaterial( {
-	roughness: 0.6,
-	color: 0xffffff,
-	metalness: 0.05,
-	bumpScale: 0.0005,
-	side: THREE.DoubleSide,
-    } );
-				          
-    texto();
+
+    materiales();
     
     /* 
     for(var i = 0; i < 6; i++){
@@ -290,7 +255,7 @@ async function init() {
 
     cuboGrandeGeometry = new THREE.SphereGeometry( 200, 32, 32 );
     cuboGrande = new THREE.Mesh(cuboGrandeGeometry, materialC2 );
-    
+
     /*
     geometryMirr = new THREE.PlaneGeometry( 80, 80 );
 
@@ -308,7 +273,9 @@ async function init() {
     scene.add( groundMirror );
 
     */ 
-
+    				          
+    texto();
+    
     renderer = new THREE.WebGLRenderer({antialias: true});
 
     renderer.setPixelRatio( window.devicePixelRatio );
@@ -334,9 +301,10 @@ async function init() {
     composer.addPass( renderScene );
 
     // composer.addPass( bloomPass );
-
+   
     glitchPass = new GlitchPass();
-    
+    composer.addPass( glitchPass ); 
+
     detonar(); 
     
 }
@@ -374,9 +342,7 @@ async function animate () {
 	torus[i].rotation.z += 0.001 + (i * 0.0006);
     }
    */
-
-    // Por acá tendría que ir otro switcher para la animación 
-   
+    
     stats.update(); 
     renderer.render( scene, camera );
 
@@ -384,48 +350,44 @@ async function animate () {
 
     vertices = [];
     
-    //renderer.clear();
-    
-    //camera.layers.set(1);
     composer.render();
 
-    // renderer.clearDepth();
-    // camera.layers.set(0);
-    // renderer.render(scene, camera);
-
     if(buscando){
-	// switch de animación
-	switch(escena%2){
+	switch( escena % numsc ){
 	case 0:
 	    animsc1(); 
 	    break;
 	case 1:
 	    animsc2(); 
+	    break;
+	case 2:
+	    animsc3();
 	    break; 
 	}	
     }
-
+    
 }
-
-/// no hay rostros 
 
 function initsc0(){
    
     if ( predictions.length < 1 ) {
 
-	materialVideo.map = new THREE.TextureLoader().load( 'https://emilioocelotl.github.io/4NT1/face-landmarks-detection/anti/img/buscando.png' );
+	materialVideo.map = new THREE.TextureLoader().load( 'buscando.74525b9b.png' );
 	materialVideo.map.wrapS = THREE.RepeatWrapping;
 	materialVideo.map.repeat.x = - 1;
 	materialVideo.map.rotation.y = Math.PI / 2;
  
 	// switch de eliminación 
 
-	switch(escena%2){
+	switch(escena%numsc){
 	case 0:
 	    rmsc1();
 	    break;
 	case 1:
 	    rmsc2();
+	    break;
+	case 3:
+	    rmsc3();
 	    break; 
 	}
 
@@ -435,7 +397,12 @@ function initsc0(){
 	scene.remove( cuboGrande );
 	scene.remove( cube );
 	scene.remove( text );
+	// player.stop(); 
+	Tone.Destination.mute = true;
 
+	clearInterval(seq1Interval);
+	clearInterval(seq2Interval);
+	clearInterval(seq3Interval); 
 	
     } else {
 
@@ -443,12 +410,15 @@ function initsc0(){
 
 	// switch de incialización
 	
-	switch(escena%2){
+	switch(escena%numsc){
 	case 0:
 	    initsc1();
 	    break;
 	case 1:
 	    initsc2(); 
+	    break;
+	case 2:
+	    initsc3();
 	    break; 
 	}
 
@@ -461,7 +431,13 @@ function initsc0(){
 	
 	buscando = true; 
 	myProgress.style.display = "block";
-	
+
+	Tone.Destination.mute = false;
+
+	seq1 = setInterval(seq1Interval, 850); 
+	seq2 = setInterval(seq2Interval, 850);
+	seq3 = setInterval(seq3Interval, 850);
+    	
     }
 }
 
@@ -520,12 +496,12 @@ function animsc1(){
     
     for(let i = 0; i < NUM_KEYPOINTS; i++){
 	
-	const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 300;
+	const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 600;
 	//const analisis = THREE.MathUtils.damp(Tone.dbToGain( analyser.getValue()[i%64] )* 200, 10000, 0.0001, 0.001) * 4  ;
 	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 700; 
 	cubos[vueltas].position.x = keypoints[i][0] * 0.1 - 20 ; 
-	cubos[vueltas].position.y = keypoints[i][1] * 0.1 - 20; 
-	cubos[vueltas].position.z = keypoints[i][2] * 0.05 * (1+analisis) ;
+	cubos[vueltas].position.y = keypoints[i][1] * 0.1 - 20 ; 
+	cubos[vueltas].position.z = keypoints[i][2] * 0.05  * (1+analisis) ;
 	cubos[vueltas].rotation.z += 0.02;
 	cubos[vueltas].rotation.y += 0.0111;
 	vueltas++;
@@ -556,6 +532,8 @@ function rmsc1(){
 
 function initsc2(){
 
+    planeB.material = materialC;  
+        
     for(let i = 0; i < 4; i++){
 	//luces[i] = new THREE.PointLight(colores[i], 0.5);
 	scene.remove( luces[i] );
@@ -567,7 +545,7 @@ function initsc2(){
 	scene.add( luces[i] );
 	// luces[i].dispose(); 
     }
-
+    
     scene.add( planeB );
   
 }
@@ -575,7 +553,7 @@ function initsc2(){
 function animsc2(){
     
     for ( let i = 0; i < position.count; i ++ ) {	
-	const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 70;
+	const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
 	// const analisis = 0; // para desactivar la audio reactividad 
 	position.setX( i, (keypoints[i][0] * 0.1 - 20) * (1+analisis) );
 	position.setY( i, (keypoints[i][1] * 0.1 - 20) * (1+analisis) );
@@ -591,6 +569,59 @@ function animsc2(){
 
 function rmsc2(){
 
+    for(let i = 0; i < 4; i++){
+	//luces[i] = new THREE.PointLight(colores[i], 0.5);
+	scene.remove( luces[i] );
+	luces[i].dispose(); 
+    }
+  
+    // planeB.material.dispose();
+    // planeB.geometry.dispose(); 
+    scene.remove( planeB );
+    
+}
+
+function initsc3(){
+
+    planeB.material = matofTexture;  
+    
+    for(let i = 0; i < 4; i++){
+	//luces[i] = new THREE.PointLight(colores[i], 0.5);
+	scene.remove( luces[i] );
+	luces[i].dispose(); 
+    }
+    
+    for(let i = 0; i < 4; i++){
+	luces[i] = new THREE.PointLight(colores3[i], 0.5);
+	scene.add( luces[i] );
+	// luces[i].dispose(); 
+    }
+
+    // planeB.material.map.dispose();     
+    
+    scene.add( planeB );
+
+}
+
+function animsc3(){
+
+    for ( let i = 0; i < position.count; i ++ ) {	
+	const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
+	// const analisis = 0; // para desactivar la audio reactividad 
+	position.setX( i, (keypoints[i][0] * 0.1 - 20) * (1+analisis) );
+	position.setY( i, (keypoints[i][1] * 0.1 - 20) * (1+analisis) );
+	position.setZ( i, keypoints[i][2] * 0.05  * (1+ analisis) ); 
+    }
+    
+    planeB.geometry.computeVertexNormals(); 
+    planeB.geometry.attributes.position.needsUpdate = true;
+    
+    position.needsUpdate = true;
+
+}
+
+function rmsc3(){
+    
       for(let i = 0; i < 4; i++){
 	//luces[i] = new THREE.PointLight(colores[i], 0.5);
 	scene.remove( luces[i] );
@@ -600,15 +631,70 @@ function rmsc2(){
     // planeB.material.dispose();
     // planeB.geometry.dispose(); 
     scene.remove( planeB );
-
+    
 }
 
-//////// conexón de puntos por cercanía y bloom 
+function cols(){
+    
+    colores = [new THREE.Color( 0x1afe49 ),
+	       new THREE.Color( 0x8386f5 ),
+	       new THREE.Color( 0x3d43b4 ),
+	       new THREE.Color( 0x04134b ),
+	       new THREE.Color( 0x000000 ) ];
 
-function sc3(){
+    colores2 = [new THREE.Color( 0x00003b ),
+		new THREE.Color( 0x33003b ),
+		new THREE.Color( 0x66003b ),
+		new THREE.Color( 0x99003b ),
+		new THREE.Color( 0x000000 ) ];
 
+    colores3 = [new THREE.Color( 0xffffff ),
+		new THREE.Color( 0xffffff ),
+		new THREE.Color( 0xffffff ),
+		new THREE.Color( 0xffffff ),
+		new THREE.Color( 0xffffff ) ];
+    
 }
 
+function materiales(){
+
+    for(var i = 0; i < 4; i++){
+	matArray[i] =  new THREE.MeshPhongMaterial( { color: 0x000000, specular: colores[i%2], emissive: colores[i], shininess: 10 } );
+    }
+   
+    materialC  = new THREE.MeshStandardMaterial( {
+	roughness: 0.2,
+	color: 0xffffff,
+	metalness: 0.7,
+	bumpScale: 0.0005,
+	side: THREE.DoubleSide,
+	// map: texture
+    } );
+       
+    materialC2  = new THREE.MeshStandardMaterial( {
+	roughness: 0.6,
+	color: 0xffffff,
+	metalness: 0.5,
+	bumpScale: 0.0005,
+	side: THREE.DoubleSide,
+    } );
+
+    ofTexture = new THREE.TextureLoader().load( 'of8.89f2fef9.jpg' );
+
+    ofTexture.wrapS = ofTexture.wrapT = THREE.RepeatWrapping;
+    ofTexture.offset.set( 0, 0 );
+    ofTexture.repeat.set( 64, 64 );
+    
+    matofTexture  = new THREE.MeshStandardMaterial( {
+	roughness: 0.6,
+	color: 0xffffff,
+	metalness: 0.2,
+	bumpScale: 0.0005,
+	map: ofTexture, 
+	side: THREE.DoubleSide,
+    } );
+}
+    
 function texto() {
     var fontLoader = new THREE.FontLoader();
     fontLoader.load("https://raw.githubusercontent.com/mrdoob/three.js/master/examples/fonts/helvetiker_regular.typeface.json", function(font ){ 
@@ -622,6 +708,7 @@ function texto() {
 	    bevelSize: 0.5,
 	    bevelEnabled: true
 	} );
+	// textGeo.rotateX( Math.PI );
 
 	textGeo.computeBoundingBox();
 	xMid = - 0.5 * ( textGeo.boundingBox.max.x - textGeo.boundingBox.min.x );
@@ -629,6 +716,7 @@ function texto() {
 	text = new THREE.Mesh( textGeo, materialC );
 	// text.position.z =  1;
 	text.rotation.z = Math.PI;
+
     })
 
 }
@@ -651,13 +739,16 @@ function htmlBar(){
 		    rmsc1();
 		    rmsc2();
 		   
-		    switch(escena%2){
+		    switch(escena%numsc){
 		    case 0:
 			initsc1();
 			break;
 		    case 1:
 			initsc2(); 
-			break; 
+			break;
+		    case 2:
+			initsc3();
+			break;
 		    }
 		    
 		} else {
@@ -665,12 +756,13 @@ function htmlBar(){
 		    elem.style.width = width + "%";
 
 		    if(width.toFixed(2) == 97.0){ 
-			composer.addPass( glitchPass );
+			// composer.addPass( glitchPass );
 			glitchPass.goWild = true; 
 		    }
 
 		    if(width.toFixed(2) == 2.0){
-			composer.removePass( glitchPass ); 
+			glitchPass.goWild = false; 
+			//composer.removePass( glitchPass ); 
 		    }
 		    
 		}
@@ -680,98 +772,60 @@ function htmlBar(){
 
 
 async function sonido(){
-
-    // variables y secuencias 
-    
-    let wet = [0.1, 0.2, 0, 0.04];
-    let wetActual;
-    
-    let reverse = [true, false, false, true, false];
-    let reverseActual;
-    let reverseCambio = 0; 
-
-    let pitch = [0, -12, 0, -12, 12];
-    let pitchActual;
-    let pitchCambio = 0; 
-
-    let start = [0.1, 0.5 ,0.7, 0.3, 0.9, 1.5, 2.0 ];
-    let startActual;
-    let startCambio = 0; 
-
-    let cambioC = 0;
-
-    // Init
     
     await Tone.start();
+    reverb = new Tone.JCReverb(0.1).connect(panner);
+    pitchShift = new Tone.PitchShift().connect(reverb);
+    dist = new Tone.Distortion(0.1).connect(pitchShift);
+
+    player = new Tone.Player("geom4.0f7aa2a3.mp3").connect(dist) ;
+    player.loop = true;
+
+    antiKick = new Tone.Player("antiKick.51e9f00a.mp3").toDestination() ;
     
-    const reverb = new Tone.JCReverb(0.5).connect(panner);
-
-    const pitchShift = new Tone.PitchShift().connect(reverb);
-
-    const dist = new Tone.Distortion(0.1).connect(pitchShift);
-
-    // modificar - trasladar las características a escenas? 
-
-    /*
-    const player1 = new Tone.GrainPlayer({
-
-
-	url: "https://emilioocelotl.github.io/4NT1/audio/geom2.mp3",
-	loopStart: 0.5,
-	loopEnd: 4.0, 
-	detune: 0.2, 
-	grainSize: 0.01,
-	overlap: 0.2,
-	playbackRate: 1, 
-	reverse: true,
-	loop: true,
-	volume: 0.25
-
-	
-    }).connect(dist);
-
-    */
-
-    const player = new Tone.Player("https://emilioocelotl.github.io/4NT1/audio/geom1.mp3").connect(dist) ;
-
-    player.loop = true; 
     Tone.loaded().then(() => {
 	player.start();
     });
     
     reverb.connect(analyser);
+    antiKick.connect(analyser); 
 
-    /*
-        // secuencias chiecar lo del clear interval - revisar más arriba 
+    // Tone.destination.connect(analyser); 
+
+    seq1 = setInterval(seq1Interval, 850); 
+    seq2 = setInterval(seq2Interval, 850);
+    seq3 = setInterval(seq3Interval, 850);
     
-    setInterval(function(){
-	let al = Math.floor(Math.random()*5);
-	//console.log(al); 
-	pitchActual= pitch[al]; 
-	pitchCambio++;
-	pitchShift.pitch = pitchActual; 
-	wetActual = wet[al]; 
-	reverb.wet = wetActual;
-    }, 1200); // esto podría secuenciarse también ? 
-
-    setInterval(function(){
-	let al = Math.floor(Math.random()*5)
-	reverseActual= reverse[al]; 
-	reverseCambio++;
-	player.reverse = reverseActual; 
-	// scene.background = colores[al] ;
-	cambioC++; 
-    },1200);
-
-    setInterval(function(){
-	startActual= start[startCambio%5]; 
-	startCambio++;
-	player.loopStart = startActual;
-    }, 600);
-
-    */
 }
 
+// secuencias 
+
+function seq1Interval (){
+    let al = Math.floor(Math.random()*5);
+    //console.log(al); 
+    pitchActual= pitch[al]; 
+    pitchCambio++;
+    pitchShift.pitch = pitchActual; 
+    wetActual = wet[al]; 
+    reverb.wet = wetActual;
+    // antiKick.start(); 
+}
+
+function seq2Interval (){
+    let al = Math.floor(Math.random()*5)
+    reverseActual= reverse[al]; 
+    reverseCambio++;
+    player.reverse = reverseActual; 
+    // scene.background = colores[al] ;
+    cambioC++; 
+}
+
+function seq3Interval() {
+    startActual= start[startCambio%5]; 
+    startCambio++;
+    player.loopStart = startActual;
+    antiKick.start(); 
+}
 
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -791,7 +845,8 @@ async function detonar(){
 }
 
 video = document.getElementById( 'video' );
-// const texture = new THREE.VideoTexture( video );
+
+    // const texture = new THREE.VideoTexture( video );
 
 //texture.wrapS = THREE.RepeatWrapping;
 //texture.repeat.x = - 1;
@@ -860,4 +915,4 @@ async function oscSend(){
     })    
 }
 
-*/ 
+*/
