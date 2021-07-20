@@ -308,15 +308,15 @@ async function init() {
     const renderScene = new RenderPass( scene, camera );
 	
     const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.4, 0.85 );
-    bloomPass.threshold = 0.21;
-    bloomPass.strength = 1.25;
+    bloomPass.threshold = 0.9;
+    bloomPass.strength = 0.15;
     bloomPass.radius = 0.55;
     // bloomPass.renderToScreen = true;
     
     composer = new EffectComposer( renderer );
     composer.addPass( renderScene );
 
-    // composer.addPass( bloomPass );
+    composer.addPass( bloomPass );
    
     glitchPass = new GlitchPass();
     composer.addPass( glitchPass ); 
@@ -755,43 +755,44 @@ function texto() {
     })
     */
 
-    loader.load( 'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/fonts/ttf/kenpixel.ttf', function ( json ) {
+    const loader = new THREE.FontLoader();
+    loader.load( 'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/fonts/helvetiker_regular.typeface.json', function ( font ) {
 
-	let font = new THREE.Font( json );
-	// createText();
-	
-	let textGeo = new THREE.TextGeometry( text, {
-	    
-	    font: font,
-	    
-	    size: size,
-	    height: height,
-	    curveSegments: curveSegments,
-	    
-	    bevelThickness: bevelThickness,
-	    bevelSize: bevelSize,
-	    bevelEnabled: true
-	    
+	const color = 0xffffff;
+
+	const matDark = new THREE.LineBasicMaterial( {
+	    color: color,
+	    side: THREE.DoubleSide
 	} );
 
-	textGeo.computeBoundingBox();
-	textGeo.computeVertexNormals();
-	
-	const centerOffset = - 0.5 * ( textGeo.boundingBox.max.x - textGeo.boundingBox.min.x );
-	
-	textMesh1 = new THREE.Mesh( textGeo, material );
-	
-	textMesh1.position.x = centerOffset;
-	textMesh1.position.y = hover;
-	textMesh1.position.z = 0;
-	
-	textMesh1.rotation.x = 0;
-	textMesh1.rotation.y = Math.PI * 2;
-	
-	group.add( textMesh1 );
-	
-    } );
-    
+	const matLite = new THREE.MeshBasicMaterial( {
+	    color: color,
+	    transparent: true,
+	     opacity: 0.9,
+	    side: THREE.DoubleSide
+	} );
+
+	const message = "4nti\n Predictions:1";
+
+	const shapes = font.generateShapes( message, 1 );
+
+	const geometry = new THREE.ShapeGeometry( shapes );
+
+	geometry.computeBoundingBox();
+
+	const xMid = - 0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
+
+	geometry.translate( xMid, 0, 0 );
+
+	// make shape ( N.B. edge view not visible )
+
+	text = new THREE.Mesh( geometry, matLite );
+	text.position.z = 4;
+	// text.rotation.x = Math.PI;
+	// text.rotation.y = Math.PI;
+	scene.add( text );
+
+    })
 }
 
 function htmlBar(){
