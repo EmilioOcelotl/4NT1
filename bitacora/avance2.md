@@ -30,14 +30,16 @@ Objetivo general: Constuir el marco de trabajo para la realización de las escen
 - [x] Arreglar texturas
 - [x] Separar escenas en funciones y dispose
 - [x] Transiciones
-- [x] Layers para objetos con bloom y sin bloom - No es tan fácil 
+- [x] Layers para objetos con bloom y sin bloom - No es tan fácil
+- [x] Stop o pausa
 - [ ] Re-indexar vertices 
 - [ ] Asignar meshes y sonidos a más de una persona 
 - [ ] Framebuffer para algo de magia 
 - [ ] Indicadores de lo que está pasando  
-- [ ] Optimización para cel y compus de placa reducida: esperar a que el render términe de cargar 
 - [ ] Desplegar un mensaje si no hay cámara
 - [ ] Corregir coordenadas de la máscara en Firefox
+- [ ] Usar otra cosa que no sea webGL para móviles, configuración ligera  
+- [ ] Filtro para la textura de cámara
 
 ## Actividades realizadas
 

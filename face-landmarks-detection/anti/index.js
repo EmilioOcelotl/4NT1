@@ -108,6 +108,14 @@ let seq1, seq2, seq3;
 
 let flow, curve, curveHandles = []; 
 
+///////////// Retro
+
+const dpr = window.devicePixelRatio;
+const textureSize = 1024 * dpr;
+let texture; 
+const vector = new THREE.Vector2();
+// let cuboGrande; 
+
 ///////////// Setupear la cámara
 
 async function setupCamera() {
@@ -229,6 +237,8 @@ async function init() {
     planeVideo.position.z = -10;
     scene.add( planeVideo );
 
+    retro(); 
+    
     materiales();
     
     /* 
@@ -253,7 +263,10 @@ async function init() {
     geometryB = new THREE.BufferGeometry();
     geometryB.verticesNeedUpdate = true; 
 
-    cuboGrandeGeometry = new THREE.SphereGeometry( 200, 32, 32 );
+    cuboGrandeGeometry = new THREE.BoxGeometry( 200, 200, 200 );
+    //cuboGrandeGeometry = new THREE.IcosahedronGeometry( 200, 1 );
+    
+    // cuboGrandeGeometry = new THREE.SphereGeometry( 200, 32, 32 );
     cuboGrande = new THREE.Mesh(cuboGrandeGeometry, materialC2 );
 
     /*
@@ -288,7 +301,7 @@ async function init() {
     window.addEventListener( 'resize', onWindowResize );
 
     container.appendChild( stats.dom ); 
-    
+
     const renderScene = new RenderPass( scene, camera );
 	
     const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.4, 0.85 );
@@ -332,7 +345,9 @@ async function animate () {
     cube.position.z = keypoints[0][2] * 0.1 + 10;
     cube.rotation.x += 0.04;
     cube.rotation.y += 0.023;
-    
+
+    cuboGrande.rotation.x += 0.001;
+    cuboGrande.rotation.y += 0.002; 
     text.rotation.y = degree * 2 + (Math.PI )   ;
 
    /*
@@ -342,8 +357,9 @@ async function animate () {
 	torus[i].rotation.z += 0.001 + (i * 0.0006);
     }
    */
-    
+ 
     stats.update(); 
+    
     renderer.render( scene, camera );
 
     panner.positionX.value = degree  ; 
@@ -352,6 +368,11 @@ async function animate () {
     
     composer.render();
 
+    vector.x = ( window.innerWidth * dpr / 2 ) - ( textureSize / 2 );
+    vector.y = ( window.innerHeight * dpr / 2 ) - ( textureSize / 2 );
+    
+    renderer.copyFramebufferToTexture( vector, texture );
+    
     if(buscando){
 	switch( escena % numsc ){
 	case 0:
@@ -400,9 +421,9 @@ function initsc0(){
 	// player.stop(); 
 	Tone.Destination.mute = true;
 
-	clearInterval(seq1Interval);
-	clearInterval(seq2Interval);
-	clearInterval(seq3Interval); 
+	//clearInterval(seq1Interval);
+	//clearInterval(seq2Interval);
+	//clearInterval(seq3Interval); 
 	
     } else {
 
@@ -434,9 +455,9 @@ function initsc0(){
 
 	Tone.Destination.mute = false;
 
-	seq1 = setInterval(seq1Interval, 850); 
-	seq2 = setInterval(seq2Interval, 850);
-	seq3 = setInterval(seq3Interval, 850);
+	//seq1 = setInterval(seq1Interval, 850); 
+	//seq2 = setInterval(seq2Interval, 850);
+	//seq3 = setInterval(seq3Interval, 850);
     	
     }
 }
@@ -479,7 +500,7 @@ function initsc1(){
 		cubos[vueltas].rotation.y = Math.random() * Math.PI ; 
 		cubos[vueltas].rotation.z = Math.random() * Math.PI ;
 		cubos[vueltas].scale.x = 1+(Math.random() * 1);
-		cubos[vueltas].scale.y = 1+(Math.random() * 2); 
+		cubos[vueltas].scale.y = 1+(Math.random() * 1); 
 		cubos[vueltas].scale.z = 1+(Math.random() * 4); 
 		scene.add( cubos[vueltas] );
 		vueltas++;
@@ -496,7 +517,7 @@ function animsc1(){
     
     for(let i = 0; i < NUM_KEYPOINTS; i++){
 	
-	const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 600;
+	const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 800;
 	//const analisis = THREE.MathUtils.damp(Tone.dbToGain( analyser.getValue()[i%64] )* 200, 10000, 0.0001, 0.001) * 4  ;
 	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 700; 
 	cubos[vueltas].position.x = keypoints[i][0] * 0.1 - 20 ; 
@@ -670,7 +691,8 @@ function materiales(){
 	side: THREE.DoubleSide,
 	// map: texture
     } );
-       
+
+    /*
     materialC2  = new THREE.MeshStandardMaterial( {
 	roughness: 0.6,
 	color: 0xffffff,
@@ -678,7 +700,16 @@ function materiales(){
 	bumpScale: 0.0005,
 	side: THREE.DoubleSide,
     } );
+    */
 
+    materialC2 = new THREE.MeshBasicMaterial( {
+	map: texture,
+	side: THREE.DoubleSide
+	//color: diffuseColor,
+	//reflectivity: beta,
+	//envMap: alpha < 0.5 ? reflectionCube : null
+    } );
+    
     ofTexture = new THREE.TextureLoader().load( 'of8.89f2fef9.jpg' );
 
     ofTexture.wrapS = ofTexture.wrapT = THREE.RepeatWrapping;
@@ -770,6 +801,13 @@ function htmlBar(){
 	}
 }
 
+function retro(){
+    const data = new Uint8Array( textureSize * textureSize * 3 );
+    
+    texture = new THREE.DataTexture( data, textureSize, textureSize, THREE.RGBFormat );
+    texture.minFilter = THREE.NearestFilter;
+    texture.magFilter = THREE.NearestFilter;
+}
 
 async function sonido(){
     
@@ -790,41 +828,32 @@ async function sonido(){
     reverb.connect(analyser);
     antiKick.connect(analyser); 
 
-    // Tone.destination.connect(analyser); 
-
-    seq1 = setInterval(seq1Interval, 850); 
-    seq2 = setInterval(seq2Interval, 850);
-    seq3 = setInterval(seq3Interval, 850);
+    if(buscando){
+    setInterval(function(){
+	let al = Math.floor(Math.random()*5);
+	//console.log(al);
+	pitchActual= pitch[al];
+	pitchCambio++;
+	pitchShift.pitch = pitchActual;
+	wetActual = wet[al];
+	reverb.wet = wetActual;
+    }, 850); // esto podría secuenciarse también ?
+    setInterval(function(){
+	let al = Math.floor(Math.random()*5)
+	reverseActual= reverse[al];
+	reverseCambio++;
+	player.reverse = reverseActual;
+	// scene.background = colores[al] ;
+	cambioC++;
+    },850);
+    setInterval(function(){
+	startActual= start[startCambio%5];
+	startCambio++;
+	player.loopStart = startActual;
+	antiKick.start(); 
+    }, 850);
+    }
     
-}
-
-// secuencias 
-
-function seq1Interval (){
-    let al = Math.floor(Math.random()*5);
-    //console.log(al); 
-    pitchActual= pitch[al]; 
-    pitchCambio++;
-    pitchShift.pitch = pitchActual; 
-    wetActual = wet[al]; 
-    reverb.wet = wetActual;
-    // antiKick.start(); 
-}
-
-function seq2Interval (){
-    let al = Math.floor(Math.random()*5)
-    reverseActual= reverse[al]; 
-    reverseCambio++;
-    player.reverse = reverseActual; 
-    // scene.background = colores[al] ;
-    cambioC++; 
-}
-
-function seq3Interval() {
-    startActual= start[startCambio%5]; 
-    startCambio++;
-    player.loopStart = startActual;
-    antiKick.start(); 
 }
 
 function onWindowResize() {
