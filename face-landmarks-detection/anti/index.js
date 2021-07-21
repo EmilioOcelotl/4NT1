@@ -260,7 +260,7 @@ async function init() {
     planeB = new THREE.Mesh(pGeometry, materialC);
     pGeometry.verticesNeedUpdate = true; 
     
-    const gCube = new THREE.TorusKnotGeometry( 5, 1, 100, 16 );
+    const gCube = new THREE.TorusKnotGeometry( 5, 0.5, 100, 16 );
     cube = new THREE.Mesh( gCube, materialC );
 
     geometryB = new THREE.BufferGeometry();
@@ -350,7 +350,7 @@ async function animate () {
     cube.rotation.y += 0.023;
 
     cuboGrande.rotation.x += 0.001;
-    cuboGrande.rotation.y += 0.002; 
+    cuboGrande.rotation.y += (degree) * 0.002; 
     text.rotation.y = degree * 2 + (Math.PI )   ;
 
    /*
@@ -419,7 +419,7 @@ function initsc0(){
 	myProgress.style.display = "none";
 	
 	scene.remove( cuboGrande );
-	scene.remove( cube );
+	// scene.remove( cube );
 	scene.remove( text );
 	// player.stop(); 
 	Tone.Destination.mute = true;
@@ -448,7 +448,7 @@ function initsc0(){
 
 	// cuboGrande.layers.enable(0); 
 	scene.add( cuboGrande );
-	scene.add( cube );
+	// scene.add( cube );
 	
 	// text.layers.enable(0);
 	scene.add( text );
@@ -498,7 +498,7 @@ function initsc1(){
 	    for(let i = 0; i < NUM_KEYPOINTS; i++){		
 
 		const al = Math.random() * 4 + 1; 
-		cubos[vueltas] = new THREE.Mesh(geometryC, materialC);
+		cubos[vueltas] = new THREE.Mesh(geometryC, materialC );
 		cubos[vueltas].rotation.x = Math.random() * Math.PI ;
 		cubos[vueltas].rotation.y = Math.random() * Math.PI ; 
 		cubos[vueltas].rotation.z = Math.random() * Math.PI ;
@@ -520,8 +520,8 @@ function animsc1(){
     
     for(let i = 0; i < NUM_KEYPOINTS; i++){
 	
-	const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 800;
-	//const analisis = THREE.MathUtils.damp(Tone.dbToGain( analyser.getValue()[i%64] )* 200, 10000, 0.0001, 0.001) * 4  ;
+	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 1000;
+	const analisis = THREE.MathUtils.damp(Tone.dbToGain( analyser.getValue()[i%64] )* 200, 10000, 0.0001, 0.001) * 4  ;
 	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 700; 
 	cubos[vueltas].position.x = keypoints[i][0] * 0.1 - 20 ; 
 	cubos[vueltas].position.y = keypoints[i][1] * 0.1 - 20 ; 
@@ -756,7 +756,7 @@ function texto() {
     */
 
     const loader = new THREE.FontLoader();
-    loader.load( 'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/fonts/helvetiker_regular.typeface.json', function ( font ) {
+    loader.load( 'https://raw.githubusercontent.com/EmilioOcelotl/4NT1/main/face-landmarks-detection/anti/fonts/techno.json', function ( font ) {
 
 	const color = 0xffffff;
 
@@ -768,13 +768,13 @@ function texto() {
 	const matLite = new THREE.MeshBasicMaterial( {
 	    color: color,
 	    transparent: true,
-	     opacity: 0.9,
+	     opacity: 0.8,
 	    side: THREE.DoubleSide
 	} );
 
-	const message = "4nti\n Predictions:1";
+	const message = "4NT1\n Prediction:1\n angle:100";
 
-	const shapes = font.generateShapes( message, 1 );
+	const shapes = font.generateShapes( message, 2 );
 
 	const geometry = new THREE.ShapeGeometry( shapes );
 
@@ -787,9 +787,11 @@ function texto() {
 	// make shape ( N.B. edge view not visible )
 
 	text = new THREE.Mesh( geometry, matLite );
-	text.position.z = 4;
-	// text.rotation.x = Math.PI;
+	text.position.z = 5;
+	//text.rotation.x = Math.PI;
 	// text.rotation.y = Math.PI;
+	text.rotation.z = Math.PI;
+
 	scene.add( text );
 
     })
