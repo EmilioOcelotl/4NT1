@@ -661,7 +661,7 @@ function rmsc3(){
 function cols(){
     
     colores2 = [new THREE.Color( 0x711c91 ),
-	       new THREE.Color(  0xea00d9 ),
+	       new THREE.Color( 0xea00d9 ),
 	       new THREE.Color( 0x0adbc6 ),
 	       new THREE.Color( 0x133e7c ),
 	       new THREE.Color( 0x000000 ) ];
