@@ -6,11 +6,13 @@ Estudios de ofuscación audiovisual para el navegador.
 
 ## Cambios
 
-Modo híbrido que prioriza la exhibición online.
+Modo híbrido que prioriza la exhibición en línea.
 
 ## Resultados
 
 [Liga provisional](https://test.ocelotl.cc/) y documentación ( este repositorio ) .
+
+Sistemas portables 
 
 ## Avances
 
@@ -22,7 +24,7 @@ Modo híbrido que prioriza la exhibición online.
 - Pruebas en modo local ( acceso restringido a la cámara sin certificados )
 - Compra de dominio y activación de subdominio ( mantenimiento, legado, registro y documentación - PLab )
 - Generación de certificado y encriptación "segura" para acceder a la cámara
-- Empaquetado y montaje ( dependencias y archivos de audio e imagen ) 
+- Empaquetado y montaje ( dependencias y archivos de audio e imagen )
 
 ### Análisis
 
@@ -80,8 +82,3 @@ Colección de escenas ( tesis ) a manera de ensayo audiovisual para el navegador
 - Audio más delimitado y diversificado
 - Máscaras que coincidan con los puntos de interés
 - Multijugador
-
-## Preguntas para la muestra
-
-- ¿ En algún momento habrá muestra presencial ? Principalmente por aspectos técnicos y de montaje
-. Si fuera digital ¿ Sería un compendio de enlaces ? ( Se podría considerar habilidades de quienes participamos ?  

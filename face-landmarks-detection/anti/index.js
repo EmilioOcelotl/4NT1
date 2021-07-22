@@ -772,7 +772,7 @@ function texto() {
 	    side: THREE.DoubleSide
 	} );
 
-	const message = "4NT1\n Prediction:1\n angle:100";
+	const message = "4NT1\n Prediction:1";
 
 	const shapes = font.generateShapes( message, 2 );
 
