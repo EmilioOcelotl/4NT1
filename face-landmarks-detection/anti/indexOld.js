@@ -39,22 +39,7 @@ let afft = [];
 const analyser = new Tone.Analyser( "fft", 64 ) ;
 let postB = true; 
 
-// const pGeometry = new THREE.PlaneGeometry(8, 8, 21, 20);
-
-const pGeometry = new THREE.BufferGeometry();
-
-const pVertices = [];
-
-for ( let i = 0; i < 468; i ++ ) {
-    const x = Math.random() * 2000 - 1000;
-    const y = Math.random() * 2000 - 1000;
-    const z = Math.random() * 2000 - 1000;
-
-    pVertices.push( x, y, z );
-}
-
-pGeometry.setAttribute( 'position', new THREE.Float32BufferAttribute( pVertices, 3 ) );
-
+const pGeometry = new THREE.PlaneGeometry(8, 8, 21, 20);
 const position = pGeometry.attributes.position;
 position.usage = THREE.DynamicDrawUsage;
 // let position = []; 
@@ -142,9 +127,8 @@ async function setupCamera() {
 	'audio': false,
 	'video': {
 	    facingMode: 'user',  
-	    // width : 540,
-	    // height: 540
-	},
+	    width : 400,
+	    height: 400},
     });
     video.srcObject = stream;
     return new Promise((resolve) => {
@@ -216,9 +200,6 @@ async function init() {
     const info = document.getElementById( 'info' );
     info.remove();
 
-    const fonca = document.getElementById( 'fonca' );
-    fonca.remove();
-
     loaderHTML.style.display = "block";
    
     container = document.createElement( 'div' );
@@ -252,15 +233,8 @@ async function init() {
 	scene.add( luces[i] ); 
     }
     
-    const geometryVideo = new THREE.PlaneGeometry( 64, 48 );
-
-    materialVideo = new THREE.MeshBasicMaterial( {
-	color: 0xffffff,
-	side: THREE.DoubleSide,
-	transparent: true,
-	opacity: 0.8
-    } );
-    
+    const geometryVideo = new THREE.PlaneGeometry( 50, 50 );
+    materialVideo = new THREE.MeshBasicMaterial( {color: 0xffffff, side: THREE.DoubleSide} );
     planeVideo = new THREE.Mesh( geometryVideo, materialVideo );
     planeVideo.rotation.x = Math.PI;
     planeVideo.position.z = -10;
@@ -283,20 +257,7 @@ async function init() {
     }
    */
 
-    const sprite = new THREE.TextureLoader().load( 'spark1.8c38070c.png' );
-
-    const matPoints = new THREE.PointsMaterial( {
-	color: 0x000000,
-	size: 20,
-	// map: sprite, 
-	blending: THREE.AdditiveBlending,
-	//transparent: true,
-	sizeAttenuation: false
-    } );
-    
-    // matPoints.color.setHSL( 1.0, 0.3, 0.7 );
-    
-    planeB = new THREE.Points( pGeometry, matPoints );
+    planeB = new THREE.Mesh(pGeometry, materialC);
     pGeometry.verticesNeedUpdate = true; 
     
     const gCube = new THREE.TorusKnotGeometry( 5, 0.5, 100, 16 );
@@ -345,13 +306,11 @@ async function init() {
     container.appendChild( stats.dom ); 
 
     const renderScene = new RenderPass( scene, camera );
-
-    // calibrar lo siguiente 
-    
+	
     const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.4, 0.85 );
-    bloomPass.threshold = 0.8 ;
-    bloomPass.strength = 0.2 ;
-    bloomPass.radius = 0.85 ;
+    bloomPass.threshold = 0.9;
+    bloomPass.strength = 0.15;
+    bloomPass.radius = 0.55;
     // bloomPass.renderToScreen = true;
     
     composer = new EffectComposer( renderer );
@@ -359,8 +318,8 @@ async function init() {
 
     composer.addPass( bloomPass );
    
-    // glitchPass = new GlitchPass();
-    // composer.addPass( glitchPass ); 
+    glitchPass = new GlitchPass();
+    composer.addPass( glitchPass ); 
 
     detonar(); 
     
@@ -444,7 +403,7 @@ function initsc0(){
  
 	// switch de eliminación 
 
-	switch( escena % numsc ){
+	switch(escena%numsc){
 	case 0:
 	    rmsc1();
 	    break;
@@ -564,9 +523,9 @@ function animsc1(){
 	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 1000;
 	const analisis = THREE.MathUtils.damp(Tone.dbToGain( analyser.getValue()[i%64] )* 200, 10000, 0.0001, 0.001) * 4  ;
 	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 700; 
-	cubos[vueltas].position.x = keypoints[i][0] * 0.075 - 24 ; 
-	cubos[vueltas].position.y = keypoints[i][1] * 0.08 - 20 ; 
-	cubos[vueltas].position.z = keypoints[i][2] * 0.05  * ( 1+ analisis ) ;
+	cubos[vueltas].position.x = keypoints[i][0] * 0.1 - 20 ; 
+	cubos[vueltas].position.y = keypoints[i][1] * 0.1 - 20 ; 
+	cubos[vueltas].position.z = keypoints[i][2] * 0.05  * (1+analisis) ;
 	cubos[vueltas].rotation.z += 0.02;
 	cubos[vueltas].rotation.y += 0.0111;
 	vueltas++;
@@ -597,7 +556,7 @@ function rmsc1(){
 
 function initsc2(){
 
-    // planeB.material = materialC;  
+    planeB.material = materialC;  
         
     for(let i = 0; i < 4; i++){
 	//luces[i] = new THREE.PointLight(colores[i], 0.5);
@@ -620,8 +579,8 @@ function animsc2(){
     for ( let i = 0; i < position.count; i ++ ) {	
 	const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
 	// const analisis = 0; // para desactivar la audio reactividad 
-	position.setX( i, (keypoints[i][0] * 0.075 - 24) * (1+analisis) );
-	position.setY( i, (keypoints[i][1] * 0.08 - 20) * (1+analisis) );
+	position.setX( i, (keypoints[i][0] * 0.1 - 20) * (1+analisis) );
+	position.setY( i, (keypoints[i][1] * 0.1 - 20) * (1+analisis) );
 	position.setZ( i, keypoints[i][2] * 0.05  * (1+ analisis) ); 
     }
     
@@ -648,7 +607,7 @@ function rmsc2(){
 
 function initsc3(){
 
-    // planeB.material = matofTexture;  
+    planeB.material = matofTexture;  
     
     for(let i = 0; i < 4; i++){
 	//luces[i] = new THREE.PointLight(colores[i], 0.5);
@@ -673,8 +632,8 @@ function animsc3(){
     for ( let i = 0; i < position.count; i ++ ) {	
 	const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
 	// const analisis = 0; // para desactivar la audio reactividad 
-	position.setX( i, (keypoints[i][0] * 0.075 - 24) * (1+analisis) );
-	position.setY( i, (keypoints[i][1] * 0.08 - 20) * (1+analisis) );
+	position.setX( i, (keypoints[i][0] * 0.1 - 20) * (1+analisis) );
+	position.setY( i, (keypoints[i][1] * 0.1 - 20) * (1+analisis) );
 	position.setZ( i, keypoints[i][2] * 0.05  * (1+ analisis) ); 
     }
     
@@ -856,7 +815,7 @@ function htmlBar(){
 		    rmsc1();
 		    rmsc2();
 		   
-		    switch( escena % numsc ){
+		    switch(escena%numsc){
 		    case 0:
 			initsc1();
 			break;

@@ -63,6 +63,9 @@ Algunas ideas-reflexiones relacionadas con este proyecto se encuentran en:
 
 ## Recursos
 
+- https://www.npmjs.com/package/perlin-noise-3d
+- https://stackoverflow.com/questions/26415778/getusermedia-video-size-in-firefox-chrome-differs
+- https://github.com/keijiro/Skinner
 - https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-18-04
 - https://nicknetvideos.com/blog/post/how-to-run-a-website-in-a-subdomain-in-digital-ocean
 - https://tonejs.github.io/

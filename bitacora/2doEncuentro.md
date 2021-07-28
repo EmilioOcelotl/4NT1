@@ -12,7 +12,10 @@ Modo híbrido que prioriza la exhibición en línea.
 
 [Liga provisional](https://test.ocelotl.cc/) y documentación ( este repositorio ) .
 
-Sistemas portables 
+## Antecedentes y consecuencias 
+
+- Sistemas portables 
+- Proyectos en el navegador
 
 ## Avances
 
