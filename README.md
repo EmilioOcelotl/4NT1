@@ -63,6 +63,9 @@ Algunas ideas-reflexiones relacionadas con este proyecto se encuentran en:
 
 ## Recursos
 
+- https://www.html5rocks.com/es/tutorials/getusermedia/intro/
+- http://phrogz.net/tmp/image_move_sprites_canvas.html
+- https://towardsdatascience.com/face-landmarks-detection-with-mediapipe-facemesh-555fa2e10b06
 - https://www.npmjs.com/package/perlin-noise-3d
 - https://stackoverflow.com/questions/26415778/getusermedia-video-size-in-firefox-chrome-differs
 - https://github.com/keijiro/Skinner
