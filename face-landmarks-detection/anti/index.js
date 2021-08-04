@@ -40,22 +40,33 @@ let postB = true;
 
 // const pGeometry = new THREE.PlaneGeometry(8, 8, 21, 20);
 
-const pGeometry = new THREE.BufferGeometry();
+const pGeometry = [new THREE.BufferGeometry(), new THREE.BufferGeometry(), new THREE.BufferGeometry];
 
-const pVertices = [];
+const pVertices1 = [];const pVertices2 = [];const pVertices3 = [];
 
 for ( let i = 0; i < 468; i ++ ) {
+
     const x = Math.random() * 2000 - 1000;
     const y = Math.random() * 2000 - 1000;
     const z = Math.random() * 2000 - 1000;
 
-    pVertices.push( x, y, z );
+    pVertices1.push( x, y, z );
+    pVertices2.push( x, y, z );
+    pVertices3.push( x, y, z );
 }
 
-pGeometry.setAttribute( 'position', new THREE.Float32BufferAttribute( pVertices, 3 ) );
+pGeometry[0].setAttribute( 'position', new THREE.Float32BufferAttribute( pVertices1, 3 ) );
+pGeometry[1].setAttribute( 'position', new THREE.Float32BufferAttribute( pVertices2, 3 ) );
+pGeometry[2].setAttribute( 'position', new THREE.Float32BufferAttribute( pVertices3, 3 ) );
 
-const position = pGeometry.attributes.position;
-position.usage = THREE.DynamicDrawUsage;
+let position = [];
+
+for (var i = 0; i < 3; i++){
+
+    position[i] = pGeometry[i].attributes.position;
+    position[i].usage = THREE.DynamicDrawUsage;
+}
+
 // let position = []; 
 // const pGeometry = new THREE.BufferGeometry();
 
@@ -103,7 +114,7 @@ const stats = new Stats();
 
 let predictions = []; 
 let container; 
-let planeB;
+let planeB = [];
 
 let composer;
 let planeVideo;
@@ -114,7 +125,13 @@ let escena = 0;
 
 let rendereo; 
 let buscando = false;
-let numsc = 2; 
+
+////////////////////////////////////////////////////////////////////
+
+let numsc = 1; 
+
+////////////////////////////////////////////////////////////////////
+
 let ofTexture;
     
 let wet = [0.1, 0.2, 0, 0.04];let wetActual;
@@ -143,7 +160,7 @@ let porcentaje;
 
 const noise = new perlinNoise3d();
 let noiseStep = 0; 
-    
+let vueltas; 
 
 ///////////// Setupear la cámara
 
@@ -184,9 +201,9 @@ async function renderPrediction() {
     }
     
     prueba = predictions.length;
-    materialVideo.needsUpdate = true;
+    // materialVideo.needsUpdate = true;
     
-    let vueltas = 0;
+    vueltas = 0;
     
     if (predictions.length > 0) {
 	predictions.forEach(prediction => {
@@ -198,6 +215,18 @@ async function renderPrediction() {
 		    TRIANGULATION[i * 3 + 2]
 		].map(index => keypoints[index]);
 	    }
+
+	    if(buscando){
+		switch( escena % numsc ){
+		case 0:
+		    animsc1(); 
+		    break;
+		case 1:
+		    animsc2(); 
+		    break;
+		}	
+	    }
+
 	    
 	});
     }
@@ -236,7 +265,7 @@ async function init() {
     container = document.createElement( 'div' );
     document.body.appendChild( container );
  
-    await tf.setBackend('webgl'); 
+    await tf.setBackend('webgl');
     await setupCamera();
 
     video.play();
@@ -248,7 +277,7 @@ async function init() {
 
     model = await faceLandmarksDetection.load(
 	faceLandmarksDetection.SupportedPackages.mediapipeFacemesh,
-	{maxFaces: 2});
+	{maxFaces: 3});
     
     scene = new THREE.Scene();
     // scene.background = new THREE.Color( 0x000000 ); // UPDATED
@@ -281,7 +310,7 @@ async function init() {
 
     const matPoints = new THREE.PointsMaterial( {
 	color: 0x000000,
-	size: 20,
+	size: 15,
 	// map: sprite, 
 	blending: THREE.AdditiveBlending,
 	//transparent: true,
@@ -290,8 +319,13 @@ async function init() {
     
     // matPoints.color.setHSL( 1.0, 0.3, 0.7 );
 
-    planeB = new THREE.Points( pGeometry, matPoints );
-    pGeometry.verticesNeedUpdate = true; 
+    planeB = [new THREE.Points( pGeometry[0], matPoints ), new THREE.Points( pGeometry[1], matPoints ), new THREE.Points( pGeometry[2], matPoints )];
+
+    for(var i = 0; i < 3; i++){
+
+	pGeometry[i].verticesNeedUpdate = true; 
+
+    }
     
     const gCube = new THREE.TorusKnotGeometry( 5, 0.5, 100, 16 );
     cube = new THREE.Mesh( gCube, materialC );
@@ -409,17 +443,6 @@ async function animate () {
     
     renderer.copyFramebufferToTexture( vector, texture );
     
-    if(buscando){
-	switch( escena % numsc ){
-	case 0:
-	    animsc1(); 
-	    break;
-	case 1:
-	    animsc2(); 
-	    break;
-	}	
-    }
-
     rmtexto(); 
      
 }
@@ -491,45 +514,73 @@ function initsc0(){
 //////// Mesh desordenado 
 
 function initsc1(){
+
     
-    scene.add( planeB );
-  
+    if (predictions.length > 0) {
+	for(var i = 0; i < planeB.length; i++){
+	    //planeB[i].material.dispose();
+	    // planeB[i].geometry.dispose(); 
+	    scene.remove( planeB[i] );
+	}
+    }
+   
+    
+    let cuentaPlane = 0; 
+    
+    if (predictions.length > 0) {
+	predictions.forEach(prediction => {
+	    scene.add( planeB[cuentaPlane] );
+	    cuentaPlane++;
+	})
+    }
 }
 
 function animsc1(){
 
-    
     // noise.noiseSeed(Math.random());
 
-    // noiseStep = 0; 
-    
-    for ( let i = 0; i < position.count; i ++ ) {
+    // noiseStep = 0;
 
-	let y = noise.get(keypoints[i][0]*noiseStep, keypoints[i][1]*noiseStep) * 15;
+    //if (predictions.length > 0) {
+	//predictions.forEach(prediction => {
+    
+    for ( let i = 0; i < position[vueltas].count; i ++ ) {
+	
+	let y = noise.get(keypoints[i][0]*noiseStep, keypoints[i][1]*noiseStep) * 30;
 	
 	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
 	// const analisis = 0; // para desactivar la audio reactividad 
-	position.setX( i, (keypoints[i][0] * 0.075 - 24)   ); // antes 1+analisis
-	position.setY( i, (keypoints[i][1] * 0.08 - 20)  );
-	position.setZ( i, keypoints[i][2] * 0.05 * Math.floor(y) )
-	   
-
+	position[vueltas].setX( i, (keypoints[i][0] * 0.075 - 24)   ); // antes 1+analisis
+	position[vueltas].setY( i, (keypoints[i][1] * 0.08 - 20)  );
+	position[vueltas].setZ( i, keypoints[i][2] * 0.05 * y )
     }
-
-    noiseStep+=0.00025;
-
+	    
+    planeB[vueltas].geometry.computeVertexNormals(); 
+    planeB[vueltas].geometry.attributes.position.needsUpdate = true;
+	    
+    position[vueltas].needsUpdate = true;
     
-    planeB.geometry.computeVertexNormals(); 
-    planeB.geometry.attributes.position.needsUpdate = true;
+    vueltas++;
+    console.log(vueltas);
+    // console.log(keypoints.length); 
     
-    position.needsUpdate = true;
+    // })
+    
+    // }
+    
+    noiseStep+=0.0001;
     
 }
 
 function rmsc1(){
 
-    scene.remove( planeB );
-    noiseStep = 0; 
+    //if (predictions.length > 0) {
+    for(var i = 0; i < planeB.length; i++){
+	scene.remove( planeB[i] );
+    }
+    // }
+
+
 }
 
 // Triangulos de mesh 
