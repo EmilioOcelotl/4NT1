@@ -45,11 +45,9 @@ const pGeometry = [new THREE.BufferGeometry(), new THREE.BufferGeometry(), new T
 const pVertices1 = [];const pVertices2 = [];const pVertices3 = [];
 
 for ( let i = 0; i < 468; i ++ ) {
-
     const x = Math.random() * 2000 - 1000;
     const y = Math.random() * 2000 - 1000;
     const z = Math.random() * 2000 - 1000;
-
     pVertices1.push( x, y, z );
     pVertices2.push( x, y, z );
     pVertices3.push( x, y, z );
@@ -62,7 +60,6 @@ pGeometry[2].setAttribute( 'position', new THREE.Float32BufferAttribute( pVertic
 let position = [];
 
 for (var i = 0; i < 3; i++){
-
     position[i] = pGeometry[i].attributes.position;
     position[i].usage = THREE.DynamicDrawUsage;
 }
@@ -128,7 +125,7 @@ let buscando = false;
 
 ////////////////////////////////////////////////////////////////////
 
-let numsc = 1; 
+let numsc = 2; 
 
 ////////////////////////////////////////////////////////////////////
 
@@ -162,8 +159,32 @@ const noise = new perlinNoise3d();
 let noiseStep = 0; 
 let vueltas; 
 
-///////////// Setupear la cámara
+///////////// Segunda escena
 
+let triaVertices = []; let triaVertices2 = []; let triaVertices3 = []; let triaVertices4 = []; let triaVertices5 = []; 
+
+for ( let i = 0; i < 3; i ++ ) {
+
+    const x = Math.random() * 2000 - 1000;
+    const y = Math.random() * 2000 - 1000;
+    const z = Math.random() * 2000 - 1000;
+    triaVertices.push( x, y, z );
+  
+}
+
+// let triaGeometry = [];
+// let triaPosition = [];
+
+let triaGeometry = new THREE.BufferGeometry();
+triaGeometry.setAttribute( 'position', new THREE.Float32BufferAttribute( triaVertices, 3 ) );
+let triaPosition = triaGeometry.attributes.position;
+triaPosition.usage = THREE.DynamicDrawUsage; 
+
+let triangulos; 
+
+let contador = 0; 
+
+///////////// Setupear la cámara
 
 async function setupCamera() {
     video = document.getElementById('video');
@@ -208,14 +229,12 @@ async function renderPrediction() {
     if (predictions.length > 0) {
 	predictions.forEach(prediction => {
 	    keypoints = prediction.scaledMesh; 
-
 	    for (let i = 0; i < TRIANGULATION.length / 3; i++) {
 		points = [
 		    TRIANGULATION[i * 3], TRIANGULATION[i * 3 + 1],
 		    TRIANGULATION[i * 3 + 2]
 		].map(index => keypoints[index]);
 	    }
-
 	    if(buscando){
 		switch( escena % numsc ){
 		case 0:
@@ -226,8 +245,6 @@ async function renderPrediction() {
 		    break;
 		}	
 	    }
-
-	    
 	});
     }
 
@@ -310,26 +327,25 @@ async function init() {
 
     const matPoints = new THREE.PointsMaterial( {
 	color: 0x000000,
-	size: 15,
+	size: 20,
 	// map: sprite, 
 	blending: THREE.AdditiveBlending,
 	//transparent: true,
 	sizeAttenuation: false
     } );
     
-    // matPoints.color.setHSL( 1.0, 0.3, 0.7 );
-
     planeB = [new THREE.Points( pGeometry[0], matPoints ), new THREE.Points( pGeometry[1], matPoints ), new THREE.Points( pGeometry[2], matPoints )];
 
     for(var i = 0; i < 3; i++){
-
 	pGeometry[i].verticesNeedUpdate = true; 
-
     }
-    
-    const gCube = new THREE.TorusKnotGeometry( 5, 0.5, 100, 16 );
-    cube = new THREE.Mesh( gCube, materialC );
 
+    let triMat =  new THREE.MeshBasicMaterial( { color: 0x000000 , blending: THREE.AdditiveBlending  });
+    
+    triangulos = new THREE.Mesh( triaGeometry, triMat );
+    triangulos.position.z = 10; 
+    triaGeometry.verticesNeedUpdate = true; 
+    
     geometryB = new THREE.BufferGeometry();
     geometryB.verticesNeedUpdate = true; 
 
@@ -363,11 +379,7 @@ async function init() {
    
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
-    // renderer.autoClear = false;
-    // renderer.toneMapping = THREE.ReinhardToneMapping;
-    // renderer.toneMapping = THREE.ReinhardToneMapping;
     document.body.appendChild( renderer.domElement );
-    // renderer.setClearColor( 0x101000 );
     
     window.addEventListener( 'resize', onWindowResize );
 
@@ -375,15 +387,10 @@ async function init() {
 
     const renderScene = new RenderPass( scene, camera );
 
-    // calibrar lo siguiente 
-    
     const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.4, 0.85 );
     bloomPass.threshold = 0.9 ;
     bloomPass.strength = 0.3 ;
     bloomPass.radius = 0.01 ;
-    // bloomPass.renderToScreen = true;
-
-    //renderer.toneMappingExposure = Math.pow( 1, 4.0 )
     
     composer = new EffectComposer( renderer );
     composer.addPass( renderScene );
@@ -394,6 +401,7 @@ async function init() {
     composer.addPass( afterimagePass );
 
     afterimagePass.uniforms[ 'damp' ].value = 0.8; 
+
     // glitchPass = new GlitchPass();
     // composer.addPass( glitchPass ); 
 
@@ -407,21 +415,12 @@ async function animate () {
         
     var time2 = Date.now() * 0.0005;
 
-    // animsc2();
-    
     text.position.x = keypoints[0][0]* 0.1 - 20;
     text.position.y = keypoints[0][1]* 0.1 -40;
     text.position.z = keypoints[0][2] * 0.1 + 10;
-
     text2.position.x = keypoints[0][0]* 0.1 - 40;
     text2.position.y = keypoints[0][1]* 0.1 - 20;
     text2.position.z = keypoints[0][2] * 0.1 + 10;
-    
-    cube.position.x = keypoints[0][0]* 0.1- 30;
-    cube.position.y = keypoints[0][1]* 0.1 -10;
-    cube.position.z = keypoints[0][2] * 0.1 + 10;
-    cube.rotation.x += 0.04;
-    cube.rotation.y += 0.023;
     
     cuboGrande.rotation.x += 0.001;
     cuboGrande.rotation.y += (degree) * 0.002; 
@@ -456,8 +455,6 @@ function initsc0(){
 	materialVideo.map.repeat.x = - 1;
 	materialVideo.map.rotation.y = Math.PI / 2;
  
-	// switch de eliminación 
-
 	switch( escena % numsc ){
 	case 0:
 	    rmsc1();
@@ -467,22 +464,16 @@ function initsc0(){
 	    break; 
 	}
 
-	buscando = false;
-	// myProgress.style.display = "none";
-	
+	buscando = false;	
 	scene.remove( cuboGrande );
-	// scene.remove( cube );
 	scene.remove( text );
 	scene.remove( text2 ); 
-	// player.stop(); 
 	Tone.Destination.mute = true;
 	
     } else {
 
 	materialVideo.map = new THREE.VideoTexture( video );
 
-	// switch de incialización
-	
 	switch( escena % numsc ){
 	case 0:
 	    initsc1();
@@ -491,21 +482,14 @@ function initsc0(){
 	    initsc2(); 
 	    break;
 	case 2:
-	    initsc3(); // aqui tendría que ir el cuarto 
+	    initsc3(); 
 	    break; 
 	}
 
-	// cuboGrande.layers.enable(0); 
+	buscando = true; 
 	scene.add( cuboGrande );
-	// scene.add( cube );
-	
-	// text.layers.enable(0);
 	scene.add( text );
 	scene.add( text2 ); 
-	
-	buscando = true; 
-	// myProgress.style.display = "block";
-
 	Tone.Destination.mute = false;
     	
     }
@@ -515,16 +499,14 @@ function initsc0(){
 
 function initsc1(){
 
+    noiseStep = 0; 
     
     if (predictions.length > 0) {
 	for(var i = 0; i < planeB.length; i++){
-	    //planeB[i].material.dispose();
-	    // planeB[i].geometry.dispose(); 
 	    scene.remove( planeB[i] );
 	}
     }
    
-    
     let cuentaPlane = 0; 
     
     if (predictions.length > 0) {
@@ -537,83 +519,66 @@ function initsc1(){
 
 function animsc1(){
 
-    // noise.noiseSeed(Math.random());
-
-    // noiseStep = 0;
-
-    //if (predictions.length > 0) {
-	//predictions.forEach(prediction => {
-    
     for ( let i = 0; i < position[vueltas].count; i ++ ) {
 	
 	let y = noise.get(keypoints[i][0]*noiseStep, keypoints[i][1]*noiseStep) * 30;
 	
 	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
-	// const analisis = 0; // para desactivar la audio reactividad 
 	position[vueltas].setX( i, (keypoints[i][0] * 0.075 - 24)   ); // antes 1+analisis
 	position[vueltas].setY( i, (keypoints[i][1] * 0.08 - 20)  );
 	position[vueltas].setZ( i, keypoints[i][2] * 0.05 * y )
+
     }
 	    
     planeB[vueltas].geometry.computeVertexNormals(); 
-    planeB[vueltas].geometry.attributes.position.needsUpdate = true;
-	    
+    planeB[vueltas].geometry.attributes.position.needsUpdate = true; 
     position[vueltas].needsUpdate = true;
-    
     vueltas++;
-    console.log(vueltas);
-    // console.log(keypoints.length); 
-    
-    // })
-    
-    // }
-    
-    noiseStep+=0.0001;
+    noiseStep+=0.00025;
     
 }
 
 function rmsc1(){
-
-    //if (predictions.length > 0) {
-    for(var i = 0; i < planeB.length; i++){
+    
+   for(var i = 0; i < planeB.length; i++){
 	scene.remove( planeB[i] );
     }
-    // }
-
 
 }
 
-// Triangulos de mesh 
+// Escena 2 
 
 function initsc2(){
-
-    scene.add( planeB );
-
+    scene.add( triangulos ); 
 }
 
 function animsc2(){
 
-    for ( let i = 0; i < position.count; i ++ ) {	
-	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
-	// const analisis = 0; // para desactivar la audio reactividad 
-	position.setX( i, (keypoints[i][0] * 0.075 - 24)  );
-	position.setY( i, (keypoints[i][1] * 0.08 - 20)  );
-	position.setZ( i, keypoints[i][2] * 0.05  ); 
+    //console.log(Math.floor(Math.random()*468)); 
+    // const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
+ 
+    if( contador % 2 == 0){
+	for(var i = 0; i < 3; i++){
+	    triaPosition.setX( i, (keypoints[Math.floor(Math.random()*468)][0] * 0.075 - 24)   ); // antes 1+analisis
+	    triaPosition.setY( i, (keypoints[Math.floor(Math.random()*468)][1] * 0.08 - 20)  );
+	    triaPosition.setZ( i, keypoints[Math.floor(Math.random()*468)][2] * 0.05 )
+	}
+	// esto tendría que estar dentro del loop repetido prediciones numero de veces 
+	triangulos.geometry.computeVertexNormals(); 
+	triangulos.geometry.attributes.position.needsUpdate = true; 
+	triaPosition.needsUpdate = true;
+	
     }
-    
-    planeB.geometry.computeVertexNormals(); 
-    planeB.geometry.attributes.position.needsUpdate = true;
-    
-    position.needsUpdate = true;
 
+    contador++
+	// vueltas++;
+
+    
 }
 
 function rmsc2(){
-    
-    // planeB.material.dispose();
-    // planeB.geometry.dispose(); 
-    scene.remove( planeB );
-    
+    scene.remove( triangulos ); 
+        
 }
 
 function cols(){
