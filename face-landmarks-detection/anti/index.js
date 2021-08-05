@@ -145,6 +145,7 @@ let seq1, seq2, seq3;
 let flow, curve, curveHandles = []; 
 
 let textMesh1; 
+
 ///////////// Retro
 
 const dpr = window.devicePixelRatio;
@@ -168,19 +169,24 @@ for ( let i = 0; i < 3; i ++ ) {
     const x = Math.random() * 2000 - 1000;
     const y = Math.random() * 2000 - 1000;
     const z = Math.random() * 2000 - 1000;
+
     triaVertices.push( x, y, z );
   
 }
 
-// let triaGeometry = [];
-// let triaPosition = [];
+let triaGeometry = [];
+let triaPosition = [];
 
-let triaGeometry = new THREE.BufferGeometry();
-triaGeometry.setAttribute( 'position', new THREE.Float32BufferAttribute( triaVertices, 3 ) );
-let triaPosition = triaGeometry.attributes.position;
-triaPosition.usage = THREE.DynamicDrawUsage; 
+for(var i = 0; i < 25; i++){
 
-let triangulos; 
+    triaGeometry[i] = new THREE.BufferGeometry();
+    triaGeometry[i].setAttribute( 'position', new THREE.Float32BufferAttribute( triaVertices, 3 ) );
+    triaPosition[i] = triaGeometry[i].attributes.position;
+    triaPosition[i].usage = THREE.DynamicDrawUsage; 
+
+}
+
+let triangulos = []; 
 
 let contador = 0; 
 
@@ -341,10 +347,12 @@ async function init() {
     }
 
     let triMat =  new THREE.MeshBasicMaterial( { color: 0x000000 , blending: THREE.AdditiveBlending  });
-    
-    triangulos = new THREE.Mesh( triaGeometry, triMat );
-    triangulos.position.z = 10; 
-    triaGeometry.verticesNeedUpdate = true; 
+
+    for(var i = 0; i < 25; i++){
+	triangulos[i] = new THREE.Mesh( triaGeometry[i], triMat );
+	triangulos[i].position.z = 10; 
+	triaGeometry[i].verticesNeedUpdate = true; 
+    }
     
     geometryB = new THREE.BufferGeometry();
     geometryB.verticesNeedUpdate = true; 
@@ -402,7 +410,7 @@ async function init() {
 
     afterimagePass.uniforms[ 'damp' ].value = 0.8; 
 
-    // glitchPass = new GlitchPass();
+    //glitchPass = new GlitchPass();
     // composer.addPass( glitchPass ); 
 
     detonar(); 
@@ -521,7 +529,7 @@ function animsc1(){
 
     for ( let i = 0; i < position[vueltas].count; i ++ ) {
 	
-	let y = noise.get(keypoints[i][0]*noiseStep, keypoints[i][1]*noiseStep) * 30;
+	let y = noise.get(keypoints[i][0]*noiseStep, keypoints[i][1]*noiseStep) * 50;
 	
 	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
 	position[vueltas].setX( i, (keypoints[i][0] * 0.075 - 24)   ); // antes 1+analisis
@@ -534,7 +542,7 @@ function animsc1(){
     planeB[vueltas].geometry.attributes.position.needsUpdate = true; 
     position[vueltas].needsUpdate = true;
     vueltas++;
-    noiseStep+=0.00025;
+    noiseStep+=0.01;
     
 }
 
@@ -549,37 +557,55 @@ function rmsc1(){
 // Escena 2 
 
 function initsc2(){
-    scene.add( triangulos ); 
+
+    noiseStep = 0; 
+    
+    for(var i = 0; i < 25; i++ ){
+	scene.add( triangulos[i] );
+    }
+    
 }
 
 function animsc2(){
 
     //console.log(Math.floor(Math.random()*468)); 
     // const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
- 
-    if( contador % 2 == 0){
-	for(var i = 0; i < 3; i++){
-	    triaPosition.setX( i, (keypoints[Math.floor(Math.random()*468)][0] * 0.075 - 24)   ); // antes 1+analisis
-	    triaPosition.setY( i, (keypoints[Math.floor(Math.random()*468)][1] * 0.08 - 20)  );
-	    triaPosition.setZ( i, keypoints[Math.floor(Math.random()*468)][2] * 0.05 )
-	}
-	// esto tendría que estar dentro del loop repetido prediciones numero de veces 
-	triangulos.geometry.computeVertexNormals(); 
-	triangulos.geometry.attributes.position.needsUpdate = true; 
-	triaPosition.needsUpdate = true;
+
+    for(var j = 0; j < 25; j++){
+	 // if( contador % 1 == 0){
+	    for(var i = 0; i < 3; i++){
 	
+		let y = noise.get(i*noiseStep, j*noiseStep) * 30;
+		
+		triaPosition[j].setX( i, (keypoints[Math.floor(Math.random()*468)][0] * 0.075 - 24)   ); 
+		triaPosition[j].setY( i, (keypoints[Math.floor(Math.random()*468)][1] * 0.08 - 20)  );
+		triaPosition[j].setZ( i, keypoints[Math.floor(Math.random()*468)][2] * 0.05 * y )
+	    }
+	
+	    triangulos[j].geometry.computeVertexNormals(); 
+	    triangulos[j].geometry.attributes.position.needsUpdate = true; 
+	    triaPosition[j].needsUpdate = true;
+	    
+	 // }
     }
 
     contador++
 	// vueltas++;
-
+    noiseStep+=0.001;
+    
     
 }
 
 function rmsc2(){
-    scene.remove( triangulos ); 
-        
+
+    for( var i = 0; i < 25; i++ ){
+	scene.remove( triangulos[i] );
+    }
+
+    
 }
+
+// Escena tres sin video, tal vez intercalada 
 
 function cols(){
     
@@ -658,7 +684,7 @@ function texto() {
 
     loader1.load( 'https://raw.githubusercontent.com/EmilioOcelotl/4NT1/main/face-landmarks-detection/anti/fonts/techno.json', function ( font ) {
 
-	const message = "4NT1\n"+porcentaje+"\nPrediciones:" + predictions.length ;
+	const message = "4NT1\nPrediciones:" + predictions.length ;
 	const shapes = font.generateShapes( message, 1 );
 	const geometry = new THREE.ShapeGeometry( shapes );
 	geometry.computeBoundingBox();
@@ -671,7 +697,6 @@ function texto() {
 	// text.rotation.y = Math.PI;
 	text.rotation.z = Math.PI;
 	scene.add( text );
-
 
 	const message2 = "¿Segurx que lxs demás\nte reconocerán en esta foto?\nNo se ve ninguna cara.\nSubir otra foto Cerrar";
 	const shapes2 = font.generateShapes( message2, 1 );
@@ -686,12 +711,8 @@ function texto() {
 	// text.rotation.y = Math.PI;
 	text2.rotation.z = Math.PI;
 	scene.add( text2 );
-	
-	
+		
     })
-
-    
-
     
 }
 
@@ -701,7 +722,7 @@ function rmtexto(){
     
     loader1.load( 'https://raw.githubusercontent.com/EmilioOcelotl/4NT1/main/face-landmarks-detection/anti/fonts/techno.json', function ( font ) {
 	
-	const message = "4 N T 1\n"+porcentaje+"%\nPrediciones:"+predictions.length;
+	const message = "4 N T 1\n"+porcentaje+"\nPrediciones:"+predictions.length;
 	const shapes = font.generateShapes( message, 1 );
 	const geometry = new THREE.ShapeGeometry( shapes );
 	geometry.computeBoundingBox();
