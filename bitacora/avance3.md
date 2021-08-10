@@ -21,12 +21,17 @@
 - [ ] Importante: en algunos casos la máquina webgl no se inicializa bien. Pasa en teléfonos y también ha pasado en computadoras 
 - [ ] Construir el modelo localmente 
 - [ ] ¿ Dispose y creación de geometrías que no se estén usando ?
+- [ ] Audio reactividad en cubo grande
+- [ ] Texto más extenso, extractos que se detonan a partir de ciertas acciones. Secciones de acuerdo la presencia y no presencia de prediccciones 
 
 ## Para la muestra 
 
-- Prueba de 6 horas.
-- Hacer otros demos (controlador) 
-- Fondo negro 
+- ~~Prueba de 6 horas.~~
+- ~~Hacer otros demos (controlador)~~ 
+- ~~Fondo negro~~
+- ~~Cubrebocas y reconocimiento facial~~ 
+- **Presencial**: Video grabado con una exploración tipo instrumento controlado por medio de rostros y un código QR para que se pudiera abir en el navegador
+- **Digital**: Enlace para acceder con una compu o un móvil 
 
 ## Para el futuro mediano u otro proyecto
 

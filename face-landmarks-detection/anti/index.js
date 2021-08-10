@@ -27,7 +27,7 @@ import { AfterimagePass } from '/jsm/postprocessing/AfterimagePass.js';
 let scene, camera, renderer, material, cube, geometryPoints; 
 let geometryC, materialC; 
 let cubos = [];
-let cuboGrande = new THREE.Mesh(); 
+let cuboGrande = new THREE.Mesh(); let cuboGrande2 = new THREE.Mesh();
 let grupo; 
 let font; 
 let text = new THREE.Mesh(); let text2 = new THREE.Mesh();  
@@ -357,11 +357,16 @@ async function init() {
     geometryB = new THREE.BufferGeometry();
     geometryB.verticesNeedUpdate = true; 
 
-    cuboGrandeGeometry = new THREE.BoxGeometry( 200, 200, 200 );
+    cuboGrandeGeometry = new THREE.BoxGeometry( 200, 200, 200, 8, 8, 8 );
+
+    var geometryGrande = new THREE.BufferGeometry();
+
+    geometryGrande.copy(cuboGrandeGeometry); 
     //cuboGrandeGeometry = new THREE.IcosahedronGeometry( 200, 1 );
     
     // cuboGrandeGeometry = new THREE.SphereGeometry( 200, 32, 32 );
-    cuboGrande = new THREE.Mesh(cuboGrandeGeometry, materialC2 );
+    cuboGrande = new THREE.Mesh(geometryGrande, materialC2 );
+    cuboGrande2 = new THREE.Mesh(geometryGrande, materialC2 );
 
     /*
     geometryMirr = new THREE.PlaneGeometry( 80, 80 );
@@ -450,7 +455,22 @@ async function animate () {
     
     renderer.copyFramebufferToTexture( vector, texture );
     
-    rmtexto(); 
+    rmtexto();
+
+    console.log(cuboGrande.vertices.length)
+    
+    if(buscando){
+
+	cuboGrande.geometry.verticesNeedUpdate = true;
+		 
+	for(var i  = 0; i < cuboGrande.vertices.length; i++){
+
+	    const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
+	    cuboGrande.vertices[i].x = cuboGrande2.vertices[i].x * analisis;
+	    
+	}
+	
+    }
      
 }
 
@@ -530,7 +550,7 @@ function animsc1(){
     for ( let i = 0; i < position[vueltas].count; i ++ ) {
 	
 	let y = noise.get(keypoints[i][0]*noiseStep, keypoints[i][1]*noiseStep) * 50;
-	
+	 
 	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
 	position[vueltas].setX( i, (keypoints[i][0] * 0.075 - 24)   ); // antes 1+analisis
 	position[vueltas].setY( i, (keypoints[i][1] * 0.08 - 20)  );
@@ -810,7 +830,7 @@ async function sonido(){
 	player.start();
     });
     
-    //reverb.connect(analyser);
+    reverb.connect(analyser);
     //antiKick.connect(analyser); 
 
     if(buscando){
