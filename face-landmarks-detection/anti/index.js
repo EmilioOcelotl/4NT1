@@ -35,7 +35,7 @@ let torus = [];
 let matArray = []; 
 let prueba = 0; 
 let afft = [];
-// const analyser = new Tone.Analyser( "fft", 64 ) ;
+const analyser = new Tone.Analyser( "fft", 64 ) ;
 let postB = true; 
 
 // const pGeometry = new THREE.PlaneGeometry(8, 8, 21, 20);
@@ -188,21 +188,34 @@ for(var i = 0; i < 25; i++){
 
 let triangulos = []; 
 
-let contador = 0; 
+let contador = 0;
+
+//let audioSphere = new THREE.SphereBufferGeometry(300, 32, 32);
+// let audioSphere2 = new THREE.SphereBufferGeometry(300, 32, 32);
+
+function isMobile() {
+    const isAndroid = /Android/i.test(navigator.userAgent);
+    const isiOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    return isAndroid || isiOS;
+}
+
+const mobile = isMobile(); 
 
 ///////////// Setupear la cámara
 
 async function setupCamera() {
     video = document.getElementById('video');
-    const stream = await navigator.mediaDevices.getUserMedia({
+    const stream =  await navigator.mediaDevices.getUserMedia({
 	'audio': false,
 	'video': {
 	    facingMode: 'user',  
-	    // width : 540,
-	    // height: 540
+	    width: mobile ? undefined : 640,
+	    height: mobile ? undefined : 480
 	},
     });
     video.srcObject = stream;
+    let {width, height} = stream.getTracks()[0].getSettings();
+    console.log(`${width}x${height}`); // 640x480
     return new Promise((resolve) => {
 	video.onloadedmetadata = () => {
 	    resolve(video);
@@ -210,11 +223,12 @@ async function setupCamera() {
     });
 }
 
+
 ////////////// Lectra de keypoints, detonación de escenas  
 
 async function renderPrediction() {
 
-    var time2 = Date.now() * 0.01;
+    // var time2 = Date.now() * 0.01;
     
     predictions = await model.estimateFaces({
 	input: video,
@@ -266,6 +280,58 @@ async function renderPrediction() {
 	degree = Math.atan((topY - bottomY) / (topX - bottomX));
     }
 
+  
+    text.position.x = keypoints[0][0]* 0.1 - 20;
+    text.position.y = keypoints[0][1]* 0.1 -40;
+    text.position.z = keypoints[0][2] * 0.1 + 10;
+    text2.position.x = keypoints[0][0]* 0.1 - 40;
+    text2.position.y = keypoints[0][1]* 0.1 - 20;
+    text2.position.z = keypoints[0][2] * 0.1 + 10;
+    
+    cuboGrande.rotation.x += 0.002;
+    cuboGrande.rotation.y += (degree) * 0.004; 
+    text.rotation.y = degree * 2 + (Math.PI )   ;
+    text2.rotation.y = degree * 2 + (Math.PI )   ;
+
+   
+    /*
+    audioSphere.computeVertexNormals();
+    audioSphere.normalsNeedUpdate = true;
+    audioSphere.verticesNeedUpdate = true;
+
+    let vertss = audioSphere.attributes.position.array.count; 
+    console.log(vertss)
+    console.log(triaGeometry[0].vertices); 
+    
+    if(buscando){
+		 
+	for(var i  = 0; i < audioSphere.attributes.position.count; i++){
+
+	    const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
+	    audioSphere.attributes.position.array[i].x = audioSphere2.attributes.position.array[i].x * analisis;
+	    
+	}
+	
+    }
+   */
+    
+    stats.update(); 
+    
+    renderer.render( scene, camera );
+
+    panner.positionX.value = degree  ; 
+
+    vertices = [];
+    
+    composer.render();
+
+    vector.x = ( window.innerWidth * dpr / 2 ) - ( textureSize / 2 );
+    vector.y = ( window.innerHeight * dpr / 2 ) - ( textureSize / 2 );
+    
+    renderer.copyFramebufferToTexture( vector, texture );
+    
+    // rmtexto();
+
     requestAnimationFrame(renderPrediction);
     
 };
@@ -273,6 +339,9 @@ async function renderPrediction() {
 ///////////////////////// Inicialización
 
 async function init() {
+
+    
+    await tf.setBackend('webgl');
     
     const overlay = document.getElementById( 'overlay' );
     overlay.remove();
@@ -288,7 +357,6 @@ async function init() {
     container = document.createElement( 'div' );
     document.body.appendChild( container );
  
-    await tf.setBackend('webgl');
     await setupCamera();
 
     video.play();
@@ -298,10 +366,6 @@ async function init() {
     video.width = videoWidth;
     video.height = videoHeight;
 
-    model = await faceLandmarksDetection.load(
-	faceLandmarksDetection.SupportedPackages.mediapipeFacemesh,
-	{maxFaces: 3});
-    
     scene = new THREE.Scene();
     // scene.background = new THREE.Color( 0x000000 ); // UPDATED
     
@@ -312,7 +376,7 @@ async function init() {
 
     cols(); 
         
-    const geometryVideo = new THREE.PlaneGeometry( 64, 48 );
+    const geometryVideo = new THREE.PlaneGeometry( 64, 48 ); // Dos modalidades, abierta y ajustada para cel 
 
     materialVideo = new THREE.MeshBasicMaterial( {
 	color: 0xffffff,
@@ -333,7 +397,7 @@ async function init() {
 
     const matPoints = new THREE.PointsMaterial( {
 	color: 0x000000,
-	size: 20,
+	size: 30,
 	// map: sprite, 
 	blending: THREE.AdditiveBlending,
 	//transparent: true,
@@ -357,18 +421,27 @@ async function init() {
     geometryB = new THREE.BufferGeometry();
     geometryB.verticesNeedUpdate = true; 
 
-    cuboGrandeGeometry = new THREE.BoxGeometry( 200, 200, 200, 8, 8, 8 );
+    audioSphere = new THREE.BoxGeometry( 400, 400, 400, 8, 8, 8 );
 
-    var geometryGrande = new THREE.BufferGeometry();
+    //var geometryGrande = new THREE.BufferGeometry();
 
-    geometryGrande.copy(cuboGrandeGeometry); 
-    //cuboGrandeGeometry = new THREE.IcosahedronGeometry( 200, 1 );
+    //geometryGrande.copy(cuboGrandeGeometry);
     
+    //cuboGrandeGeometry = new THREE.IcosahedronGeometry( 200, 1 );    
     // cuboGrandeGeometry = new THREE.SphereGeometry( 200, 32, 32 );
-    cuboGrande = new THREE.Mesh(geometryGrande, materialC2 );
-    cuboGrande2 = new THREE.Mesh(geometryGrande, materialC2 );
+
+    cuboGrande = new THREE.Mesh(audioSphere, materialC2 );
+    //cuboGrande.position.x = 10;
+    //cuboGrande.position.y = 10;
+    //cuboGrande.position.z = 10;  
+    //cuboGrande2 = new THREE.Mesh(audioSphere, materialC2 );
+
+    //audioSphere.computeVertexNormals();
+    //audioSphere.normalsNeedUpdate = true;
+    //audioSphere.verticesNeedUpdate = true;
 
     /*
+
     geometryMirr = new THREE.PlaneGeometry( 80, 80 );
 
     groundMirror = new Reflector( gCube, {
@@ -413,15 +486,22 @@ async function init() {
     afterimagePass = new AfterimagePass();
     composer.addPass( afterimagePass );
 
-    afterimagePass.uniforms[ 'damp' ].value = 0.8; 
+    afterimagePass.uniforms[ 'damp' ].value = 0.7; 
 
     //glitchPass = new GlitchPass();
     // composer.addPass( glitchPass ); 
 
+    model = await faceLandmarksDetection.load(
+	faceLandmarksDetection.SupportedPackages.mediapipeFacemesh,
+	{maxFaces: 3,
+	 shouldLoadIrisModel: false,
+	 maxContinuousChecks: 80});
+    
     detonar(); 
     
 }
 
+/*
 async function animate () {
 
     requestAnimationFrame( animate );
@@ -439,7 +519,28 @@ async function animate () {
     cuboGrande.rotation.y += (degree) * 0.002; 
     text.rotation.y = degree * 2 + (Math.PI )   ;
     text2.rotation.y = degree * 2 + (Math.PI )   ;
+
+    /*
+    audioSphere.computeVertexNormals();
+    audioSphere.normalsNeedUpdate = true;
+    audioSphere.verticesNeedUpdate = true;
+
+    let vertss = audioSphere.attributes.position.array.count; 
+    console.log(vertss)
+    console.log(triaGeometry[0].vertices); 
+    
+    if(buscando){
+		 
+	for(var i  = 0; i < audioSphere.attributes.position.count; i++){
+
+	    const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
+	    audioSphere.attributes.position.array[i].x = audioSphere2.attributes.position.array[i].x * analisis;
+	    
+	}
+	
+    }
  
+    
     stats.update(); 
     
     renderer.render( scene, camera );
@@ -455,24 +556,12 @@ async function animate () {
     
     renderer.copyFramebufferToTexture( vector, texture );
     
-    rmtexto();
+    // rmtexto();
 
-    console.log(cuboGrande.vertices.length)
-    
-    if(buscando){
-
-	cuboGrande.geometry.verticesNeedUpdate = true;
-		 
-	for(var i  = 0; i < cuboGrande.vertices.length; i++){
-
-	    const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
-	    cuboGrande.vertices[i].x = cuboGrande2.vertices[i].x * analisis;
-	    
-	}
-	
-    }
      
 }
+
+*/
 
 function initsc0(){
    
@@ -549,7 +638,7 @@ function animsc1(){
 
     for ( let i = 0; i < position[vueltas].count; i ++ ) {
 	
-	let y = noise.get(keypoints[i][0]*noiseStep, keypoints[i][1]*noiseStep) * 50;
+	let y = noise.get(i*noiseStep) * 50;
 	 
 	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
 	position[vueltas].setX( i, (keypoints[i][0] * 0.075 - 24)   ); // antes 1+analisis
@@ -562,7 +651,7 @@ function animsc1(){
     planeB[vueltas].geometry.attributes.position.needsUpdate = true; 
     position[vueltas].needsUpdate = true;
     vueltas++;
-    noiseStep+=0.01;
+    noiseStep+=0.001;
     
 }
 
@@ -611,7 +700,7 @@ function animsc2(){
 
     contador++
 	// vueltas++;
-    noiseStep+=0.001;
+    noiseStep+=0.0001;
     
     
 }
@@ -742,7 +831,7 @@ function rmtexto(){
     
     loader1.load( 'https://raw.githubusercontent.com/EmilioOcelotl/4NT1/main/face-landmarks-detection/anti/fonts/techno.json', function ( font ) {
 	
-	const message = "4 N T 1\n"+porcentaje+"\nPrediciones:"+predictions.length;
+	// const message = "4 N T 1\n"+porcentaje+"\nPrediciones:"+predictions.length;
 	const shapes = font.generateShapes( message, 1 );
 	const geometry = new THREE.ShapeGeometry( shapes );
 	geometry.computeBoundingBox();
@@ -869,7 +958,7 @@ function onWindowResize() {
 
 async function detonar(){
     await renderPrediction();
-    animate();
+    // animate();
     sonido() 
     htmlBar(); 
     loaderHTML.style.display = "none";

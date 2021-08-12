@@ -23,14 +23,19 @@
 - [ ] ¿ Dispose y creación de geometrías que no se estén usando ?
 - [ ] Audio reactividad en cubo grande
 - [ ] Texto más extenso, extractos que se detonan a partir de ciertas acciones. Secciones de acuerdo la presencia y no presencia de prediccciones 
+- [x] renderPrediction y animate juntos. Separados generan contradiccción de flujo
+- [ ] Sugerir que la app en el móvil solamente funciona en modo horizontal (modo vertical está raro)
+- [ ] Reducir procesamiento en el navegador para más fps
+- [x] Arreglar la reproducción del video en navegadores 
 
 ## Para la muestra 
 
 - ~~Prueba de 6 horas.~~
 - ~~Hacer otros demos (controlador)~~ 
 - ~~Fondo negro~~
-- ~~Cubrebocas y reconocimiento facial~~ 
-- **Presencial**: Video grabado con una exploración tipo instrumento controlado por medio de rostros y un código QR para que se pudiera abir en el navegador
+- ~~Cubrebocas y reconocimiento facial~~
+
+- **Presencial**: Código QR para acceder desde el móvil 
 - **Digital**: Enlace para acceder con una compu o un móvil 
 
 ## Para el futuro mediano u otro proyecto
