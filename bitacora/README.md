@@ -14,4 +14,8 @@ Desarrollo, estructuración.
 
 [Bitácora](https://github.com/EmilioOcelotl/anti/blob/main/bitacora/avance2.md) 
 
+## Tercero
 
+Narrativa y detalles 
+
+[Bitácora](https://github.com/EmilioOcelotl/anti/blob/main/bitacora/avance2.md)

@@ -27,6 +27,10 @@
 - [ ] Sugerir que la app en el móvil solamente funciona en modo horizontal (modo vertical está raro)
 - [ ] Reducir procesamiento en el navegador para más fps
 - [x] Arreglar la reproducción del video en navegadores 
+- [ ] Sin retro en dispositivos móviles. En general: optimización 
+- [ ] Checar las dependencias del nuevo demo para resolver optimización y vulnerabilidades
+- [ ] Versión escritorio y móvil, implementar nueva librería. Evaluar sustitución  
+- [ ] Asociar posición de un rostro a la cámara 
 
 ## Para la muestra 
 
@@ -37,6 +41,8 @@
 
 - **Presencial**: Código QR para acceder desde el móvil 
 - **Digital**: Enlace para acceder con una compu o un móvil 
+
+- **Ambos Casos**: Versión de escritorio y versión para móvil 
 
 ## Para el futuro mediano u otro proyecto
 
@@ -52,4 +58,4 @@
 - eficiencia > el problema no es la relación de aspecto
 - Parece que en algunos casos hay problemas para cargar el contexto de webGL. En la computadora pasó cuando utilicé una resolución muy grande en la pantalla. Tendrá que ver con el tamaño de la ventana del navegador? La tasa de cuadros bajo hasta 1 o 2. Sospecha: el mismo motor cambia a cpu
 - retroalimentación háptica - comunicación y [la simulación d]el sentido del tacto
-
+- Interesante: tecnologías orientadas al mercado y tecnologías orientadas a un resultado robusto > Qué tanto se puede usar en móviles 

@@ -201,6 +201,25 @@ function isMobile() {
 
 const mobile = isMobile(); 
 
+///////////// Camera
+
+
+let mouseX = 0;
+let mouseY = 0;
+
+let windowHalfX = window.innerWidth / 2;
+let windowHalfY = window.innerHeight / 2;
+
+let aletx = [], alety = [], aletz = []; 
+
+for(let i = 0; i < 25; i++){
+
+    aletx[i] = 0;
+    alety[i] = 0;
+    aletz[i] = 0; 
+    
+}
+
 ///////////// Setupear la cámara
 
 async function setupCamera() {
@@ -210,7 +229,8 @@ async function setupCamera() {
 	'video': {
 	    facingMode: 'user',  
 	    width: mobile ? undefined : 640,
-	    height: mobile ? undefined : 480
+	    height: mobile ? undefined : 480,
+	    frameRate: { ideal: 10, max: 15 }
 	},
     });
     video.srcObject = stream;
@@ -248,13 +268,16 @@ async function renderPrediction() {
     
     if (predictions.length > 0) {
 	predictions.forEach(prediction => {
-	    keypoints = prediction.scaledMesh; 
+	    keypoints = prediction.scaledMesh;
+	   
 	    for (let i = 0; i < TRIANGULATION.length / 3; i++) {
 		points = [
 		    TRIANGULATION[i * 3], TRIANGULATION[i * 3 + 1],
 		    TRIANGULATION[i * 3 + 2]
 		].map(index => keypoints[index]);
 	    }
+	    s
+	    
 	    if(buscando){
 		switch( escena % numsc ){
 		case 0:
@@ -267,6 +290,8 @@ async function renderPrediction() {
 	    }
 	});
     }
+
+    // console.log(keypoints.length); 
 
     /////////////////// rotación en z de la cara
     
@@ -288,8 +313,8 @@ async function renderPrediction() {
     text2.position.y = keypoints[0][1]* 0.1 - 20;
     text2.position.z = keypoints[0][2] * 0.1 + 10;
     
-    cuboGrande.rotation.x += 0.002;
-    cuboGrande.rotation.y += (degree) * 0.004; 
+    cuboGrande.rotation.x += 0.003;
+    cuboGrande.rotation.y +=  (degree) * 0.006; 
     text.rotation.y = degree * 2 + (Math.PI )   ;
     text2.rotation.y = degree * 2 + (Math.PI )   ;
 
@@ -313,9 +338,21 @@ async function renderPrediction() {
 	}
 	
     }
-   */
-    
-    stats.update(); 
+    */
+
+    mouseX = ( keypoints[168][0] - windowHalfX ) / 10;
+    mouseY = ( keypoints[168][1] - windowHalfY ) / 10;
+
+    ///console.log( Math.abs(mouseX) - 32, ); 
+   
+    camera.position.x += (  Math.abs(mouseX)- 48 - camera.position.x ) * .05;
+    camera.position.y += (  Math.abs(mouseY)- 24 - camera.position.y ) * .05;
+
+    camera.lookAt( scene.position );
+
+    camera.rotation.z = Math.PI; 
+  
+    // stats.update(); 
     
     renderer.render( scene, camera );
 
@@ -382,7 +419,7 @@ async function init() {
 	color: 0xffffff,
 	side: THREE.DoubleSide,
 	transparent: true,
-	opacity: 0.98
+	opacity: 0.8
     } );
     
     planeVideo = new THREE.Mesh( geometryVideo, materialVideo );
@@ -397,10 +434,10 @@ async function init() {
 
     const matPoints = new THREE.PointsMaterial( {
 	color: 0x000000,
-	size: 30,
+	size: 25,
 	// map: sprite, 
 	blending: THREE.AdditiveBlending,
-	//transparent: true,
+	// transparent: true,
 	sizeAttenuation: false
     } );
     
@@ -471,11 +508,13 @@ async function init() {
 
     container.appendChild( stats.dom ); 
 
+    // renderer.setPixelRatio(0.75);
+    
     const renderScene = new RenderPass( scene, camera );
 
     const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.4, 0.85 );
     bloomPass.threshold = 0.9 ;
-    bloomPass.strength = 0.3 ;
+    bloomPass.strength = 0.2 ;
     bloomPass.radius = 0.01 ;
     
     composer = new EffectComposer( renderer );
@@ -495,7 +534,7 @@ async function init() {
 	faceLandmarksDetection.SupportedPackages.mediapipeFacemesh,
 	{maxFaces: 3,
 	 shouldLoadIrisModel: false,
-	 maxContinuousChecks: 80});
+	 maxContinuousChecks: 80});    
     
     detonar(); 
     
@@ -641,9 +680,9 @@ function animsc1(){
 	let y = noise.get(i*noiseStep) * 50;
 	 
 	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
-	position[vueltas].setX( i, (keypoints[i][0] * 0.075 - 24)   ); // antes 1+analisis
-	position[vueltas].setY( i, (keypoints[i][1] * 0.08 - 20)  );
-	position[vueltas].setZ( i, keypoints[i][2] * 0.05 * y )
+	position[vueltas].setX( i, (keypoints[i][0] * 0.075 - 24)  ); // antes 1+analisis
+	position[vueltas].setY( i, (keypoints[i][1] * 0.08 - 20) );
+	position[vueltas].setZ( i, keypoints[i][2] * 0.05 * y  )
 
     }
 	    
@@ -668,7 +707,7 @@ function rmsc1(){
 function initsc2(){
 
     noiseStep = 0; 
-    
+	        
     for(var i = 0; i < 25; i++ ){
 	scene.add( triangulos[i] );
     }
@@ -679,28 +718,36 @@ function animsc2(){
 
     //console.log(Math.floor(Math.random()*468)); 
     // const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
-
+    
     for(var j = 0; j < 25; j++){
-	 // if( contador % 1 == 0){
-	    for(var i = 0; i < 3; i++){
 	
-		let y = noise.get(i*noiseStep, j*noiseStep) * 30;
-		
-		triaPosition[j].setX( i, (keypoints[Math.floor(Math.random()*468)][0] * 0.075 - 24)   ); 
-		triaPosition[j].setY( i, (keypoints[Math.floor(Math.random()*468)][1] * 0.08 - 20)  );
-		triaPosition[j].setZ( i, keypoints[Math.floor(Math.random()*468)][2] * 0.05 * y )
-	    }
-	
-	    triangulos[j].geometry.computeVertexNormals(); 
-	    triangulos[j].geometry.attributes.position.needsUpdate = true; 
-	    triaPosition[j].needsUpdate = true;
+	for(var i = 0; i < 3; i++){
+
+	    aletx[contador%25] = Math.floor(Math.random()*468);
+	    alety[contador%25] = Math.floor(Math.random()*468);
+	    aletz[contador%25] = Math.floor(Math.random()*468);
 	    
-	 // }
+	    let y = noise.get(i*noiseStep) * 50;
+	    
+	    triaPosition[j].setX( i, (keypoints[aletx[j]][0] * 0.075 - 24)  ); 
+	    triaPosition[j].setY( i, (keypoints[alety[j]][1] * 0.08 - 20)  );
+	    triaPosition[j].setZ( i, (keypoints[aletz[j]][2] * 0.05 * -2) );
+
+	        contador = contador + 3; 
+
+	}
+
+	triangulos[j].geometry.computeVertexNormals(); 
+	triangulos[j].geometry.attributes.position.needsUpdate = true; 
+	triaPosition[j].needsUpdate = true;
+
+	
+
     }
 
-    contador++
+    console.log(contador%25); 
 	// vueltas++;
-    noiseStep+=0.0001;
+    noiseStep+=0.001;
     
     
 }
@@ -965,6 +1012,13 @@ async function detonar(){
     // myProgress.style.display = "block";  
     console.log('t4m0sr3dy');
     // fps(); 
+}
+
+function normalize(min, max) {
+    var delta = max - min;
+    return function (val) {
+	return (val - min) / delta;
+    };
 }
 
 video = document.getElementById( 'video' );

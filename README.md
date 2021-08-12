@@ -63,6 +63,10 @@ Algunas ideas-reflexiones relacionadas con este proyecto se encuentran en:
 
 ## Recursos
 
+- https://github.com/justadudewhohacks/face-api.js/
+- https://github.com/AndersJessen/FaceAPIJS-ThreeJS
+- https://google.github.io/mediapipe/solutions/face_detection.html
+- https://github.55860.com/jeeliz/jeelizFaceFilter
 - https://www.html5rocks.com/es/tutorials/getusermedia/intro/
 - http://phrogz.net/tmp/image_move_sprites_canvas.html
 - https://towardsdatascience.com/face-landmarks-detection-with-mediapipe-facemesh-555fa2e10b06
