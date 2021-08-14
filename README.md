@@ -63,6 +63,7 @@ Algunas ideas-reflexiones relacionadas con este proyecto se encuentran en:
 
 ## Recursos
 
+- https://github.com/tensorflow/tfjs-models/tree/master/blazeface
 - https://github.com/justadudewhohacks/face-api.js/
 - https://github.com/AndersJessen/FaceAPIJS-ThreeJS
 - https://google.github.io/mediapipe/solutions/face_detection.html

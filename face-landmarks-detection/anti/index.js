@@ -19,6 +19,7 @@ import { GlitchPass } from '/jsm/postprocessing/GlitchPass.js';
 import { TTFLoader } from '/jsm/loaders/TTFLoader.js';
 import perlinNoise3d from 'perlin-noise-3d'
 import { AfterimagePass } from '/jsm/postprocessing/AfterimagePass.js';
+import * as blazeface from '@tensorflow-models/blazeface';
 
 // const OSC = require('osc-js'); // pal osc 
 // const osc = new OSC(); 
@@ -149,7 +150,7 @@ let textMesh1;
 ///////////// Retro
 
 const dpr = window.devicePixelRatio;
-const textureSize = 1024 * dpr;
+const textureSize = 512 * dpr;
 let texture; 
 const vector = new THREE.Vector2();
 // let cuboGrande;
@@ -220,6 +221,10 @@ for(let i = 0; i < 25; i++){
     
 }
 
+let model2;
+const annotateBoxes = true;
+let landmarks;
+
 ///////////// Setupear la cámara
 
 async function setupCamera() {
@@ -249,7 +254,20 @@ async function setupCamera() {
 async function renderPrediction() {
 
     // var time2 = Date.now() * 0.01;
+
     
+    const predictions2 = await model2.estimateFaces(
+	video, false, false, true);
+
+    if (annotateBoxes) {
+	for (let j = 0; j < predictions2.length; j++) {
+	    landmarks = predictions2[j].landmarks;
+	    
+	}
+    }
+
+    console.log(landmarks); 
+
     predictions = await model.estimateFaces({
 	input: video,
 	returnTensors: false,
@@ -345,14 +363,14 @@ async function renderPrediction() {
 
     ///console.log( Math.abs(mouseX) - 32, ); 
    
-    camera.position.x += (  Math.abs(mouseX)- 48 - camera.position.x ) * .05;
+    camera.position.x += (  Math.abs(mouseX)- 36 - camera.position.x ) * .05;
     camera.position.y += (  Math.abs(mouseY)- 24 - camera.position.y ) * .05;
 
     camera.lookAt( scene.position );
 
     camera.rotation.z = Math.PI; 
   
-    // stats.update(); 
+    stats.update(); 
     
     renderer.render( scene, camera );
 
@@ -468,6 +486,8 @@ async function init() {
     // cuboGrandeGeometry = new THREE.SphereGeometry( 200, 32, 32 );
 
     cuboGrande = new THREE.Mesh(audioSphere, materialC2 );
+    // cuboGrande.visible = false;
+    
     //cuboGrande.position.x = 10;
     //cuboGrande.position.y = 10;
     //cuboGrande.position.z = 10;  
@@ -535,6 +555,8 @@ async function init() {
 	{maxFaces: 3,
 	 shouldLoadIrisModel: false,
 	 maxContinuousChecks: 80});    
+
+    model2 = await blazeface.load();
     
     detonar(); 
     
@@ -643,7 +665,7 @@ function initsc0(){
 	}
 
 	buscando = true; 
-	scene.add( cuboGrande );
+	 scene.add( cuboGrande );
 	scene.add( text );
 	scene.add( text2 ); 
 	Tone.Destination.mute = false;
