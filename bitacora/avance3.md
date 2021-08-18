@@ -17,10 +17,13 @@
 - [x] multijugador local
 - [x] renderPrediction y animate juntos. Separados generan contradiccción de flujo
 - [x] Arreglar la reproducción del video en navegadores
-- [x] Asociar posición de un rostro a la cámara
-- [x] Encontrar una alternativa para la retroalimentación en móviles. Sin FB el teléfono alcanza 10 fps > ¿ Es posible aplicar una textura de muy baja resolución ? 
+- [x] Asociar posición de un rostro a la cámara 
+- [x] Probar blazeface para más ligereza. No funciona 
+- [x] efectos y triangulación aleatoria
+- [x] Score en la consola
+- [x] Distintas resoluciones de la textura para móviles y para escritorio 
+- [x] Tiempo en segundos y no en ciclos de animación - diferencias de fps
 - [ ] Cambiar archivos de github al server
-- [ ] efectos y triangulación aleatoria
 - [ ] Construir el modelo localmente 
 - [ ] ¿ Dispose y creación de geometrías que no se estén usando ?
 - [ ] Audio reactividad en cubo grande
@@ -28,6 +31,7 @@
 - [ ] Checar las dependencias del nuevo demo para resolver optimización y vulnerabilidades 
 - [ ] Ajustar resolución por defecto de los dispositivos a las acciones del canvas 
 - [ ] ¿ Hydra como textura ?
+- [ ] Esperar a tiempos mejores
 
 ## Para la muestra 
 
@@ -48,6 +52,7 @@
 ## Para el futuro mediano u otro proyecto
 
 - multiplayer online
+- Versión performeada 
 
 ## Comentarios
 
@@ -60,4 +65,5 @@
 - Parece que en algunos casos hay problemas para cargar el contexto de webGL. En la computadora pasó cuando utilicé una resolución muy grande en la pantalla. Tendrá que ver con el tamaño de la ventana del navegador? La tasa de cuadros bajo hasta 1 o 2. Sospecha: el mismo motor cambia a cpu
 - retroalimentación háptica - comunicación y [la simulación d]el sentido del tacto
 - Interesante: tecnologías orientadas al mercado y tecnologías orientadas a un resultado robusto > Qué tanto se puede usar en móviles
-- La captura de la pantalla es costosa. Puede funcionar en la compu pero en móviles se incrementa el desempeño 
+- La captura de la pantalla es costosa. Puede funcionar en la compu pero en móviles se incrementa el desempeño
+- Blazeface no es tan eficiente. En compus ligeras congela el navegador 

@@ -17,6 +17,7 @@ La mayor parte del texto se concentra en *sin predicciones* y *una predicción*.
 
 Dispositivos tecnológicos y el software como cajas negras. Dentro de estas cajas negras hay más cajas negras. (Latour) 
 ¿Estas instancias expresan algo más que entramados técnicos?
+Acércate, aparece 
 
 Trabajo muerto (Marx) 
 
@@ -28,6 +29,7 @@ Una computadora que trabaja
 
 Sonido asociado al cambio de predicciones.
 Sonidos asociados a acciones como la [reaparición,renacimiento] en los videojuegos
+Puntos de interés y expresividad 
 
 #### Una predicción
 

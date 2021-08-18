@@ -147,10 +147,27 @@ let flow, curve, curveHandles = [];
 
 let textMesh1; 
 
+function isMobile() {
+    const isAndroid = /Android/i.test(navigator.userAgent);
+    const isiOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    return isAndroid || isiOS;
+}
+
+const mobile = isMobile();
+
 ///////////// Retro
 
 const dpr = window.devicePixelRatio;
-const textureSize = 512 * dpr;
+let textureSize; 
+
+if(mobile){
+    textureSize = 512 * dpr;
+    console.log("En movimiento"); 
+} else {
+    textureSize = 1024* dpr;
+    console.log("Estático"); 
+}
+
 let texture; 
 const vector = new THREE.Vector2();
 // let cuboGrande;
@@ -194,16 +211,7 @@ let contador = 0;
 //let audioSphere = new THREE.SphereBufferGeometry(300, 32, 32);
 // let audioSphere2 = new THREE.SphereBufferGeometry(300, 32, 32);
 
-function isMobile() {
-    const isAndroid = /Android/i.test(navigator.userAgent);
-    const isiOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-    return isAndroid || isiOS;
-}
-
-const mobile = isMobile(); 
-
 ///////////// Camera
-
 
 let mouseX = 0;
 let mouseY = 0;
@@ -211,19 +219,14 @@ let mouseY = 0;
 let windowHalfX = window.innerWidth / 2;
 let windowHalfY = window.innerHeight / 2;
 
-let aletx = [], alety = [], aletz = []; 
-
-for(let i = 0; i < 25; i++){
-
-    aletx[i] = 0;
-    alety[i] = 0;
-    aletz[i] = 0; 
-    
-}
+let aletx, alety, aletz; 
 
 let model2;
 const annotateBoxes = true;
 let landmarks;
+let inicio;
+let fin, transcurso;
+let segundo; 
 
 ///////////// Setupear la cámara
 
@@ -240,7 +243,7 @@ async function setupCamera() {
     });
     video.srcObject = stream;
     let {width, height} = stream.getTracks()[0].getSettings();
-    console.log(`${width}x${height}`); // 640x480
+    console.log("Resolución:"+ `${width}x${height}`); // 640x480
     return new Promise((resolve) => {
 	video.onloadedmetadata = () => {
 	    resolve(video);
@@ -255,19 +258,13 @@ async function renderPrediction() {
 
     // var time2 = Date.now() * 0.01;
 
-    
-    const predictions2 = await model2.estimateFaces(
-	video, false, false, true);
+    fin = Date.now();
+    transcurso = (fin - inicio) / 1000;
 
-    if (annotateBoxes) {
-	for (let j = 0; j < predictions2.length; j++) {
-	    landmarks = predictions2[j].landmarks;
-	    
-	}
-    }
+    //score(transcurso, 10); 
 
-    console.log(landmarks); 
-
+    score();
+       
     predictions = await model.estimateFaces({
 	input: video,
 	returnTensors: false,
@@ -394,7 +391,6 @@ async function renderPrediction() {
 ///////////////////////// Inicialización
 
 async function init() {
-
     
     await tf.setBackend('webgl');
     
@@ -554,9 +550,7 @@ async function init() {
 	faceLandmarksDetection.SupportedPackages.mediapipeFacemesh,
 	{maxFaces: 3,
 	 shouldLoadIrisModel: false,
-	 maxContinuousChecks: 80});    
-
-    model2 = await blazeface.load();
+	 maxContinuousChecks: 120});    
     
     detonar(); 
     
@@ -745,15 +739,15 @@ function animsc2(){
 	
 	for(var i = 0; i < 3; i++){
 
-	    aletx[contador%25] = Math.floor(Math.random()*468);
-	    alety[contador%25] = Math.floor(Math.random()*468);
-	    aletz[contador%25] = Math.floor(Math.random()*468);
+	    aletx = Math.floor(Math.random()*468);
+	    alety = Math.floor(Math.random()*468);
+	    aletz = Math.floor(Math.random()*468);
 	    
 	    let y = noise.get(i*noiseStep) * 50;
 	    
-	    triaPosition[j].setX( i, (keypoints[aletx[j]][0] * 0.075 - 24)  ); 
-	    triaPosition[j].setY( i, (keypoints[alety[j]][1] * 0.08 - 20)  );
-	    triaPosition[j].setZ( i, (keypoints[aletz[j]][2] * 0.05 * -2) );
+	    triaPosition[j].setX( i, (keypoints[aletx][0] * 0.075 - 24)  ); 
+	    triaPosition[j].setY( i, (keypoints[alety][1] * 0.08 - 20)  );
+	    triaPosition[j].setZ( i, (keypoints[aletz][2] * 0.05 * -4) * y );
 
 	        contador = contador + 3; 
 
@@ -767,8 +761,8 @@ function animsc2(){
 
     }
 
-    console.log(contador%25); 
-	// vueltas++;
+    // console.log(contador%25); 
+    // vueltas++;
     noiseStep+=0.001;
     
     
@@ -913,6 +907,7 @@ function rmtexto(){
 
 }
 
+/*
 function htmlBar(){
     var i = 0;
 	if (i == 0) {
@@ -927,7 +922,6 @@ function htmlBar(){
 		    // cambiar de escena
 		    htmlBar();
 		    escena++;
-
 		    rmsc1();
 		    rmsc2();
 		   
@@ -942,10 +936,9 @@ function htmlBar(){
 		    
 		} else {
 		    width+= 0.2;
-
 		    porcentaje = width.toFixed(2);
 		    
-		    /*
+		    // esto estaba comentado 
 		    if(width.toFixed(2) == 97.0){ 
 			// composer.addPass( glitchPass );
 			glitchPass.goWild = true; 
@@ -955,12 +948,13 @@ function htmlBar(){
 			glitchPass.goWild = false; 
 			//composer.removePass( glitchPass ); 
 		    }
-		    */
+		    
 		    
 		}
 	    }
 	}
 }
+*/
 
 function retro(){
     
@@ -1029,18 +1023,47 @@ async function detonar(){
     await renderPrediction();
     // animate();
     sonido() 
-    htmlBar(); 
+    // htmlBar(); 
     loaderHTML.style.display = "none";
     // myProgress.style.display = "block";  
-    console.log('t4m0sr3dy');
-    // fps(); 
+    console.log("██╗  ██╗███╗   ██╗████████╗ ██╗\n██║  ██║████╗  ██║╚══██╔══╝███║\n███████║██╔██╗ ██║   ██║   ╚██║\n╚════██║██║╚██╗██║   ██║    ██║\n     ██║██║ ╚████║   ██║    ██║\n     ╚═╝╚═╝  ╚═══╝   ╚═╝    ╚═╝");    // fps(); 
+    inicio = Date.now(); 
 }
 
-function normalize(min, max) {
-    var delta = max - min;
-    return function (val) {
-	return (val - min) / delta;
-    };
+// Ajustar duraciones 
+
+function score() {
+
+    if( transcurso.toFixed() == 1 && segundo != 1 ){
+	segundo = transcurso.toFixed();
+	console.log("4nt1 - Aproximaciones a la ofsucación audiovisual\nPara ninguno, uno o más usuarixs");
+	// aquí tendría que ir el cambio de escena 
+    }
+
+    
+    if( transcurso.toFixed() == 10 && segundo != 10 ){
+	segundo = transcurso.toFixed();
+	console.log("Transición y triangulación\n ¿ Puedes distinguirte ? ");
+	// aquí tendría que ir el cambio de escena
+	escena = 0;
+	rmsc1();
+	rmsc2();
+	initsc1()
+    }
+
+    if( transcurso.toFixed() == 25 && segundo != 25 ){
+	segundo = transcurso.toFixed();
+	console.log("1.- Encuentros\nVoltea\n¿Quién está a tu lado?");
+	if(predictions > 1) {
+	    console.log("Miralx"); 
+	}
+	escena = 1;
+	rmsc1();
+	rmsc2();
+	initsc2(); 
+    }
+
+
 }
 
 video = document.getElementById( 'video' );
