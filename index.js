@@ -5,7 +5,7 @@
 import * as faceLandmarksDetection from '@tensorflow-models/face-landmarks-detection';
 import * as tf from '@tensorflow/tfjs-core';
 import '@tensorflow/tfjs-backend-webgl';
-import '@tensorflow/tfjs-backend-cpu';
+// import '@tensorflow/tfjs-backend-cpu';
 import * as THREE from 'three';
 import {TRIANGULATION} from './js/triangulation';
 import * as Tone from 'tone';
@@ -18,6 +18,8 @@ import {GlitchPass} from './jsm/postprocessing/GlitchPass.js';
 // import { SVGLoader } from '/jsm/loaders/SVGLoader.js';
 import {TTFLoader} from './jsm/loaders/TTFLoader.js';
 import perlinNoise3d from 'perlin-noise-3d';
+// const perlinNoise3d = require('perlin-noise-3d');
+
 import {AfterimagePass} from './jsm/postprocessing/AfterimagePass.js';
 import * as blazeface from '@tensorflow-models/blazeface';
 
@@ -25,8 +27,9 @@ import * as blazeface from '@tensorflow-models/blazeface';
 // const osc = new OSC();
 // const osc = new OSC({ plugin: new OSC.WebsocketServerPlugin() })
 
+let matofTexture; 
 let scene, camera, renderer, material, cube, geometryPoints;
-let geometryC, materialC;
+let geometryC, materialC, materialC2;
 let cubos = [];
 let cuboGrande = new THREE.Mesh(); let cuboGrande2 = new THREE.Mesh();
 let grupo;
@@ -107,7 +110,7 @@ function hasGetUserMedia() {
 
 startButton.addEventListener( 'click', init );
 
-let colores = [], colores2 = [];
+let colores = [], colores2 = [], colores3 = [];
 const stats = new Stats();
 
 let predictions = [];
@@ -174,7 +177,7 @@ const vector = new THREE.Vector2();
 let afterimagePass;
 let porcentaje;
 
-const noise = new perlinNoise3d();
+let noise = new perlinNoise3d();
 let noiseStep = 0;
 let vueltas;
 
@@ -286,7 +289,7 @@ async function renderPrediction() {
 		    TRIANGULATION[i * 3 + 2],
 		].map((index) => keypoints[index]);
 	    }
-	    s;
+	   
 
 	    if (buscando) {
 		switch ( escena % numsc ) {
@@ -465,7 +468,7 @@ async function init() {
     geometryB = new THREE.BufferGeometry();
     geometryB.verticesNeedUpdate = true;
 
-    audioSphere = new THREE.BoxGeometry( 400, 400, 400, 8, 8, 8 );
+    let audioSphere = new THREE.BoxGeometry( 400, 400, 400, 8, 8, 8 );
 
     // var geometryGrande = new THREE.BufferGeometry();
 
