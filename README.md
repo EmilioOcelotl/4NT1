@@ -12,17 +12,31 @@ La obra toma en cuenta la transformación de flujos de audio y video y se retroa
 
 [Bitácora](https://github.com/EmilioOcelotl/anti/tree/main/bitacora) 
 
+[Diagrama de montaje](https://github.com/EmilioOcelotl/anti/tree/main/pdf/antiEx.pdf) 
+
 ## Ejecución 
 
-`cd face-landmarks-detection/anti`
+Primero:
+
+`git clone https://github.com/tensorflow/tfjs-models`
+
+`cd face-landmarks-detection`
+
+Luego:
+
+`git clone https://github.com/EmilioOcelotl/4NT1`
 
 JS [Three.js + TS.js] en modo local: 
 
 `yarn`
 
-`yarn watch`
+`yarn build`
 
-Es posible activar la comunicación OSC. Para realizar esto es necesario descomentar algunas tripas y escribir: 
+o
+
+`yarn build-deps`
+
+Es posible activar la comunicación OSC. Para realizar esto es necesario descomentar algunas tripas y ejecutar: 
 
 `node bridge.js`
 

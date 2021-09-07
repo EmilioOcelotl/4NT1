@@ -10,8 +10,6 @@
   },
   "dependencies": {
     "@tensorflow-models/face-landmarks-detection": "link:../dist",
-    "@tensorflow/tfjs-backend-cpu": "^3.1.0",
-    "@tensorflow/tfjs-backend-wasm": "^3.1.0",
     "@tensorflow/tfjs-backend-webgl": "^3.1.0",
     "@tensorflow/tfjs-converter": "^3.1.0",
     "@tensorflow/tfjs-core": "^3.1.0",

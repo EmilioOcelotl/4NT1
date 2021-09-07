@@ -1035,21 +1035,13 @@
   version "0.0.0"
   uid ""
 
-"@tensorflow/tfjs-backend-cpu@3.8.0", "@tensorflow/tfjs-backend-cpu@^3.1.0":
+"@tensorflow/tfjs-backend-cpu@3.8.0":
   version "3.8.0"
   resolved "https://registry.yarnpkg.com/@tensorflow/tfjs-backend-cpu/-/tfjs-backend-cpu-3.8.0.tgz#1b0655d5ca1b57370c1ea9586d571f3d63ca7393"
   integrity sha512-iSwHrqX0Ixh1kelfmxIgChKft/KrcZk9EMHQcX+878XnX7mxB2HfWUqfiJVIcq+Fyr4I3oE4ncbbpmlKMxA85A==
   dependencies:
     "@types/seedrandom" "2.4.27"
     seedrandom "2.4.3"
-
-"@tensorflow/tfjs-backend-wasm@^3.1.0":
-  version "3.8.0"
-  resolved "https://registry.yarnpkg.com/@tensorflow/tfjs-backend-wasm/-/tfjs-backend-wasm-3.8.0.tgz#9002eac2364f0902562888425def87f91ba7bb1d"
-  integrity sha512-pQmrO6M1BwtM9Kz1Me+AhhgBgWziG4BHaavG50+Dwe5lu61WHtvtRCOU984dWjf7R6dTG447W0G5zwdQBN6i0g==
-  dependencies:
-    "@tensorflow/tfjs-backend-cpu" "3.8.0"
-    "@types/emscripten" "~0.0.34"
 
 "@tensorflow/tfjs-backend-webgl@^3.1.0":
   version "3.8.0"
@@ -1080,11 +1072,6 @@
     long "4.0.0"
     node-fetch "~2.6.1"
     seedrandom "2.4.3"
-
-"@types/emscripten@~0.0.34":
-  version "0.0.34"
-  resolved "https://registry.yarnpkg.com/@types/emscripten/-/emscripten-0.0.34.tgz#12b4a344274fb102ff2f6c877b37587bc3e46008"
-  integrity sha512-QSb9ojDincskc+uKMI0KXp8e1NALFINCrMlp8VGKGcTSxeEyRTTKyjWw75NYrCZHUsVEEEpr1tYHpbtaC++/sQ==
 
 "@types/estree@*":
   version "0.0.50"

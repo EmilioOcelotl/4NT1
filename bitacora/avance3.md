@@ -31,6 +31,8 @@
 - [ ] Checar las dependencias del nuevo demo para resolver optimización y vulnerabilidades 
 - [ ] Ajustar resolución por defecto de los dispositivos a las acciones del canvas 
 - [ ] ¿ Hydra como textura ?
+- [ ] Manual online y offline de montaje para anexarlo a la entrega
+- [ ] Arreglar cable dañado 
 - [ ] Esperar a tiempos mejores
 
 ## Para la muestra 

@@ -42,6 +42,8 @@ let afft = [];
 const analyser = new Tone.Analyser( 'fft', 64 );
 let postB = true;
 
+import perlinNoise3d from 'perlin-noise-3d';
+
 // const pGeometry = new THREE.PlaneGeometry(8, 8, 21, 20);
 
 const pGeometry = [new THREE.BufferGeometry(), new THREE.BufferGeometry(), new THREE.BufferGeometry];
@@ -358,8 +360,8 @@ async function renderPrediction() {
 
     // /console.log( Math.abs(mouseX) - 32, );
 
-    camera.position.x += ( Math.abs(mouseX)- 36 - camera.position.x ) * .05;
-    camera.position.y += ( Math.abs(mouseY)- 24 - camera.position.y ) * .05;
+    //camera.position.x += ( Math.abs(mouseX)- 36 - camera.position.x ) * .05;
+    // camera.position.y += ( Math.abs(mouseY)- 24 - camera.position.y ) * .05;
 
     camera.lookAt( scene.position );
 
@@ -406,8 +408,15 @@ async function init() {
 
     await setupCamera();
 
-    video.play();
+    ////////////////////////////////////////////////////////////////////
 
+    // Esto se puede comentar ? // 
+    
+    video.play(); 
+
+    ////////////////////////////////////////////////////////////////////
+
+    
     videoWidth = video.videoWidth;
     videoHeight = video.videoHeight;
     video.width = videoWidth;
