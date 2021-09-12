@@ -42,7 +42,7 @@ let afft = [];
 const analyser = new Tone.Analyser( 'fft', 64 );
 let postB = true;
 
-import perlinNoise3d from 'perlin-noise-3d';
+// import perlinNoise3d from 'perlin-noise-3d';
 
 // const pGeometry = new THREE.PlaneGeometry(8, 8, 21, 20);
 
