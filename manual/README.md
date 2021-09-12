@@ -18,7 +18,7 @@ El subwoofer debe colocarse en el suelo, las bocinas pueden colocarse lo más al
 
 **Interacción:** Es necesario que las personas se quiten el cubrebocas para experimentar la pieza, un par de indicaciones podrán ser anexadas para indicar esto. 
 
-## Montaje
+## Mantenimiento
 
 1.- La pieza se enciende manualmente con el botón de encendido que se encuentra en la parte trasera de la computadora.
 
