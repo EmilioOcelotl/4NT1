@@ -16,9 +16,13 @@ En caso de ser necesario, la versión del modo exhibición de anti se encuentra 
 
 ## Instrucciones de montaje
 
-La computadora mac mini es el centro de la configuración tecnológica.
+### 1. Computadora 
 
-### 1. Conexión a Internet
+La computadora mac mini es el centro de la configuración tecnológica. Las conexiones son las siguientes: 
+
+![Diagrama](https://github.com/EmilioOcelotl/4NT1/blob/main/manual/img/macmini.png)
+
+### 2. Conexión a Internet
 
 Es necesario que esta computadora se conecte a la red del sitio (de preferencia ethernet pero también es posible hacerlo con wifi).
 
@@ -32,7 +36,7 @@ Para conectar la computadora a internet vía WIFI es necesario realizar lo sigui
 
 Imagenes 
 
-### 2. Imagen
+### 3. Imagen
 
 El cable HDMI permite conectar el monitor a la computadora
 
@@ -44,7 +48,7 @@ Sobre el monitor debe colocarse la cámara web que a su vez, se conecta vía usb
 
 Imagen de la cámara montada
 
-### 3. Audio
+### 4. Audio
 
 El cable jack mini a RCA conecta el audio de la computadora a las bocinas. La siguiente imagen muestra la salida de audio de mini jack de la mac mini
 
