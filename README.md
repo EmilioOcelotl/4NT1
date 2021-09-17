@@ -77,6 +77,7 @@ Algunas ideas-reflexiones relacionadas con este proyecto se encuentran en:
 
 ## Recursos
 
+- https://gist.github.com/rampfox/085bf3ffb9ff51e114bf7afdf3ced71b
 - https://github.com/tensorflow/tfjs-models/tree/master/blazeface
 - https://github.com/justadudewhohacks/face-api.js/
 - https://github.com/AndersJessen/FaceAPIJS-ThreeJS
@@ -101,7 +102,7 @@ Algunas ideas-reflexiones relacionadas con este proyecto se encuentran en:
 - https://github.com/tensorflow/tfjs-models/tree/master/face-landmarks-detection
 - https://threejs.org/
 - https://supercollider.github.io/
-- https://developer.mozilla.org/es/docs/Web/API/Web_Audio_API
+- https://developer.mozilla.org/es/docs/Web/API/Web_Audio_API	
 - https://github.com/PAIR-code/scatter-gl
 - https://github.com/kylemcdonald/ofxFaceTracker
 
