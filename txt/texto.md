@@ -5,6 +5,7 @@
 Distintos extractos asociados a predicciones ( o no predicciones ) secciones que coinciden con distintos momentos.
 El texto como dato es más económico que la imagen y el audio.
 ¿Poner a leer a la máquina? 
+Escribir en primera persona
 
 ## Secciones
 
@@ -37,7 +38,12 @@ El individuo
 
 Exploración, mientras menos volteas a la cámara percibes más estímulos.
 
-El egocentrismo obnubila pero la autoobservación puede ser necesaria. 
+El egocentrismo obnubila pero la autoobservación puede ser necesaria.
+
+La autocrítica - Esta aplicación está alojada en un servidor privado y será obsoleta en algún momento 
+
+Me pregunto si no me he dejado deslumbrar y ahora, viviré anclado al mantenimiento. 
+Embaucado por la nostalgia y deslumbrado por el futuro 
 
 #### Dos predicciones
 
@@ -54,3 +60,4 @@ Texto que acompañará a la pieza y que dialogará con un texto extendido
 - Instagramización de la política y la estetización de la resistencia
 - ¿Segurx que los demás te reconocerán en esta foto? No se ve ninguna cara. Subir foto Cerrar
 - La ofuscación como autocuidado. No se trata de desaparecer sino de cuidar la presencia. 
+

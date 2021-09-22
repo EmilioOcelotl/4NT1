@@ -1,8 +1,18 @@
 # Tercer avance
 
-## Pendiente general
+## Pendientes generales
 
-- ¿Cómo mantener la premisa del proyecto ? 
+- [ ] ¿Cómo mantener la premisa del proyecto ? Desplazamiento de la instagramización de la política 
+
+### Texto
+
+- [ ] Escritura del texto que estará dentro de la piezas
+- [ ] El texto que estará fuera de la pieza puede ser un artículo académico que a su vez, podría dar forma a un capítulo de la tesis
+  - [ ] Observaciones transversales a las piezas > fijación, obsolescencia y . Contexto (cuidado con eso, primero auto-crítica) 
+
+### Audio
+
+- [ ] Remixeo de algunas rolas 
 
 ## Avances y pendientes 
 

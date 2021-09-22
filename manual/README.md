@@ -54,7 +54,7 @@ Imagen de la cámara montada
 
 Las conexiones de audio se realizan en la parte posterior del subwoofer como se indica en la siguiente magen:
 
-![](https://github.com/EmilioOcelotl/4NT1/blob/main/manual/img/sub.png) 
+![](https://github.com/EmilioOcelotl/4NT1/blob/main/manual/img/wub.png) 
 
 El cable jack mini a RCA conecta el audio de la computadora al subwoofer y las bocinas, 
 
