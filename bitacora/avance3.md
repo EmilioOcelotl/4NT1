@@ -2,7 +2,7 @@
 
 ## Pendientes generales
 
-- [ ] ¿Cómo mantener la premisa del proyecto ? Desplazamiento de la instagramización de la política 
+- [ ] ¿Cómo mantener la premisa del proyecto ?
 
 ### Texto
 
@@ -12,7 +12,8 @@
 
 ### Audio
 
-- [ ] Remixeo de algunas rolas 
+- [ ] Remixeo de algunas rolas
+- [ ] Mantener los audios sin master para usarlos en algún otro momento 
 
 ## Avances y pendientes 
 
@@ -42,8 +43,11 @@
 - [ ] Ajustar resolución por defecto de los dispositivos a las acciones del canvas 
 - [ ] ¿ Hydra como textura ?
 - [ ] Manual online y offline de montaje para anexarlo a la entrega
-- [ ] Arreglar cable dañado 
+- [ ] Arreglar cable dañado
+- [ ] Desplazarse de la imagen y el sonido al texto 
+- [ ] Comprar un mouse y un teclado. 
 - [ ] Esperar a tiempos mejores
+
 
 ## Para la muestra 
 

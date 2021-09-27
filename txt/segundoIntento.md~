@@ -1,0 +1,8 @@
+
+# Segundo intento
+
+El proyecto involucra la realización de piezas pero también la escritura de un texto académico. ¿Este texto puede vincularse de alguna manera con las piezas?
+Más allá de que el texto escrito (académmico) se intercale como comentario o que cumpla una función de repositorio, me pregunto si será posible explorar creativamente el mismo texto que estoy escribiendo y plotearlo en alguna de las piezas. Se me ocurre que para un futuro cercano, podría ser un sistema de escritura que remixeara la tesis ?
+Estuve probando un modelo que entrena una LSTM para generar texto a partir de una entrada.
+Hasta el momento no ha servido pero igual es cuestión de tiempo invertido en la escritura y procesamiento realizado por la computadora.
+Si logro hacer funcionar esto entonces tendría una segunda forma de ofuscación que sería más textual. Llevarlo a lo sonoro ya estaría muy complicado pero podría encontrar algún tipo de relación. 

@@ -2,7 +2,7 @@
 
 Montaje y operación de **anti** en modo exhibición.
 
-Una versión impresa de este documento será agregada a la entrega del FONCA.  
+Una versión impresa de este documento será agregada a la entrega de JC.  
 
 Versión digital: [https://github.com/EmilioOcelotl/4NT1/tree/main/manual](https://github.com/EmilioOcelotl/4NT1/tree/main/manual)
 
@@ -14,7 +14,7 @@ La siguiente imagen es una aproximación gráfica al montaje
 
 ## Sitio dedicado
 
-En caso de ser necesario, la versión del modo exhibición de anti se encuentra en: [https://fonca.ocelotl.cc](https://fonca.ocelotl.cc)
+En caso de ser necesario, la versión del modo exhibición de anti se encuentra en: [https://jc.ocelotl.cc](https://jc.ocelotl.cc)
 
 ## Instrucciones de montaje
 
