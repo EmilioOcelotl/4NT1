@@ -14,4 +14,5 @@ Pienso que por acá podría ir un último proyecto del doctorado. Me imagino una
 La escritura colaborativa podría entrar, con sus respectivas referencias
 Facilmente esto podría ser un proyecto de vida, debería pensar en alguna solución práctica para el proyecto de FONCA.
 ¿Qué tanto tendría que escribir para que esto empezara a tener sentido?
-Independientemente de la extensión y de la exactitud es necesario hacer retroalimentación humana y ajustes para que esto tenga sentido. 
+Independientemente de la extensión y de la exactitud es necesario hacer retroalimentación humana y ajustes para que esto tenga sentido.
+La resistencia a lo efímero, perdurabilidad y registro. 

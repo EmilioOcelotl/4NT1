@@ -77,6 +77,7 @@ Algunas ideas-reflexiones relacionadas con este proyecto se encuentran en:
 
 ## Recursos
 
+- https://hackaday.com/2021/09/24/adversarial-makeup-your-contouring-skills-could-defeat-facial-recognition/?
 - https://www.latercera.com/la-tercera-domingo/noticia/la-tecnodiversidad-una-filosofia-contra-el-apocalipsis/FQD4XYJWMVCYZHMLEAQH25VCLU/
 - https://gist.github.com/rampfox/085bf3ffb9ff51e114bf7afdf3ced71b
 - https://github.com/tensorflow/tfjs-models/tree/master/blazeface

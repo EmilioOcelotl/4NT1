@@ -32,11 +32,17 @@ Para conectar la computadora a internet vía WIFI es necesario realizar lo sigui
 
 2.1 Encender la computadora, presionar F11 para salir del modo pantalla completa y minimizar el navegador
 
-2.2 Buscar en el escritorio la aplicación WICD y dar doble ? clic
+2.2 Buscar en el escritorio la aplicación Wicd y dar doble clic 
 
-2.3 Dar clic en buscar redes, encontrar la red en cuestión y dar clic, introducir la contraseña cuando la aplicación lo solicite 
+![wifi1](https://github.com/EmilioOcelotl/4NT1/blob/main/manual/img/wifi1.png)
 
-Imagenes 
+2.3 Dar clic en buscar redes, encontrar la red en cuestión
+
+![wifi2](https://github.com/EmilioOcelotl/4NT1/blob/main/manual/img/wifi2.png)
+
+2.3 Dar clic, introducir la contraseña cuando la aplicación lo solicite 
+
+![wifi3](https://github.com/EmilioOcelotl/4NT1/blob/main/manual/img/wifi3.png)
 
 ### 3. Imagen
 

@@ -44,7 +44,8 @@
 - [ ] ¿ Hydra como textura ?
 - [ ] Manual online y offline de montaje para anexarlo a la entrega
 - [ ] Arreglar cable dañado
-- [ ] Desplazarse de la imagen y el sonido al texto 
+- [ ] El texto puede ser un recurso pero me imagino más grabaciones de la lectura del texto - streaming que se envía al espacio 
+- [ ] Streaming vs cargar todos los archivos. Ligeras variaciones en la reproducción de los archivos  
 - [ ] Comprar un mouse y un teclado. 
 - [ ] Esperar a tiempos mejores
 

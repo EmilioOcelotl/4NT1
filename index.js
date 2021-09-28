@@ -624,7 +624,7 @@ async function animate () {
 
 function initsc0() {
     if ( predictions.length < 1 ) {
-	materialVideo.map = new THREE.TextureLoader().load( 'buscando.74525b9b.png' );
+	materialVideo.map = new THREE.TextureLoader().load( 'img/buscando.png' );
 	materialVideo.map.wrapS = THREE.RepeatWrapping;
 	materialVideo.map.repeat.x = - 1;
 	materialVideo.map.rotation.y = Math.PI / 2;
@@ -799,7 +799,7 @@ function materiales() {
 	// envMap: alpha < 0.5 ? reflectionCube : null
     } );
 
-    ofTexture = new THREE.TextureLoader().load( 'of8.89f2fef9.jpg' );
+    ofTexture = new THREE.TextureLoader().load( 'img/of8.jpg' );
 
     ofTexture.wrapS = ofTexture.wrapT = THREE.RepeatWrapping;
     ofTexture.offset.set( 0, 0 );
@@ -938,10 +938,10 @@ async function sonido() {
     pitchShift = new Tone.PitchShift().connect(reverb);
     dist = new Tone.Distortion(0.1).connect(pitchShift);
 
-    player = new Tone.Player('geom4.0f7aa2a3.mp3').connect(dist);
+    player = new Tone.Player('audio/geom4.mp3').connect(dist);
     player.loop = true;
 
-    antiKick = new Tone.Player('antiKick.51e9f00a.mp3').toDestination();
+    antiKick = new Tone.Player('audio/antiKick.mp3').toDestination();
 
     Tone.loaded().then(() => {
 	player.start();
