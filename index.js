@@ -21,7 +21,9 @@ import perlinNoise3d from 'perlin-noise-3d';
 // const perlinNoise3d = require('perlin-noise-3d');
 
 import {AfterimagePass} from './jsm/postprocessing/AfterimagePass.js';
-import * as blazeface from '@tensorflow-models/blazeface';
+// import * as blazeface from '@tensorflow-models/blazeface';
+
+import {ImprovedNoise} from './jsm/math/ImprovedNoise.js'; 
 
 // const OSC = require('osc-js'); // pal osc
 // const osc = new OSC();
@@ -229,6 +231,8 @@ let inicio;
 let fin, transcurso;
 let segundo;
 
+const perlin = new ImprovedNoise();
+
 // /////////// Setupear la cámara
 
 async function setupCamera() {
@@ -237,7 +241,7 @@ async function setupCamera() {
 	'audio': false,
 	'video': {
 	    facingMode: 'user',
-	    width: mobile ? undefined : 640,
+	    width: mobile ? undefined : 480, // antes 640
 	    height: mobile ? undefined : 480,
 	    frameRate: {ideal: 10, max: 15},
 	},
@@ -432,7 +436,7 @@ async function init() {
 
     cols();
 
-    const geometryVideo = new THREE.PlaneGeometry( 64, 48 ); // Dos modalidades, abierta y ajustada para cel
+    const geometryVideo = new THREE.PlaneGeometry( 64, 64 ); // Dos modalidades, abierta y ajustada para cel
 
     materialVideo = new THREE.MeshBasicMaterial( {
 	color: 0xffffff,
@@ -624,7 +628,7 @@ async function animate () {
 
 function initsc0() {
     if ( predictions.length < 1 ) {
-	materialVideo.map = new THREE.TextureLoader().load( 'img/buscando.png' );
+	materialVideo.map = new THREE.TextureLoader().load( 'img/qr.png' );
 	materialVideo.map.wrapS = THREE.RepeatWrapping;
 	materialVideo.map.repeat.x = - 1;
 	materialVideo.map.rotation.y = Math.PI / 2;
@@ -688,20 +692,25 @@ function initsc1() {
 }
 
 function animsc1() {
-    for ( let i = 0; i < position[vueltas].count; i ++ ) {
-	let y = noise.get(i*noiseStep) * 50;
+    
+    var time2 = Date.now() * 0.0005;
 
+    for ( let i = 0; i < position[vueltas].count; i ++ ) {
+	//let y = noise.get(i*noiseStep) * 50;
+
+	let d = perlin.noise(keypoints[i][0] * 0.03  + time2, keypoints[i][1]*0.03+time2, keypoints[i][2]* 0.03+time2) * 1.5; 
+	
 	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
-	position[vueltas].setX( i, (keypoints[i][0] * 0.075 - 24) ); // antes 1+analisis
-	position[vueltas].setY( i, (keypoints[i][1] * 0.08 - 20) );
-	position[vueltas].setZ( i, keypoints[i][2] * 0.05 * y );
+	position[vueltas].setX( i, (keypoints[i][0] * 0.1 - 24) *(1+d) ); // antes 1+analisis
+	position[vueltas].setY( i, (keypoints[i][1] * 0.1 - 24) * (1+d));
+	position[vueltas].setZ( i, keypoints[i][2] * 0.05  );
     }
 
     planeB[vueltas].geometry.computeVertexNormals();
     planeB[vueltas].geometry.attributes.position.needsUpdate = true;
     position[vueltas].needsUpdate = true;
     vueltas++;
-    noiseStep+=0.001;
+    // noiseStep+=0.001;
 }
 
 function rmsc1() {
@@ -724,19 +733,25 @@ function animsc2() {
     // console.log(Math.floor(Math.random()*468));
     // const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
 
+    var time2 = Date.now() * 0.0005;
+    
     for (let j = 0; j < 25; j++) {
 	for (let i = 0; i < 3; i++) {
+
 	    aletx = Math.floor(Math.random()*468);
 	    alety = Math.floor(Math.random()*468);
 	    aletz = Math.floor(Math.random()*468);
 
-	    let y = noise.get(i*noiseStep) * 50;
+	    let d = perlin.noise(keypoints[aletx][0] * 0.03  + time2, keypoints[alety][1]*0.03+time2, keypoints[aletz][2]* 0.03+time2) * 1.5; 
+	    
+	    // let y = noise.get(i*noiseStep) * 50;
 
-	    triaPosition[j].setX( i, (keypoints[aletx][0] * 0.075 - 24) );
-	    triaPosition[j].setY( i, (keypoints[alety][1] * 0.08 - 20) );
-	    triaPosition[j].setZ( i, (keypoints[aletz][2] * 0.05 * -4) * y );
+	    triaPosition[j].setX( i, (keypoints[aletx][0] * 0.1 - 24)*(1+d) );
+	    triaPosition[j].setY( i, (keypoints[alety][1] * 0.1 - 24)*(1+d) );
+	    triaPosition[j].setZ( i, (keypoints[aletz][2] * 0.05 * -4) );
 
-	        contador = contador + 3;
+	    contador = contador + 3;
+	    
 	}
 
 	triangulos[j].geometry.computeVertexNormals();
@@ -746,7 +761,7 @@ function animsc2() {
 
     // console.log(contador%25);
     // vueltas++;
-    noiseStep+=0.001;
+    // noiseStep+=0.001;
 }
 
 function rmsc2() {

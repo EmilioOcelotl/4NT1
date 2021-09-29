@@ -34,21 +34,21 @@
 - [x] Score en la consola
 - [x] Distintas resoluciones de la textura para móviles y para escritorio 
 - [x] Tiempo en segundos y no en ciclos de animación - diferencias de fps
+- [x] Texto más extenso, extractos que se detonan a partir de ciertas acciones. Secciones de acuerdo la presencia y no presencia de prediccciones 
+- [x] Checar las dependencias del nuevo demo para resolver optimización y vulnerabilidades
+- [x] Manual online y offline de montaje para anexarlo a la entrega
+- [x] Generar un qr
+- [x] Qr más grande y negativo 
 - [ ] Cambiar archivos de github al server
-- [ ] Construir el modelo localmente 
+- [ ] Hacer referencia a los json de blazeface y facemesh  
 - [ ] ¿ Dispose y creación de geometrías que no se estén usando ?
-- [ ] Audio reactividad en cubo grande
-- [ ] Texto más extenso, extractos que se detonan a partir de ciertas acciones. Secciones de acuerdo la presencia y no presencia de prediccciones 
-- [ ] Checar las dependencias del nuevo demo para resolver optimización y vulnerabilidades 
+- [ ] Audio reactividad en cubo grande 
 - [ ] Ajustar resolución por defecto de los dispositivos a las acciones del canvas 
-- [ ] ¿ Hydra como textura ?
-- [ ] Manual online y offline de montaje para anexarlo a la entrega
 - [ ] Arreglar cable dañado
 - [ ] El texto puede ser un recurso pero me imagino más grabaciones de la lectura del texto - streaming que se envía al espacio 
 - [ ] Streaming vs cargar todos los archivos. Ligeras variaciones en la reproducción de los archivos  
-- [ ] Comprar un mouse y un teclado. 
+- [ ] Comprar un mouse y un teclado.
 - [ ] Esperar a tiempos mejores
-
 
 ## Para la muestra 
 
