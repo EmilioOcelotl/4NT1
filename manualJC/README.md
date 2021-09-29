@@ -46,15 +46,13 @@ Para conectar la computadora a internet vía WIFI es necesario realizar lo sigui
 
 ### 3. Imagen
 
-El cable HDMI conecta el monitor a la computadora.
-
 El monitor puede montarse en la pared a 1,67 m de altura (altura promedio de los ojos) con respecto al suelo. Para hacer esto es posible quitar la base del monitor
 
 En caso de que no sea posible montar el monitor a la pared, es posible colocarlo en una mesa o soporte que se aproxime en altura a la magnitud antes indicada.
 
 Sobre el monitor debe colocarse la cámara web que a su vez, se conecta vía usb a la computadora. La cámara debe inclinarse para que capture el rostro de las personas. 
 
-Imagen de la cámara montada
+El cable HDMI conecta el monitor a la computadora. Es importante que el cable HDMI esté conectado y el monitor encendido antes de encender la computadora
 
 ### 4. Audio
 
