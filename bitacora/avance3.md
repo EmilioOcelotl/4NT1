@@ -8,12 +8,12 @@
 
 - [ ] Escritura del texto que estará dentro de la piezas
 - [ ] El texto que estará fuera de la pieza puede ser un artículo académico que a su vez, podría dar forma a un capítulo de la tesis
-  - [ ] Observaciones transversales a las piezas > fijación, obsolescencia y . Contexto (cuidado con eso, primero auto-crítica) 
+  - [ ] Observaciones transversales a las piezas > fijación, obsolescencia y contexto (cuidado con eso, primero auto-crítica) 
 
 ### Audio
 
 - [ ] Remixeo de algunas rolas
-- [ ] Mantener los audios sin master para usarlos en algún otro momento 
+- [x] Mantener los audios sin master para usarlos en algún otro momento 
 
 ## Avances y pendientes 
 
@@ -41,7 +41,7 @@
 - [x] Qr más grande y negativo 
 - [ ] Cambiar archivos de github al server
 - [ ] Hacer referencia a los json de blazeface y facemesh  
-- [ ] ¿ Dispose y creación de geometrías que no se estén usando ?
+- [x] ¿ Dispose y creación de geometrías que no se estén usando ?
 - [ ] Audio reactividad en cubo grande 
 - [ ] Ajustar resolución por defecto de los dispositivos a las acciones del canvas 
 - [ ] Arreglar cable dañado

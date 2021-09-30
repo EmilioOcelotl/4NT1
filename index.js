@@ -1,4 +1,4 @@
-// ////////////////////////////////
+/ ////////////////////////////////
 // ///////// 4NT1 /////////////////
 // ////////////////////////////////
 
@@ -252,7 +252,7 @@ async function setupCamera() {
 	'audio': false,
 	'video': {
 	    facingMode: 'user',
-	    width: mobile ? undefined : 480, // antes 640
+	    width: mobile ? undefined : 640, // antes 640
 	    height: mobile ? undefined : 480,
 	    frameRate: {ideal: 10, max: 15},
 	},
@@ -642,7 +642,7 @@ function initsc0() {
 	materialVideo.map = new THREE.TextureLoader().load( 'img/qr.png' );
 	materialVideo.map.wrapS = THREE.RepeatWrapping;
 	materialVideo.map.repeat.x = - 1;
-	materialVideo.map.rotation.y = Math.PI / 2;
+	// materialVideo.map.rotation.y = Math.PI / 2; // por alguna razon hay que comentar esto 
 	switch ( escena % numsc ) {
 	case 0:
 	    rmsc1();
@@ -726,10 +726,12 @@ function animsc1() {
     for ( let i = 0; i < position[vueltas].count; i ++ ) {
 	//let y = noise.get(i*noiseStep) * 50;
 
-	let d = perlin.noise(keypoints[i][0] * 0.03  + time2, keypoints[i][1]*0.03+time2, keypoints[i][2]* 0.03+time2) * 1.5; 
+	// let d = perlin.noise(keypoints[i][0] * 0.03  + time2, keypoints[i][1]*0.03+time2, keypoints[i][2]* 0.03+time2) * 1.5; 
+
+	let d = 0;
 	
 	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
-	position[vueltas].setX( i, (keypoints[i][0] * 0.1 - 24) *(1+d) ); // antes 1+analisis
+	position[vueltas].setX( i, (keypoints[i][0] * 0.07 - 22) *(1+d) ); // antes 1+analisis
 	position[vueltas].setY( i, (keypoints[i][1] * 0.1 - 24) * (1+d));
 	position[vueltas].setZ( i, keypoints[i][2] * 0.05  );
     }
