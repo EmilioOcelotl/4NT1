@@ -41,7 +41,7 @@ let torus = [];
 let matArray = [];
 let prueba = 0;
 let afft = [];
-const analyser = new Tone.Analyser( 'fft', 64 );
+// const analyser = new Tone.Analyser( 'fft', 64 );
 let postB = true;
 
 // import perlinNoise3d from 'perlin-noise-3d';
@@ -232,6 +232,17 @@ let fin, transcurso;
 let segundo;
 
 const perlin = new ImprovedNoise();
+let intro; 
+
+
+player = new Tone.Player('audio/geom4.mp3').connect(panner);
+player.loop = true;
+
+antiKick = new Tone.Player('audio/antiKick.mp3').toDestination();
+
+intro = new Tone.Player('audio/intro.mp3').toDestination();
+intro.loop = true; 
+
 
 // /////////// Setupear la cámara
 
@@ -632,7 +643,6 @@ function initsc0() {
 	materialVideo.map.wrapS = THREE.RepeatWrapping;
 	materialVideo.map.repeat.x = - 1;
 	materialVideo.map.rotation.y = Math.PI / 2;
-
 	switch ( escena % numsc ) {
 	case 0:
 	    rmsc1();
@@ -646,10 +656,21 @@ function initsc0() {
 	scene.remove( cuboGrande );
 	scene.remove( text );
 	scene.remove( text2 );
-	Tone.Destination.mute = true;
+	// Tone.Destination.mute = true;
+
+	/*
+	player.mute = true;
+	intro.mute = false;
+	*/
+
+	player.stop();
+	intro.restart();
+	intro.start();
+	
     } else {
 	materialVideo.map = new THREE.VideoTexture( video );
 
+	// intro.stop("+0.5");
 	switch ( escena % numsc ) {
 	case 0:
 	    initsc1();
@@ -666,7 +687,14 @@ function initsc0() {
 	 scene.add( cuboGrande );
 	scene.add( text );
 	scene.add( text2 );
-	Tone.Destination.mute = false;
+	// Tone.Destination.mute = false;
+	/*
+	player.mute = false;
+	intro.mute = true; 
+	*/
+	player.restart(); 
+	player.start();
+	intro.stop(); 
     }
 }
 
@@ -949,20 +977,16 @@ function retro() {
 
 async function sonido() {
     await Tone.start();
-    reverb = new Tone.JCReverb(0.1).connect(panner);
-    pitchShift = new Tone.PitchShift().connect(reverb);
-    dist = new Tone.Distortion(0.1).connect(pitchShift);
-
-    player = new Tone.Player('audio/geom4.mp3').connect(dist);
-    player.loop = true;
-
-    antiKick = new Tone.Player('audio/antiKick.mp3').toDestination();
-
+    //reverb = new Tone.JCReverb(0.1).connect(panner);
+    // pitchShift = new Tone.PitchShift().connect(reverb);
+    //dist = new Tone.Distortion(0.1).connect(pitchShift);
+    
     Tone.loaded().then(() => {
-	player.start();
+	// player.start();
+	// intro.start(); 
     });
 
-    reverb.connect(analyser);
+    // reverb.connect(analyser);
     // antiKick.connect(analyser);
 
     if (buscando) {
@@ -971,7 +995,7 @@ async function sonido() {
 	// console.log(al);
 	pitchActual= pitch[al];
 	pitchCambio++;
-	pitchShift.pitch = pitchActual;
+	// pitchShift.pitch = pitchActual;
 	wetActual = wet[al];
 	reverb.wet = wetActual;
     }, 850); // esto podría secuenciarse también ?
@@ -980,6 +1004,7 @@ async function sonido() {
 	reverseActual= reverse[al];
 	reverseCambio++;
 	player.reverse = reverseActual;
+	intro.reverse = reverseActual; 
 	// scene.background = colores[al] ;
 	cambioC++;
     }, 850);
@@ -987,7 +1012,10 @@ async function sonido() {
 	startActual= start[startCambio%5];
 	startCambio++;
 	player.loopStart = startActual;
-	antiKick.start();
+	intro.loopStart = startActual;
+	if(buscando){
+	    antiKick.start();
+	}
     }, 850);
     }
 }

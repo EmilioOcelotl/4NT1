@@ -8,6 +8,6 @@ Agregar en:
 
 la siguiente linea: 
 
-`@chromium-browser --incognito --start-fullscreen https://google.com/`
+`@chromium-browser --incognito --start-fullscreen https://anti.ocelotl.cc`
 
 
