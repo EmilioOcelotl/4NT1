@@ -112,7 +112,13 @@ function hasGetUserMedia() {
 	      navigator.mozGetUserMedia || navigator.msGetUserMedia);
 }
 
-startButton.addEventListener( 'click', init );
+// startButton.addEventListener( 'click', init );
+
+document.querySelector('button').addEventListener('click', async () => {
+	await Tone.start()
+    // console.log('audio is ready')
+    init(); 
+})
 
 let colores = [], colores2 = [], colores3 = [];
 const stats = new Stats();
@@ -243,20 +249,34 @@ antiKick = new Tone.Player('audio/antiKick.mp3').toDestination();
 intro = new Tone.Player('audio/intro.mp3').toDestination();
 intro.loop = true; 
 
+if(mobile){
+
+    camWidth = 160;
+    camHeight = 120;
+
+}
+
+if(!mobile){
+    camWidth = 120;
+    camHeight = 160;
+}
+
+let stream
 
 // /////////// Setupear la cámara
 
 async function setupCamera() {
     video = document.getElementById('video');
-    const stream = await navigator.mediaDevices.getUserMedia({
+    stream = await navigator.mediaDevices.getUserMedia({
 	'audio': false,
 	'video': {
 	    facingMode: 'user',
-	    width: mobile ? undefined : 640, // antes 640
-	    height: mobile ? undefined : 480,
-	    frameRate: {ideal: 10, max: 15},
-	},
+	    width: mobile ? undefined : 480, // antes 640
+	    height: mobile ? undefined : 640,
+	    frameRate: {ideal: 15, max: 30},
+	}
     });
+    
     video.srcObject = stream;
     let {width, height} = stream.getTracks()[0].getSettings();
     console.log('Resolución:'+ `${width}x${height}`); // 640x480
@@ -447,7 +467,11 @@ async function init() {
 
     cols();
 
-    const geometryVideo = new THREE.PlaneGeometry( 64, 64 ); // Dos modalidades, abierta y ajustada para cel
+    let {width, height} = stream.getTracks()[0].getSettings();
+    console.log('Resolución:'+ `${width}x${height}`); // 640x480
+
+    const geometryVideo = new THREE.PlaneGeometry( width/10, height/10 ); // Dos modalidades, abierta y ajustada para cel
+
 
     materialVideo = new THREE.MeshBasicMaterial( {
 	color: 0xffffff,
@@ -719,6 +743,8 @@ function initsc1() {
     }
 }
 
+// dos correcciones de acuerdo a la resolución. Pienso que esto tiene que ver con el modo horizontal o vertical. Cada navegador hace lo que quiere y firefox nunca me deja jalar la cámara en módo vertical 
+
 function animsc1() {
     
     var time2 = Date.now() * 0.0005;
@@ -731,8 +757,8 @@ function animsc1() {
 	let d = 0;
 	
 	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
-	position[vueltas].setX( i, (keypoints[i][0] * 0.07 - 22) *(1+d) ); // antes 1+analisis
-	position[vueltas].setY( i, (keypoints[i][1] * 0.1 - 24) * (1+d));
+	position[vueltas].setX( i, (keypoints[i][0] * 0.07 - 17) *(1+d) ); // antes 1+analisis
+	position[vueltas].setY( i, (keypoints[i][1] * 0.07 - 22) * (1+d));
 	position[vueltas].setZ( i, keypoints[i][2] * 0.05  );
     }
 
@@ -978,14 +1004,16 @@ function retro() {
 }
 
 async function sonido() {
-    await Tone.start();
+
+    // await Tone.start();
     //reverb = new Tone.JCReverb(0.1).connect(panner);
     // pitchShift = new Tone.PitchShift().connect(reverb);
     //dist = new Tone.Distortion(0.1).connect(pitchShift);
     
     Tone.loaded().then(() => {
 	// player.start();
-	// intro.start(); 
+	// intro.start();
+	antiKick.start(); // Esto tendría que ser un sonido de inicio? 
     });
 
     // reverb.connect(analyser);
@@ -998,15 +1026,15 @@ async function sonido() {
 	pitchActual= pitch[al];
 	pitchCambio++;
 	// pitchShift.pitch = pitchActual;
-	wetActual = wet[al];
-	reverb.wet = wetActual;
+	//wetActual = wet[al];
+	// reverb.wet = wetActual;
     }, 850); // esto podría secuenciarse también ?
     setInterval(function() {
 	let al = Math.floor(Math.random()*5);
 	reverseActual= reverse[al];
 	reverseCambio++;
 	player.reverse = reverseActual;
-	intro.reverse = reverseActual; 
+	//intro.reverse = reverseActual; 
 	// scene.background = colores[al] ;
 	cambioC++;
     }, 850);
@@ -1014,7 +1042,7 @@ async function sonido() {
 	startActual= start[startCambio%5];
 	startCambio++;
 	player.loopStart = startActual;
-	intro.loopStart = startActual;
+	//intro.loopStart = startActual;
 	if(buscando){
 	    antiKick.start();
 	}

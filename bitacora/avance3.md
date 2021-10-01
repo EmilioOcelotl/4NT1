@@ -48,6 +48,7 @@
 - [ ] El texto puede ser un recurso pero me imagino más grabaciones de la lectura del texto - streaming que se envía al espacio 
 - [ ] Streaming vs cargar todos los archivos. Ligeras variaciones en la reproducción de los archivos  
 - [ ] Comprar un mouse y un teclado.
+- [ ] Cámara: en escritorio y en teléfono: 160x120 y 120x160 respectivamente. Probar con esas dos resoluciones. Dos correcciones de acuerdo a la resolución. Pienso que esto tiene que ver con el modo horizontal o vertical                    
 - [ ] Esperar a tiempos mejores
 
 ## Para la muestra 

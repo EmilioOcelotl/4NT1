@@ -77,6 +77,7 @@ Algunas ideas-reflexiones relacionadas con este proyecto se encuentran en:
 
 ## Recursos
 
+- https://webrtchacks.github.io/WebRTC-Camera-Resolution/
 - https://www.linux-magazine.com/Online/Features/Generating-QR-Codes-in-Linux
 - https://hackaday.com/2021/09/24/adversarial-makeup-your-contouring-skills-could-defeat-facial-recognition/?
 - https://www.latercera.com/la-tercera-domingo/noticia/la-tecnodiversidad-una-filosofia-contra-el-apocalipsis/FQD4XYJWMVCYZHMLEAQH25VCLU/
