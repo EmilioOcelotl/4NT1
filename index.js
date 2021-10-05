@@ -251,6 +251,12 @@ const out = new Tone.Player('audio/out.mp3').toDestination();
 intro = new Tone.Player('audio/espera.mp3').toDestination();
 intro.loop = true; 
 
+let glitchPass; 
+
+/*
+
+// Según yo esto ya no sirve 
+
 if(mobile){
     camWidth = 160;
     camHeight = 120;
@@ -260,6 +266,7 @@ if(!mobile){
     camWidth = 120;
     camHeight = 160;
 }
+*/
 
 let stream
 let gSignal, gFin, gTranscurso; 
