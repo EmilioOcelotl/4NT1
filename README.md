@@ -77,6 +77,7 @@ Algunas ideas-reflexiones relacionadas con este proyecto se encuentran en:
 
 ## Recursos
 
+- https://github.com/Tonejs/Tone.js/wiki/Time
 - https://tonejs.github.io/docs/r13/CrossFade
 - https://webrtchacks.github.io/WebRTC-Camera-Resolution/
 - https://www.linux-magazine.com/Online/Features/Generating-QR-Codes-in-Linux

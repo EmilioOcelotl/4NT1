@@ -53,6 +53,7 @@
 - [ ] Agregar algunas notas desde tone y muestras distorsionadas
 - [x] Valores iniciales para los keypoints 
 - [ ] Esperar a tiempos mejores
+- [ ] Sin glitch para el movil 
 
 ## Para la muestra 
 

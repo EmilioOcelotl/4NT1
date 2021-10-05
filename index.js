@@ -19,15 +19,9 @@ import {GlitchPass} from './jsm/postprocessing/GlitchPass.js';
 import {TTFLoader} from './jsm/loaders/TTFLoader.js';
 import perlinNoise3d from 'perlin-noise-3d';
 // const perlinNoise3d = require('perlin-noise-3d');
-
 import {AfterimagePass} from './jsm/postprocessing/AfterimagePass.js';
 // import * as blazeface from '@tensorflow-models/blazeface';
-
 import {ImprovedNoise} from './jsm/math/ImprovedNoise.js'; 
-
-// const OSC = require('osc-js'); // pal osc
-// const osc = new OSC();
-// const osc = new OSC({ plugin: new OSC.WebsocketServerPlugin() })
 
 let matofTexture; 
 let scene, camera, renderer, material, cube, geometryPoints;
@@ -106,12 +100,15 @@ const loaderHTML = document.getElementById('loaderHTML');
 const startButton = document.getElementById( 'startButton' );
 const myProgress = document.getElementById( 'myProgress' );
 const myBar = document.getElementById( 'myBar' );
+const body = document.getElementById( 'body' );
 
+/*
 function hasGetUserMedia() {
     // Note: Opera builds are unprefixed.
     return !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
 	      navigator.mozGetUserMedia || navigator.msGetUserMedia);
 }
+*/
 
 // startButton.addEventListener( 'click', init );
 
@@ -186,7 +183,7 @@ if (mobile) {
 let texture;
 const vector = new THREE.Vector2();
 // let cuboGrande;
-let afterimagePass;
+let afterimagePass, bloomPass; 
 let porcentaje;
 
 let noise = new perlinNoise3d();
@@ -243,33 +240,25 @@ const perlin = new ImprovedNoise();
 let intro; 
 let gSegundo; 
 
-player = new Tone.Player('audio/intro.mp3').connect(panner);
+player = new Tone.Player('audio/fondos/intro.mp3').connect(panner);
 player.loop = true;
-antiKick = new Tone.Player('audio/antiKick.mp3').toDestination();
-const respawn = new Tone.Player('audio/respawn.mp3').toDestination(); 
-const out = new Tone.Player('audio/out.mp3').toDestination(); 
-intro = new Tone.Player('audio/espera.mp3').toDestination();
+antiKick = new Tone.Player('audio/perc/antiKick.mp3').toDestination();
+const respawn = new Tone.Player('audio/perc/respawn.mp3').toDestination(); 
+const out = new Tone.Player('audio/perc/out.mp3').toDestination(); 
+intro = new Tone.Player('audio/fondos/espera.mp3').toDestination();
 intro.loop = true; 
+
+intro.volume.value = -6;
 
 let glitchPass; 
 
-/*
-
-// Según yo esto ya no sirve 
-
-if(mobile){
-    camWidth = 160;
-    camHeight = 120;
-}
-
-if(!mobile){
-    camWidth = 120;
-    camHeight = 160;
-}
-*/
-
 let stream
 let gSignal, gFin, gTranscurso; 
+
+var voz = new Tone.Players({
+  "aun": "audio/voces/aun.mp3",
+  // "snare":"samples/505/snare.mp3"
+}).toDestination();
 
 // /////////// Setupear la cámara
 
@@ -294,7 +283,6 @@ async function setupCamera() {
 	};
     });
 }
-
 
 // //////////// Lectra de keypoints, detonación de escenas
 
@@ -335,7 +323,6 @@ async function renderPrediction() {
 		].map((index) => keypoints[index]);
 	    }
 	   
-
 	    if (buscando) {
 		switch ( escena % numsc ) {
 		case 0:
@@ -349,8 +336,6 @@ async function renderPrediction() {
 	});
     }
 
-    // console.log(keypoints.length);
-
     // ///////////////// rotación en z de la cara
 
     if (predictions.length > 0) {
@@ -362,7 +347,6 @@ async function renderPrediction() {
 	const bottomY = (rightY + leftY) / 2;
 	degree = Math.atan((topY - bottomY) / (topX - bottomX));
     }
-
 
     /*
     text.position.x = keypoints[0][0]* 0.1 - 20;
@@ -422,29 +406,34 @@ async function renderPrediction() {
 
     composer.render();
 
-    vector.x = ( window.innerWidth * dpr / 2 ) - ( textureSize / 2 );
-    vector.y = ( window.innerHeight * dpr / 2 ) - ( textureSize / 2 );
-
-    renderer.copyFramebufferToTexture( vector, texture );
-
+    if(buscando){
+	vector.x = ( window.innerWidth * dpr / 2 ) - ( textureSize / 2 );
+	vector.y = ( window.innerHeight * dpr / 2 ) - ( textureSize / 2 );
+	
+	renderer.copyFramebufferToTexture( vector, texture );
+    }
+    
     // rmtexto();
 
-    // activación del glitch 
-    
-    gTranscurso = (gFin - gSignal) / 1000;
+    // activación del glitch solo en móviles
 
-    // console.log(gTranscurso.toFixed()); 
-    if(gTranscurso.toFixed() == 1 && gSegundo != 1){
-	// console.log("Cambio");
-	gSegundo = gTranscurso.toFixed();
-	glitchPass.goWild = false;
-	composer.removePass( glitchPass );
-		
-    } else {
-	gSegundo = 0; 
-    }
+    if(!mobile){
+	gTranscurso = (gFin - gSignal) / 1000;
 	
-    gFin = Date.now(); 
+	// console.log(gTranscurso.toFixed()); 
+	if(gTranscurso.toFixed() == 1 && gSegundo != 1){
+	    // console.log("Cambio");
+	    gSegundo = gTranscurso.toFixed();
+	    glitchPass.goWild = false;
+	    composer.removePass( glitchPass );
+	    
+	} else {
+	    gSegundo = 0; 
+	}
+	
+	gFin = Date.now(); 
+	
+    }
     
     requestAnimationFrame(renderPrediction);
 };
@@ -464,11 +453,13 @@ async function init() {
     const fonca = document.getElementById( 'fonca' );
     fonca.remove();
 
-    loaderHTML.style.display = 'block';
+    // loaderHTML.style.display = 'block';
+    // const body = document.getElementById( 'body'); 
+    // body.style.cursor = 'none'; 
 
     container = document.createElement( 'div' );
-     document.body.appendChild( container );
-
+    document.body.appendChild( container );
+    document.body.style.cursor = 'none'; 
     await setupCamera();
 
     ////////////////////////////////////////////////////////////////////
@@ -478,7 +469,6 @@ async function init() {
     video.play(); 
 
     ////////////////////////////////////////////////////////////////////
-
     
     videoWidth = video.videoWidth;
     videoHeight = video.videoHeight;
@@ -590,6 +580,12 @@ async function init() {
 
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
+
+    /*
+    renderer.toneMapping = THREE.ReinhardToneMapping;
+    renderer.toneMappingExposure = Math.pow(2, 4.0 );
+    */
+    
     document.body.appendChild( renderer.domElement );
 
     window.addEventListener( 'resize', onWindowResize );
@@ -600,20 +596,17 @@ async function init() {
 
     const renderScene = new RenderPass( scene, camera );
 
-    const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.4, 0.85 );
-    bloomPass.threshold = 0.9;
-    bloomPass.strength = 0.2;
-    bloomPass.radius = 0.01;
+    bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.4, 0.85 );
 
     composer = new EffectComposer( renderer );
     composer.addPass( renderScene );
 
     composer.addPass( bloomPass );
 
-    afterimagePass = new AfterimagePass();
-    composer.addPass( afterimagePass );
+    //afterimagePass = new AfterimagePass();
+    //composer.addPass( afterimagePass );
 
-    afterimagePass.uniforms['damp'].value = 0.7;
+    //afterimagePass.uniforms['damp'].value = 0.7;
 
     glitchPass = new GlitchPass();
     // composer.addPass( glitchPass );
@@ -653,9 +646,9 @@ function initsc0() {
 	}
 
 	buscando = false;
-	scene.remove( cuboGrande );
-	scene.remove( text );
-	scene.remove( text2 );
+	scene.remove( cuboGrande ); // necesario disposear todo ?
+	//scene.remove( text );
+	//scene.remove( text2 );
 	// Tone.Destination.mute = true;
 
 	/*
@@ -666,7 +659,11 @@ function initsc0() {
 	player.stop();
 	intro.restart();
 	intro.start();
-	
+
+	bloomPass.threshold = 0.7;
+	bloomPass.strength = 0.5;
+	bloomPass.radius = 0;
+
     } else {
 
 	materialVideo.map = new THREE.VideoTexture( video );
@@ -696,6 +693,11 @@ function initsc0() {
 	player.restart(); 
 	player.start();
 	intro.stop();
+
+	bloomPass.threshold = 0.9;
+	bloomPass.strength = 0.2;
+	bloomPass.radius = 0;
+
 
 	// retro(); 
     }
@@ -879,8 +881,9 @@ function texto() {
     const loader1 = new THREE.FontLoader();
 
     loader1.load( 'fonts/techno.json', function( font ) {
-	const message = '4NT1\nPrediciones:' + predictions.length;
-	const shapes = font.generateShapes( message, 1 );
+
+	const message = 'No hay\npredicciones';
+	const shapes = font.generateShapes( message, 2 );
 	const geometry = new THREE.ShapeGeometry( shapes );
 	geometry.computeBoundingBox();
 
@@ -893,26 +896,14 @@ function texto() {
 	text.rotation.z = Math.PI;
 	scene.add( text );
 
-	const message2 = '¿Segurx que lxs demás\nte reconocerán en esta foto?\nNo se ve ninguna cara.\nSubir otra foto Cerrar';
-	const shapes2 = font.generateShapes( message2, 1 );
-	const geometry2 = new THREE.ShapeGeometry( shapes2 );
-	geometry2.computeBoundingBox();
-
-	const xMid2 = - 0.5 * ( geometry2.boundingBox.max.x - geometry2.boundingBox.min.x );
-	geometry2.translate( xMid, 0, 0 );
-	text2 = new THREE.Mesh( geometry2, matLite );
-	text2.position.z = 5;
-	// text.rotation.x = Math.PI;
-	// text.rotation.y = Math.PI;
-	text2.rotation.z = Math.PI;
-	scene.add( text2 );
     });
+	
 }
 
 function rmtexto() {
     const loader1 = new THREE.FontLoader();
 
-    loader1.load( 'https://raw.githubusercontent.com/EmilioOcelotl/4NT1/main/face-landmarks-detection/anti/fonts/techno.json', function( font ) {
+    loader1.load( 'fonts/techno.json', function( font ) {
 	// const message = "4 N T 1\n"+porcentaje+"\nPrediciones:"+predictions.length;
 	const shapes = font.generateShapes( message, 1 );
 	const geometry = new THREE.ShapeGeometry( shapes );
@@ -925,55 +916,6 @@ function rmtexto() {
     });
 }
 
-/*
-function htmlBar(){
-    var i = 0;
-	if (i == 0) {
-	    i = 1;
-	    //var elem = document.getElementById("myBar");
-	    var width = 1;
-	    var id = setInterval(frame, 10);
-	    function frame() {
-		if (width >= 100) {
-		    clearInterval(id);
-		    i = 0;
-		    // cambiar de escena
-		    htmlBar();
-		    escena++;
-		    rmsc1();
-		    rmsc2();
-
-		    switch( escena % numsc ){
-		    case 0:
-			initsc1();
-			break;
-		    case 1:
-			initsc2();
-			break;
-		    }
-
-		} else {
-		    width+= 0.2;
-		    porcentaje = width.toFixed(2);
-
-		    // esto estaba comentado
-		    if(width.toFixed(2) == 97.0){
-			// composer.addPass( glitchPass );
-			glitchPass.goWild = true;
-		    }
-
-		    if(width.toFixed(2) == 2.0){
-			glitchPass.goWild = false;
-			//composer.removePass( glitchPass );
-		    }
-
-
-		}
-	    }
-	}
-}
-*/
-
 function retro() {
     const data = new Uint8Array( textureSize * textureSize * 3 );
 
@@ -984,51 +926,20 @@ function retro() {
 
 async function sonido() {
 
+    const loop = new Tone.Loop((time) => {
+	// triggered every eighth note.
+	//console.log(time);
+	voz.player("aun").start(time); 
+    }, "15").start(0);
+    Tone.Transport.start();
+        
     // await Tone.start();
     //reverb = new Tone.JCReverb(0.1).connect(panner);
     // pitchShift = new Tone.PitchShift().connect(reverb);
     //dist = new Tone.Distortion(0.1).connect(pitchShift);
 
-    /*
-    Tone.loaded().then(() => {
-	// player.start();
-	// intro.start();
-	antiKick.start(); // Esto tendría que ser un sonido de inicio? 
-    });
-    */
-
     // reverb.connect(analyser);
     // antiKick.connect(analyser);
-
-    if (buscando) {
-    setInterval(function() {
-	let al = Math.floor(Math.random()*5);
-	// console.log(al);
-	pitchActual= pitch[al];
-	pitchCambio++;
-	// pitchShift.pitch = pitchActual;
-	//wetActual = wet[al];
-	// reverb.wet = wetActual;
-    }, 850); // esto podría secuenciarse también ?
-    setInterval(function() {
-	let al = Math.floor(Math.random()*5);
-	reverseActual= reverse[al];
-	reverseCambio++;
-	//player.reverse = reverseActual;
-	//intro.reverse = reverseActual; 
-	// scene.background = colores[al] ;
-	cambioC++;
-    }, 850);
-    setInterval(function() {
-	startActual= start[startCambio%5];
-	startCambio++;
-	//player.loopStart = startActual;
-	//intro.loopStart = startActual;
-	if(buscando){
-	    antiKick.start();
-	}
-    }, 850);
-    }
 }
 
 function onWindowResize() {
@@ -1042,7 +953,7 @@ async function detonar() {
     // animate();
     sonido();
     // htmlBar();
-    loaderHTML.style.display = 'none';
+    // loaderHTML.style.display = 'none';
     // myProgress.style.display = "block";
     console.log('██╗  ██╗███╗   ██╗████████╗ ██╗\n██║  ██║████╗  ██║╚══██╔══╝███║\n███████║██╔██╗ ██║   ██║   ╚██║\n╚════██║██║╚██╗██║   ██║    ██║\n     ██║██║ ╚████║   ██║    ██║\n     ╚═╝╚═╝  ╚═══╝   ╚═╝    ╚═╝'); // fps();
     inicio = Date.now();
@@ -1091,6 +1002,13 @@ video = document.getElementById( 'video' );
 // texture.rotation.y = Math.PI / 2;
 
 /*
+
+// para osc
+
+// const OSC = require('osc-js'); // pal osc
+// const osc = new OSC();
+// const osc = new OSC({ plugin: new OSC.WebsocketServerPlugin() })
+
 
 async function oscSend(){
 
@@ -1153,4 +1071,54 @@ async function oscSend(){
     })
 }
 
+*/
+
+/*
+
+function htmlBar(){
+    var i = 0;
+	if (i == 0) {
+	    i = 1;
+	    //var elem = document.getElementById("myBar");
+	    var width = 1;
+	    var id = setInterval(frame, 10);
+	    function frame() {
+		if (width >= 100) {
+		    clearInterval(id);
+		    i = 0;
+		    // cambiar de escena
+		    htmlBar();
+		    escena++;
+		    rmsc1();
+		    rmsc2();
+
+		    switch( escena % numsc ){
+		    case 0:
+			initsc1();
+			break;
+		    case 1:
+			initsc2();
+			break;
+		    }
+
+		} else {
+		    width+= 0.2;
+		    porcentaje = width.toFixed(2);
+
+		    // esto estaba comentado
+		    if(width.toFixed(2) == 97.0){
+			// composer.addPass( glitchPass );
+			glitchPass.goWild = true;
+		    }
+
+		    if(width.toFixed(2) == 2.0){
+			glitchPass.goWild = false;
+			//composer.removePass( glitchPass );
+		    }
+
+
+		}
+	    }
+	}
+}
 */
