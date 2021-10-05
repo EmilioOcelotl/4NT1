@@ -39,7 +39,7 @@ let font;
 let text = new THREE.Mesh(); let text2 = new THREE.Mesh();
 let torus = [];
 let matArray = [];
-let prueba = 0;
+let prueba = 4;
 let afft = [];
 // const analyser = new Tone.Analyser( 'fft', 64 );
 let postB = true;
@@ -87,14 +87,15 @@ const NUM_KEYPOINTS = 468;
 
 let points = [];
 let normals = [];
-let keypoints = [];
+//let keypoints = [];
+let  keypoints = []; 
 
 let laterales = [];
 
 let geometry = new THREE.BufferGeometry();
 let mesh = new THREE.Mesh();
 let meshB = new THREE.Mesh();
-let degree;
+let degree = 0;
 let xMid;
 
 let model, ctx, videoWidth, videoHeight, video;
@@ -115,16 +116,17 @@ function hasGetUserMedia() {
 // startButton.addEventListener( 'click', init );
 
 document.querySelector('button').addEventListener('click', async () => {
+
     await Tone.start().then(() => {
-	antiKick.start(); 
-    }
+	// respawn.start(); 
+    });
     
     
-		      ;
+		    
 
     // console.log('audio is ready')
     init(); 
-})
+})			   
 
 let colores = [], colores2 = [], colores3 = [];
 const stats = new Stats();
@@ -245,14 +247,18 @@ let segundo;
 
 const perlin = new ImprovedNoise();
 let intro; 
+let gSegundo; 
 
-
-player = new Tone.Player('audio/geom4.mp3').connect(panner);
+player = new Tone.Player('audio/intro.mp3').connect(panner);
 player.loop = true;
 
 antiKick = new Tone.Player('audio/antiKick.mp3').toDestination();
 
-intro = new Tone.Player('audio/intro.mp3').toDestination();
+const respawn = new Tone.Player('audio/respawn.mp3').toDestination(); 
+
+const out = new Tone.Player('audio/out.mp3').toDestination(); 
+
+intro = new Tone.Player('audio/espera.mp3').toDestination();
 intro.loop = true; 
 
 if(mobile){
@@ -268,6 +274,7 @@ if(!mobile){
 }
 
 let stream
+let gSignal, gFin, gTranscurso; 
 
 // /////////// Setupear la cámara
 
@@ -362,17 +369,19 @@ async function renderPrediction() {
     }
 
 
+    /*
     text.position.x = keypoints[0][0]* 0.1 - 20;
     text.position.y = keypoints[0][1]* 0.1 -40;
     text.position.z = keypoints[0][2] * 0.1 + 10;
     text2.position.x = keypoints[0][0]* 0.1 - 40;
     text2.position.y = keypoints[0][1]* 0.1 - 20;
     text2.position.z = keypoints[0][2] * 0.1 + 10;
+    */
 
     cuboGrande.rotation.x += 0.003;
     cuboGrande.rotation.y += (degree) * 0.006;
-    text.rotation.y = degree * 2 + (Math.PI );
-    text2.rotation.y = degree * 2 + (Math.PI );
+    ///text.rotation.y = degree * 2 + (Math.PI );
+    //text2.rotation.y = degree * 2 + (Math.PI );
 
 
     /*
@@ -396,8 +405,8 @@ async function renderPrediction() {
     }
     */
 
-    mouseX = ( keypoints[168][0] - windowHalfX ) / 10;
-    mouseY = ( keypoints[168][1] - windowHalfY ) / 10;
+    //mouseX = ( keypoints[168][0] - windowHalfX ) / 10;
+    //mouseY = ( keypoints[168][1] - windowHalfY ) / 10;
 
     // /console.log( Math.abs(mouseX) - 32, );
 
@@ -412,7 +421,7 @@ async function renderPrediction() {
 
     renderer.render( scene, camera );
 
-    panner.positionX.value = degree;
+    panner.positionX.value = 0;
 
     vertices = [];
 
@@ -425,6 +434,23 @@ async function renderPrediction() {
 
     // rmtexto();
 
+    // activación del glitch 
+    
+    gTranscurso = (gFin - gSignal) / 1000;
+
+    console.log(gTranscurso.toFixed()); 
+    if(gTranscurso.toFixed() == 1 && gSegundo != 1){
+	// console.log("Cambio");
+	gSegundo = gTranscurso.toFixed();
+	glitchPass.goWild = false;
+	composer.removePass( glitchPass );
+		
+    } else {
+	gSegundo = 0; 
+    }
+	
+    gFin = Date.now(); 
+    
     requestAnimationFrame(renderPrediction);
 };
 
@@ -445,7 +471,7 @@ async function init() {
     loaderHTML.style.display = 'block';
 
     container = document.createElement( 'div' );
-    document.body.appendChild( container );
+     document.body.appendChild( container );
 
     await setupCamera();
 
@@ -532,6 +558,7 @@ async function init() {
     // cuboGrandeGeometry = new THREE.SphereGeometry( 200, 32, 32 );
 
     cuboGrande = new THREE.Mesh(audioSphere, materialC2 );
+    scene.add( cuboGrande); 
     // cuboGrande.visible = false;
 
     // cuboGrande.position.x = 10;
@@ -593,7 +620,7 @@ async function init() {
 
     afterimagePass.uniforms['damp'].value = 0.7;
 
-    // glitchPass = new GlitchPass();
+    glitchPass = new GlitchPass();
     // composer.addPass( glitchPass );
 
     model = await faceLandmarksDetection.load(
@@ -668,8 +695,18 @@ async function animate () {
 */
 
 function initsc0() {
+
+    gSignal = Date.now();
+
+    
+    composer.addPass( glitchPass );
+    glitchPass.goWild = true;
+    
     if ( predictions.length < 1 ) {
-	materialVideo.map = new THREE.TextureLoader().load( 'img/qr.png' );
+
+			
+	out.start(); 
+	materialVideo.map = new THREE.TextureLoader().load( 'img/siluetaNeg.png' );
 	materialVideo.map.wrapS = THREE.RepeatWrapping;
 	materialVideo.map.repeat.x = - 1;
 	// materialVideo.map.rotation.y = Math.PI / 2; // por alguna razon hay que comentar esto 
@@ -698,8 +735,9 @@ function initsc0() {
 	intro.start();
 	
     } else {
-	materialVideo.map = new THREE.VideoTexture( video );
 
+	materialVideo.map = new THREE.VideoTexture( video );
+	respawn.start(); 
 	// intro.stop("+0.5");
 	switch ( escena % numsc ) {
 	case 0:
@@ -714,7 +752,7 @@ function initsc0() {
 	}
 
 	buscando = true;
-	 scene.add( cuboGrande );
+	scene.add( cuboGrande );
 	scene.add( text );
 	scene.add( text2 );
 	// Tone.Destination.mute = false;
@@ -724,7 +762,9 @@ function initsc0() {
 	*/
 	player.restart(); 
 	player.start();
-	intro.stop(); 
+	intro.stop();
+
+	// retro(); 
     }
 }
 
@@ -1041,7 +1081,7 @@ async function sonido() {
 	let al = Math.floor(Math.random()*5);
 	reverseActual= reverse[al];
 	reverseCambio++;
-	player.reverse = reverseActual;
+	//player.reverse = reverseActual;
 	//intro.reverse = reverseActual; 
 	// scene.background = colores[al] ;
 	cambioC++;
@@ -1049,7 +1089,7 @@ async function sonido() {
     setInterval(function() {
 	startActual= start[startCambio%5];
 	startCambio++;
-	player.loopStart = startActual;
+	//player.loopStart = startActual;
 	//intro.loopStart = startActual;
 	if(buscando){
 	    antiKick.start();
@@ -1073,6 +1113,7 @@ async function detonar() {
     // myProgress.style.display = "block";
     console.log('██╗  ██╗███╗   ██╗████████╗ ██╗\n██║  ██║████╗  ██║╚══██╔══╝███║\n███████║██╔██╗ ██║   ██║   ╚██║\n╚════██║██║╚██╗██║   ██║    ██║\n     ██║██║ ╚████║   ██║    ██║\n     ╚═╝╚═╝  ╚═══╝   ╚═╝    ╚═╝'); // fps();
     inicio = Date.now();
+    respawn.start(); 
 }
 
 // Ajustar duraciones
@@ -1110,7 +1151,7 @@ function score() {
 
 video = document.getElementById( 'video' );
 
-    // const texture = new THREE.VideoTexture( video );
+// const texture = new THREE.VideoTexture( video );
 
 // texture.wrapS = THREE.RepeatWrapping;
 // texture.repeat.x = - 1;

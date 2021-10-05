@@ -39,16 +39,19 @@
 - [x] Manual online y offline de montaje para anexarlo a la entrega
 - [x] Generar un qr
 - [x] Qr más grande y negativo 
-- [ ] Cambiar archivos de github al server
+- [x] Cambiar archivos de github al server
+- [ ] Cambiar el json de la fuente al server
 - [ ] Hacer referencia a los json de blazeface y facemesh  
 - [x] ¿ Dispose y creación de geometrías que no se estén usando ?
 - [ ] Audio reactividad en cubo grande 
 - [ ] Ajustar resolución por defecto de los dispositivos a las acciones del canvas 
-- [ ] Arreglar cable dañado
-- [ ] El texto puede ser un recurso pero me imagino más grabaciones de la lectura del texto - streaming que se envía al espacio 
-- [ ] Streaming vs cargar todos los archivos. Ligeras variaciones en la reproducción de los archivos  
-- [ ] Comprar un mouse y un teclado.
-- [ ] Cámara: en escritorio y en teléfono: 160x120 y 120x160 respectivamente. Probar con esas dos resoluciones. Dos correcciones de acuerdo a la resolución. Pienso que esto tiene que ver con el modo horizontal o vertical                    
+- [ ] Monitores de audio 
+- [ ] El texto puede ser un recurso pero me imagino más grabaciones de la lectura del texto  
+- [x] Streaming vs cargar todos los archivos. Ligeras variaciones en la reproducción de los archivos  
+- [x] Enviar un mouse, activar el wifi con teclado virtual e incluso el inicio 
+- [x] Cámara: en escritorio y en teléfono: 160x120 y 120x160 respectivamente. Probar con esas dos resoluciones. Dos correcciones de acuerdo a la resolución. Pienso que esto tiene que ver con el modo horizontal o vertical
+- [ ] Agregar algunas notas desde tone y muestras distorsionadas
+- [x] Valores iniciales para los keypoints 
 - [ ] Esperar a tiempos mejores
 
 ## Para la muestra 

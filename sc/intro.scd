@@ -24,24 +24,25 @@ i = Buffer.read(s, "/home/emi/Música/4NT1/uxmal.wav");
 ~nota2 = {Demand.kr(Impulse.kr(~tempo*0.125), 0, Drand(Array.rand(20, 30,500), inf))};
 ~nota3 = {Lag.kr(Demand.kr(Impulse.kr(~tempo*0.125), 0, Drand(Array.rand(20, 0.05, 30), inf)), 0.5)};
 
-~sonFin = {Pan2.ar(LPF.ar(LFSaw.ar(~nota * [0.999, 1, 1.001]).mean * 0.2, ~sweep))};
+~sonFin = {Pan2.ar(LPF.ar(LFSaw.ar(~nota * [0.999, 1.001]).mean * 0.2, ~sweep))};
 
 ~filtro = {Lag.kr(Demand.kr(Impulse.kr(~tempo*0.125, 1.5), 0, Drand(Array.rand(20, 100, 5500), inf)), 10)};
 
 ~crack = {LPF.ar(Crackle.ar(1.95, 0.25),  ~filtro)};
 
 ~dema = {Lag.kr(Demand.kr(Impulse.kr(~tempo*0.25), 0, Dseq(Array.rand(20, 0, 0.99999), inf)), 8)};
-~dema2 = {Lag.kr(Demand.kr(Impulse.kr(~tempo*0.125), 0, Drand([0.5, 1, 2, -1, -2, 0, 0], inf)), 16)};
+~dema2 = {Lag.kr(Demand.kr(Impulse.kr(~tempo*0.125), 0, Drand([0.5, 1, 2, -1, -2, 0, 0], inf)), 8)};
 
-~wpA1 = {arg amp = 1.25; (Pan2.ar(Warp1.ar(1, i, ~dema, ~dema2, 0.15, -1, 12, 0.3, 4))) * amp};
+~wpA1 = {arg amp = 0.5; (Pan2.ar(Warp1.ar(1, i, ~dema, ~dema2*[2.1, 1,1.1, 2], 0.1, -1, 8, 0.5, 4))) * amp};
 
 
 )
 
+
 ~out.fadeTime = 10
 
 ~out  =  ~crack
-~out  =  ~wpA1 + ~crack
+~out  =  ~wpA1
 ~out  =  ~wpA1 + ~crack + ~sonFin
 
 
