@@ -117,13 +117,7 @@ function hasGetUserMedia() {
 
 document.querySelector('button').addEventListener('click', async () => {
 
-    await Tone.start().then(() => {
-	// respawn.start(); 
-    });
-    
-    
-		    
-
+    await Tone.start(); 
     // console.log('audio is ready')
     init(); 
 })			   
@@ -251,21 +245,15 @@ let gSegundo;
 
 player = new Tone.Player('audio/intro.mp3').connect(panner);
 player.loop = true;
-
 antiKick = new Tone.Player('audio/antiKick.mp3').toDestination();
-
 const respawn = new Tone.Player('audio/respawn.mp3').toDestination(); 
-
 const out = new Tone.Player('audio/out.mp3').toDestination(); 
-
 intro = new Tone.Player('audio/espera.mp3').toDestination();
 intro.loop = true; 
 
 if(mobile){
-
     camWidth = 160;
     camHeight = 120;
-
 }
 
 if(!mobile){
@@ -438,7 +426,7 @@ async function renderPrediction() {
     
     gTranscurso = (gFin - gSignal) / 1000;
 
-    console.log(gTranscurso.toFixed()); 
+    // console.log(gTranscurso.toFixed()); 
     if(gTranscurso.toFixed() == 1 && gSegundo != 1){
 	// console.log("Cambio");
 	gSegundo = gTranscurso.toFixed();
@@ -457,6 +445,7 @@ async function renderPrediction() {
 // /////////////////////// Inicialización
 
 async function init() {
+
     await tf.setBackend('webgl');
 
     const overlay = document.getElementById( 'overlay' );
@@ -503,7 +492,6 @@ async function init() {
     console.log('Resolución:'+ `${width}x${height}`); // 640x480
 
     const geometryVideo = new THREE.PlaneGeometry( width/10, height/10 ); // Dos modalidades, abierta y ajustada para cel
-
 
     materialVideo = new THREE.MeshBasicMaterial( {
 	color: 0xffffff,
@@ -632,84 +620,22 @@ async function init() {
     detonar();
 }
 
-/*
-async function animate () {
-
-    requestAnimationFrame( animate );
-
-    var time2 = Date.now() * 0.0005;
-
-    text.position.x = keypoints[0][0]* 0.1 - 20;
-    text.position.y = keypoints[0][1]* 0.1 -40;
-    text.position.z = keypoints[0][2] * 0.1 + 10;
-    text2.position.x = keypoints[0][0]* 0.1 - 40;
-    text2.position.y = keypoints[0][1]* 0.1 - 20;
-    text2.position.z = keypoints[0][2] * 0.1 + 10;
-
-    cuboGrande.rotation.x += 0.001;
-    cuboGrande.rotation.y += (degree) * 0.002;
-    text.rotation.y = degree * 2 + (Math.PI )   ;
-    text2.rotation.y = degree * 2 + (Math.PI )   ;
-
-    /*
-    audioSphere.computeVertexNormals();
-    audioSphere.normalsNeedUpdate = true;
-    audioSphere.verticesNeedUpdate = true;
-
-    let vertss = audioSphere.attributes.position.array.count;
-    console.log(vertss)
-    console.log(triaGeometry[0].vertices);
-
-    if(buscando){
-
-	for(var i  = 0; i < audioSphere.attributes.position.count; i++){
-
-	    const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
-	    audioSphere.attributes.position.array[i].x = audioSphere2.attributes.position.array[i].x * analisis;
-
-	}
-
-    }
-
-
-    stats.update();
-
-    renderer.render( scene, camera );
-
-    panner.positionX.value = degree  ;
-
-    vertices = [];
-
-    composer.render();
-
-    vector.x = ( window.innerWidth * dpr / 2 ) - ( textureSize / 2 );
-    vector.y = ( window.innerHeight * dpr / 2 ) - ( textureSize / 2 );
-
-    renderer.copyFramebufferToTexture( vector, texture );
-
-    // rmtexto();
-
-
-}
-
-*/
-
 function initsc0() {
 
     gSignal = Date.now();
-
     
     composer.addPass( glitchPass );
     glitchPass.goWild = true;
     
     if ( predictions.length < 1 ) {
-
 			
 	out.start(); 
 	materialVideo.map = new THREE.TextureLoader().load( 'img/siluetaNeg.png' );
 	materialVideo.map.wrapS = THREE.RepeatWrapping;
 	materialVideo.map.repeat.x = - 1;
+
 	// materialVideo.map.rotation.y = Math.PI / 2; // por alguna razon hay que comentar esto 
+
 	switch ( escena % numsc ) {
 	case 0:
 	    rmsc1();
@@ -945,7 +871,7 @@ function texto() {
 
     const loader1 = new THREE.FontLoader();
 
-    loader1.load( 'https://raw.githubusercontent.com/EmilioOcelotl/4NT1/main/face-landmarks-detection/anti/fonts/techno.json', function( font ) {
+    loader1.load( 'fonts/techno.json', function( font ) {
 	const message = '4NT1\nPrediciones:' + predictions.length;
 	const shapes = font.generateShapes( message, 1 );
 	const geometry = new THREE.ShapeGeometry( shapes );

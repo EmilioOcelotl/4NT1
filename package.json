@@ -24,7 +24,8 @@
     "build-deps": "yarn build-model && yarn build",
     "build-model": "cd .. && yarn && yarn build-npm",
     "lint": "eslint .",
-    "link-local": "yalc link @tensorflow-models/face-landmarks-detection"
+      "link-local": "yalc link @tensorflow-models/face-landmarks-detection",
+    "deployar": "yarn build-model && yarn build && cp -r audio dist && cp -r img dist && fonts dist"  
   },
   "browser": {
     "crypto": false
