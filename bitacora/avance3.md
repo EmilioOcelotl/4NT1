@@ -89,3 +89,8 @@
 - Interesante: tecnologías orientadas al mercado y tecnologías orientadas a un resultado robusto > Qué tanto se puede usar en móviles
 - La captura de la pantalla es costosa. Puede funcionar en la compu pero en móviles se incrementa el desempeño
 - Blazeface no es tan eficiente. En compus ligeras congela el navegador 
+
+para iniciar chrome con autoplay 
+
+`chrome --autoplay-policy=no-user-gesture-required`
+

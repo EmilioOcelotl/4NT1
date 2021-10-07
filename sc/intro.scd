@@ -20,11 +20,18 @@ i = Buffer.read(s, "/home/emi/Música/4NT1/uxmal.wav");
 
 ~sweep = {LFSaw.ar(Demand.kr(Impulse.kr(~tempo*0.125/4), 0, Dseq([~tempo*0.125/4], inf))).exprange(10, 15000)};
 
-~nota = {Demand.kr(Impulse.kr(~tempo*0.125/4), 0, Dseq([40, 50, 30, 20], inf))};
+~nota = {Demand.kr(Impulse.kr(~tempo*0.125/4), 0, Dseq((Scale.hirajoshi.degrees + 57).midicps*0.125, inf))};
+~notasin = {Demand.kr(Impulse.kr(~tempo*~demaTempoSin), 0, Drand((Scale.hirajoshi.degrees + 57).midicps, inf))};
+
 ~nota2 = {Demand.kr(Impulse.kr(~tempo*0.125), 0, Drand(Array.rand(20, 30,500), inf))};
 ~nota3 = {Lag.kr(Demand.kr(Impulse.kr(~tempo*0.125), 0, Drand(Array.rand(20, 0.05, 30), inf)), 0.5)};
 
+
 ~sonFin = {Pan2.ar(LPF.ar(LFSaw.ar(~nota * [0.999, 1.001]).mean * 0.2, ~sweep))};
+
+~demaTempoSin = {Lag.kr(Demand.kr(Impulse.kr(~tempo*1), 0, Drand([2.5, 1, 1.5, 0.5, 5, 6, 8, 10]/2, inf)), 0.5)};
+
+~sin = {Pan2.ar(SinOsc.ar(~notasin* [1.999, 2.001], 0, 0.1) * Decay.kr(Demand.kr(Impulse.kr(~tempo*~demaTempoSin), 0, Drand([0.45, 1, 0.2, 0.7, 0.8], inf)) * Impulse.kr(~tempo*~demaTempoSin), 0.15)).fold2(0.1)};
 
 ~filtro = {Lag.kr(Demand.kr(Impulse.kr(~tempo*0.125, 1.5), 0, Drand(Array.rand(20, 100, 5500), inf)), 10)};
 
@@ -33,17 +40,19 @@ i = Buffer.read(s, "/home/emi/Música/4NT1/uxmal.wav");
 ~dema = {Lag.kr(Demand.kr(Impulse.kr(~tempo*0.25), 0, Dseq(Array.rand(20, 0, 0.99999), inf)), 8)};
 ~dema2 = {Lag.kr(Demand.kr(Impulse.kr(~tempo*0.125), 0, Drand([0.5, 1, 2, -1, -2, 0, 0], inf)), 8)};
 
-~wpA1 = {arg amp = 0.5; (Pan2.ar(Warp1.ar(1, i, ~dema, ~dema2*[2.1, 1,1.1, 2], 0.1, -1, 8, 0.5, 4))) * amp};
+~wpA1 = {arg amp = 1; (Pan2.ar(Warp1.ar(1, i, ~dema, ~dema2*[2.1, 1,1.1, 2], 0.1, -1, 8, 0.5, 4))) * amp};
 
 
 )
 
+Scale.hirajoshi.degrees + 60.midicps
+Scale.names
 
 ~out.fadeTime = 10
 
 ~out  =  ~crack
 ~out  =  ~wpA1
-~out  =  ~wpA1 + ~crack + ~sonFin
+~out  =  ~wpA1 + ~crack + ~sonFin + ~sin
 
 
 ~out.free

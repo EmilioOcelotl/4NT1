@@ -31,11 +31,11 @@ SynthDef(\kp, {
 
 	chain = PV_MagMul(chainA, chainB); // writes into bufferA
 
-	outS = DelayC.ar(IFFT(chain), 0.01, 0.0006*0.75) * EnvFollow.ar(IFFT(chain), 1 - (0.0006 * SampleRate.ir).reciprocal).max(0.174377).reciprocal *0.5!2; // para las otras rolas está a 0.2
+	outS = DelayC.ar(IFFT(chain), 0.01, 0.0006*0.75) * EnvFollow.ar(IFFT(chain), 1 - (0.0006 * SampleRate.ir).reciprocal).max(0.174377).reciprocal *0.25!2; // para las otras rolas está a 0.2
 
-    outD = GVerb.ar(BPF.ar(IFFT(chain), Array.geom(8, 50, 1.5), 1/4).sum, 80, 5.85, 0.41, 0.19, 15, -3.dbamp, -5.dbamp, -5.dbamp, 180, 1) * 0.2;
+    //outD = GVerb.ar(BPF.ar(IFFT(chain), Array.geom(8, 50, 1.5), 1/4).sum, 80, 5.85, 0.41, 0.19, 15, -3.dbamp, -5.dbamp, -5.dbamp, 180, 1) * 0.2;
 
-	lim = Limiter.ar(outS + outD);
+	lim = Limiter.ar(outS);
 
 	Out.ar([0, 1], lim  );
 
@@ -47,7 +47,18 @@ SynthDef(\kp, {
 z = Synth(\kp);
 s.meter
 
+(
+a = Array.fill(15,{100+rand(15000)});
+z.setn(\freq1, a);
 
+
+b = Array.fill(15,{100+rand(15000)});
+z.setn(\freq2, b);
+
+c = Array.fill(15,{rand(30)});
+z.setn(\index, c);
+
+)
 (
 
 

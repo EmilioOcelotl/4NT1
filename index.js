@@ -112,12 +112,22 @@ function hasGetUserMedia() {
 
 // startButton.addEventListener( 'click', init );
 
+// funcion que se espera hasta que el cuerpo está cargado > onload para el caso en el que no uso el botón 
+
+// con boton
+
+/*
+
 document.querySelector('button').addEventListener('click', async () => {
 
     await Tone.start(); 
     // console.log('audio is ready')
     init(); 
-})			   
+})
+
+*/
+
+Tone.start().then( (x) => init()) // sin botón 
 
 let colores = [], colores2 = [], colores3 = [];
 const stats = new Stats();
