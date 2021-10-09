@@ -1,0 +1,100 @@
+
+* Cuarto Intento
+
+# Una misma idea que puede estar presente en las tres voces
+# Puede esto durar 3 minutos ?
+
+Dos ejes principales: escritura y ofuscación
+
+Tres voces: indicaciones generales / performance, programación / partitura, reflexión / metáfora
+
+** Indicaciones generales / performance
+
+# De preferencia en las primeras escenas 
+# Incluso aquí también pueden ir las indicaciones de montaje
+
+*** En espera
+
+Sin predicciones 
+La pantalla de bloqueo se activa cuando la cámara detecta uno o más rostros
+Por favor, acércate para activar la interacción. Pueden participar hasta tres personas.
+La obra se activa cuando detecta un rostro dentro del rango de la cámara
+Será necesario que te quites el cubrebocas y mantengas 1.5 m de distancia
+Es posible acceder a la versión web de esta aplicación
+También hay un repositorio que conduce a los módulos que conforman esta aplicación
+
+si ( delimitación es pequeña ) > Acércate 
+
+*** En escena 
+
+El audio y la imagen se interpretan fuera de escena a partir de este texto
+
+** Programación partitura
+
+*** Primera escena
+
+I
+
+Predicciones 
+El texto comentado también puede estar en escena
+La primera delimitación de la aplicación: en espera o en escena 
+Algunos aspectos están delimitados por posiciones y otras por un reloj interno 
+Los comentarios hacen referencia a imagenes y audio 
+Enlaces y códigos qr como referencias externas 
+Secuenciadores que activan secuenciadores de audio y eventos visuales 
+El cubrebocas se interpone en la lectura de una buena parte de los puntos de referencia faciales
+
+*** Segunda escena
+
+*** Tercera escena
+
+** Reflexión metáfora 
+
+*** Primera escena
+
+# Tipo antecedentes 
+
+I 
+
+Predicciones
+Los comentarios pueden repartirse como indicaciones y como programación
+Parece que una buena parte del trabajo invertido se concentra en la delimitación escénica
+Otra parte del trabajo invertido está en la infraestructura 
+El análisis de las imágenes como una posibilidad de interacción con la máquina 
+Pero es necesario algún otro dispositivo de interacción para acceder a enlaces externos
+Pregunta: Es redundante usar qr para vincular este espacio físico con el entramado detrás de la obra
+# qr con la referencia a la reflexión de documenta 
+Para la lectura sencilla de un rostro, el cubrebocas funciona como un dispositivo de ofuscación facial por sí mismo.
+Los módulos que conforman esta aplicación cumplen funciones básicas que se pueden conducir para proyectos específicos.
+En este caso hay dos tipos de ofuscación: sonora y visual
+Los componentes utilizados se pueden utilizar en la vida cotidiana
+
+*** Segunda escena
+
+II
+
+¿Es posible desmantelar dispositivos y recomponerlos para el cuidado personal y colectivo?
+Si es posible hacerlo con el reconocmiento de puntos de referencia faciales entonces también es posible hacerlo con casi cualquier tecnología que nos atraviesa
+Abrir una caja negra para encontrar más cajas negras
+# qr latour 
+¿ Hasta dónde podemos llegar? 
+Esta obra está montada en un servidor privado en algún lugar de EU
+
+
+*** Intermedio
+
+# Silencio 
+Para continuar, deja de verte
+# se activa el detector de iris
+
+*** Tercera escena 
+
+III
+
+** Final / reinicio
+
+Epilogo
+
+Espera tantos segundos para reiniciar 
+
+

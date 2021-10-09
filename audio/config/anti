@@ -4,10 +4,10 @@
   <param name="bypass" value="0" />
   <param name="level_in" value="1" />
   <param name="level_out" value="1" />
-  <param name="meter_inL" value="0.265295" />
-  <param name="meter_inR" value="0.266907" />
-  <param name="meter_outL" value="0.228009" />
-  <param name="meter_outR" value="0.229507" />
+  <param name="meter_inL" value="0.295403" />
+  <param name="meter_inR" value="0.293564" />
+  <param name="meter_outL" value="0.365849" />
+  <param name="meter_outR" value="0.364364" />
   <param name="clip_inL" value="0" />
   <param name="clip_inR" value="0" />
   <param name="clip_outL" value="0" />
@@ -68,23 +68,23 @@
 </plugin>
 <plugin type="reverb" instance-name="Reverb" input-index="3" output-index="3">
 <preset bank="0" program="0" plugin="reverb" name="">
-  <param name="meter_inL" value="0.228009" />
-  <param name="meter_inR" value="0.229507" />
+  <param name="meter_inL" value="0.365849" />
+  <param name="meter_inR" value="0.364364" />
   <param name="clip_outL" value="0" />
-  <param name="decay_time" value="1.89382" />
+  <param name="decay_time" value="1.68644" />
   <param name="hf_damp" value="20000" />
   <param name="room_size" value="2" />
-  <param name="diffusion" value="0.688" />
-  <param name="amount" value="0.467164" />
+  <param name="diffusion" value="0.509" />
+  <param name="amount" value="0.344363" />
   <param name="dry" value="0.577543" />
   <param name="predelay" value="96" />
   <param name="bass_cut" value="300" />
-  <param name="treble_cut" value="5000" />
+  <param name="treble_cut" value="9182.69" />
   <param name="on" value="1" />
   <param name="level_in" value="1" />
   <param name="level_out" value="1" />
-  <param name="meter_outL" value="0.252283" />
-  <param name="meter_outR" value="0.260967" />
+  <param name="meter_outL" value="0.267467" />
+  <param name="meter_outR" value="0.296561" />
   <param name="clip_inL" value="0" />
   <param name="clip_inR" value="0" />
   <param name="clip_outR" value="0" />
@@ -94,8 +94,8 @@
 <preset bank="0" program="0" plugin="compressor" name="">
   <param name="bypass" value="0" />
   <param name="level_in" value="1" />
-  <param name="meter_in" value="0.260967" />
-  <param name="meter_out" value="0.33397" />
+  <param name="meter_in" value="0.267162" />
+  <param name="meter_out" value="0.341825" />
   <param name="clip_in" value="0" />
   <param name="clip_out" value="0" />
   <param name="threshold" value="0.25" />
@@ -106,7 +106,7 @@
   <param name="knee" value="2.82843" />
   <param name="detection" value="0" />
   <param name="stereo_link" value="0" />
-  <param name="compression" value="0.997594" />
+  <param name="compression" value="1" />
   <param name="mix" value="1" />
 </preset>
 </plugin>

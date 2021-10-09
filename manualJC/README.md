@@ -58,9 +58,9 @@ Las conexiones de audio se realizan en la parte posterior del subwoofer como se 
 
 ![](https://github.com/EmilioOcelotl/4NT1/blob/main/manualJC/img/wub.png) 
 
-El cable jack mini a RCA conecta el audio de la computadora al subwoofer y las bocinas, 
+El cable jack mini a RCA conecta el audio de la computadora al monitor de audio activo.
 
-La conexión RCA y las bocinas se conectan a la entrada estéreo del subwoofer.
+Posteriormente es necesario conectar el cable sencillo del monitor activo al pasivo
 
 ### 4. Interacción
 
@@ -68,11 +68,11 @@ Por el contexto de la pandemia de COVID-19, es necesario que las personas se qui
 
 ## Mantenimiento
 
-1.- La pieza se enciende manualmente con el botón de encendido que se encuentra en la parte trasera de la computadora.
+1.- Primero, es necesario encender el monitor y las bocinas con el botón correspondiente. 
 
-2.- Antes de encender la computadora, es necesario encender el monitor y las bocinas con el botón correspondiente. 
+2.- Después, la obra se enciende manualmente con el botón de encendido que se encuentra en la parte trasera de la computadora
 
-3.- La computadora se apaga automáticamente a partir de la hora de cierre de la muestra.
+3.- La computadora se apaga automáticamente a la hora de cierre de la muestra.
 
 4.- Es necesario apagar el monitor y las bocinas manualmente. 
 
