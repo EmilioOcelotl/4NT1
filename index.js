@@ -358,12 +358,15 @@ async function renderPrediction() {
 	const bottomX = (rightX + leftX) / 2;
 	const bottomY = (rightY + leftY) / 2;
 	degree = Math.atan((topY - bottomY) / (topX - bottomX));
+
+	
+	text.position.x = keypoints[0][0]* 0.1 - 20;
+	text.position.y = keypoints[0][1]* 0.1 -40;
+	text.position.z = keypoints[0][2] * 0.1 + 10;
+	
     }
 
    
-    text.position.x = keypoints[0][0]* 0.1 - 20;
-    text.position.y = keypoints[0][1]* 0.1 -40;
-    text.position.z = keypoints[0][2] * 0.1 + 10;
     
     /*
     text2.position.x = keypoints[0][0]* 0.1 - 40;
@@ -705,7 +708,7 @@ function initsc0() {
 	intro.mute = true; 
 	*/
 	player.restart(); 
-	player.start();
+	// player.start(); // Revisar si esto es necesario 
 	intro.stop();
 
 	bloomPass.threshold = 0.9;
