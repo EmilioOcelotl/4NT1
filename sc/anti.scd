@@ -6,7 +6,11 @@
 
 s.boot
 
+i = Buffer.read(s, "/home/emi/Música/4NT1/uxmal.wav");
+
 a = []; b = []; c = []; // inicializar arreglos
+
+PlayBuf
 
 (
 
@@ -23,7 +27,8 @@ SynthDef(\kp, {
     sin = SinOsc.ar(0.1, 0, 2, 8);
 
 	inA = PMOsc.ar(freq1,freq2, index, 0, 0.6).sum;
-	inB = SoundIn.ar(0);
+	// inB = SoundIn.ar(0);
+	inB = PlayBuf.ar(1, i, BufRateScale.kr(i), doneAction: Done.freeSelf)
 
 	chainA = FFT(LocalBuf(2048), inA);
     chainB = FFT(LocalBuf(2048), inB);

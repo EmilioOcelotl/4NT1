@@ -34,6 +34,8 @@ Para conectar la computadora a internet vía WIFI es necesario realizar lo sigui
 
 2.3 Dar clic en buscar redes, encontrar la red en cuestión
 
+Es posible realizar estas conexiones con el mouse y el teclado incluídos con la entrega.
+
 ![wifi2](https://github.com/EmilioOcelotl/4NT1/blob/main/manualJC/img/wifi2.png)
 
 2.3 Dar clic, introducir la contraseña cuando la aplicación lo solicite 
@@ -51,6 +53,8 @@ En caso de que no sea posible montar el monitor a la pared, es posible colocarlo
 Sobre el monitor debe colocarse la cámara web que a su vez, se conecta vía usb a la computadora. La cámara debe inclinarse para que capture el rostro de las personas. 
 
 El cable HDMI conecta el monitor a la computadora. Es importante que el cable HDMI esté conectado y el monitor encendido antes de encender la computadora
+
+El monitor puede ser calibrado en caso de que sea necesario. 
 
 ### 4. Audio
 
@@ -80,3 +84,5 @@ Por el contexto de la pandemia de COVID-19, es necesario que las personas se qui
 
 - [ ] Programar apagado automático ( preguntar la hora de cierre de la exhibición )
 - [x] Programar ejecución del sitio en chromium pantalla completa en cuanto inicie la compu
+- [ ] Documentos: Ficha técnica, formato y este documento
+- [ ] Comprar cinta adhesiva 

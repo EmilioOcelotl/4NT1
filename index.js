@@ -270,6 +270,8 @@ var voz = new Tone.Players({
   // "snare":"samples/505/snare.mp3"
 }).toDestination();
 
+let txtPrueba = ["No hay predicciones", "esto es una prueba", "Esta es una prueba\ncon el texto más extenso"];
+
 // /////////// Setupear la cámara
 
 async function setupCamera() {
@@ -280,7 +282,7 @@ async function setupCamera() {
 	    facingMode: 'user',
 	    width: mobile ? undefined : 480, // antes 640
 	    height: mobile ? undefined : 640,
-	    frameRate: {ideal: 10, max: 15},
+	    // frameRate: {ideal: 10, max: 15},
 	}
     });
     
@@ -358,10 +360,12 @@ async function renderPrediction() {
 	degree = Math.atan((topY - bottomY) / (topX - bottomX));
     }
 
-    /*
+   
     text.position.x = keypoints[0][0]* 0.1 - 20;
     text.position.y = keypoints[0][1]* 0.1 -40;
     text.position.z = keypoints[0][2] * 0.1 + 10;
+    
+    /*
     text2.position.x = keypoints[0][0]* 0.1 - 40;
     text2.position.y = keypoints[0][1]* 0.1 - 20;
     text2.position.z = keypoints[0][2] * 0.1 + 10;
@@ -425,7 +429,7 @@ async function renderPrediction() {
     
     // rmtexto();
 
-    // activación del glitch solo en móviles
+    // activación del glitch solo en escritorio ¿Esto realmente importa? 
 
     if(!mobile){
 	gTranscurso = (gFin - gSignal) / 1000;
@@ -716,7 +720,6 @@ function initsc0() {
 // ////// Mesh desordenado
 
 function initsc1() {
-    noiseStep = 0;
 
     if (predictions.length > 0) {
 	for (let i = 0; i < planeB.length; i++) {
@@ -743,12 +746,12 @@ function animsc1() {
     for ( let i = 0; i < position[vueltas].count; i ++ ) {
 	//let y = noise.get(i*noiseStep) * 50;
 
-	// let d = perlin.noise(keypoints[i][0] * 0.03  + time2, keypoints[i][1]*0.03+time2, keypoints[i][2]* 0.03+time2) * 1.5; 
+	let d = perlin.noise(keypoints[i][0] * 0.03  + time2, keypoints[i][1]*0.03+time2, keypoints[i][2]* 0.03+time2) * 4; 
 
-	let d = 0;
+	// let d = 0;
 	
 	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
-	position[vueltas].setX( i, (keypoints[i][0] * 0.07 - 17) *(1+d) ); // antes 1+analisis
+	position[vueltas].setX( i, (keypoints[i][0] * 0.07 - 16.5) *(1+d) ); // antes 1+analisis
 	position[vueltas].setY( i, (keypoints[i][1] * 0.07 - 22) * (1+d));
 	position[vueltas].setZ( i, keypoints[i][2] * 0.05  );
     }
@@ -789,12 +792,12 @@ function animsc2() {
 	    alety = Math.floor(Math.random()*468);
 	    aletz = Math.floor(Math.random()*468);
 
-	    let d = perlin.noise(keypoints[aletx][0] * 0.03  + time2, keypoints[alety][1]*0.03+time2, keypoints[aletz][2]* 0.03+time2) * 1.5; 
+	    let d = perlin.noise(keypoints[aletx][0] * 0.03  + time2, keypoints[alety][1]*0.03+time2, keypoints[aletz][2]* 0.03+time2) * 4; 
 	    
 	    // let y = noise.get(i*noiseStep) * 50;
 
-	    triaPosition[j].setX( i, (keypoints[aletx][0] * 0.1 - 24)*(1+d) );
-	    triaPosition[j].setY( i, (keypoints[alety][1] * 0.1 - 24)*(1+d) );
+	    triaPosition[j].setX( i, (keypoints[aletx][0] * 0.07 - 16.5)*(1+d) );
+	    triaPosition[j].setY( i, (keypoints[alety][1] * 0.07 - 22)*(1+d) );
 	    triaPosition[j].setZ( i, (keypoints[aletz][2] * 0.05 * -4) );
 
 	    contador = contador + 3;
@@ -892,8 +895,8 @@ function texto() {
 
     loader1.load( 'fonts/techno.json', function( font ) {
 
-	const message = 'No hay\npredicciones';
-	const shapes = font.generateShapes( message, 2 );
+	const message = txtPrueba[2];
+	const shapes = font.generateShapes( message, 1 );
 	const geometry = new THREE.ShapeGeometry( shapes );
 	geometry.computeBoundingBox();
 
