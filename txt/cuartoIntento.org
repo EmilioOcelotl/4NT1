@@ -1,12 +1,14 @@
-
-* Cuarto Intento
+q
+* 4NT1
 
 # Una misma idea que puede estar presente en las tres voces
 # Puede esto durar 3 minutos ?
+# Menos voz y más texto, tal vez alguna indicación de lo que está bueno poner como voz
+# Dos máquinas, una para audio y texto (con asterisco) y otra solo para texto ( sin asterisco )  
+# Esto tiene que pasarse a CSV y luego a JSON 
+# Tres voces: indicaciones generales / performance, programación / partitura, reflexión / metáfora
 
-Dos ejes principales: escritura y ofuscación
-
-Tres voces: indicaciones generales / performance, programación / partitura, reflexión / metáfora
+Dos ejes principales: escritura y ofuscación*
 
 ** Indicaciones generales / performance
 
@@ -15,17 +17,22 @@ Tres voces: indicaciones generales / performance, programación / partitura, ref
 
 *** En espera
 
-Sin predicciones 
-La pantalla de bloqueo se activa cuando la cámara detecta uno o más rostros
-Por favor, acércate para activar la interacción. Pueden participar hasta tres personas.
-La obra se activa cuando detecta un rostro dentro del rango de la cámara
-Será necesario que te quites el cubrebocas y mantengas 1.5 m de distancia
-Es posible acceder a la versión web de esta aplicación
-También hay un repositorio que conduce a los módulos que conforman esta aplicación
+# Audio armónico más etereo 
 
-si ( delimitación es pequeña ) > Acércate 
+En espera
+Ausencia de predicciones* 
+La pantalla de bloqueo se activa cuando la cámara detecta uno o más rostros*
+Por favor, acércate para activar la interacción. Pueden participar hasta tres personas*
+La obra se activa cuando detecta un rostro dentro del rango de la cámara*
+Será necesario que te quites el cubrebocas y mantengas 1.5 m de distancia*
+Es posible acceder a la versión web de esta aplicación*
+También hay un repositorio que conduce a los módulos que conforman esta aplicación*
+
+si ( delimitación es pequeña ) > Acércate*
 
 *** En escena 
+
+# Estas indicaciones pueden estar repartidas en las siguientes escenas
 
 El audio y la imagen se interpretan fuera de escena a partir de este texto
 
@@ -35,66 +42,82 @@ El audio y la imagen se interpretan fuera de escena a partir de este texto
 
 I
 
-Predicciones 
+Predicciones* 
 El texto comentado también puede estar en escena
-La primera delimitación de la aplicación: en espera o en escena 
+Hay primera delimitación de la aplicación: en espera o en escena 
 Algunos aspectos están delimitados por posiciones y otras por un reloj interno 
 Los comentarios hacen referencia a imagenes y audio 
 Enlaces y códigos qr como referencias externas 
 Secuenciadores que activan secuenciadores de audio y eventos visuales 
-El cubrebocas se interpone en la lectura de una buena parte de los puntos de referencia faciales
+El cubrebocas se interpone en la lectura de una buena parte de los puntos de referencia faciales*
 
 *** Segunda escena
 
+# Aspectos técnicos del sistema 
+
+II
+
+Archivos de texto plano de mínimo un 1 MB para la escritura asistida por computadora 
+
 *** Tercera escena
+
+III
 
 ** Reflexión metáfora 
 
 *** Primera escena
 
-# Tipo antecedentes 
+# Algo tipo antecedentes 
 
 I 
 
-Predicciones
+Predicciones*
 Los comentarios pueden repartirse como indicaciones y como programación
-Parece que una buena parte del trabajo invertido se concentra en la delimitación escénica
-Otra parte del trabajo invertido está en la infraestructura 
-El análisis de las imágenes como una posibilidad de interacción con la máquina 
-Pero es necesario algún otro dispositivo de interacción para acceder a enlaces externos
-Pregunta: Es redundante usar qr para vincular este espacio físico con el entramado detrás de la obra
+Una buena parte del trabajo invertido se concentra en la delimitación escénica*
+Otra parte del trabajo invertido está en la infraestructura*
+El análisis de las imágenes es una posibilidad de interacción con la máquina* 
+Es necesario algún otro dispositivo de interacción para acceder a enlaces externos*
+¿Es redundante usar qr para vincular este espacio físico con el entramado detrás de la obra?*
 # qr con la referencia a la reflexión de documenta 
-Para la lectura sencilla de un rostro, el cubrebocas funciona como un dispositivo de ofuscación facial por sí mismo.
-Los módulos que conforman esta aplicación cumplen funciones básicas que se pueden conducir para proyectos específicos.
-En este caso hay dos tipos de ofuscación: sonora y visual
-Los componentes utilizados se pueden utilizar en la vida cotidiana
+Para la lectura sencilla de un rostro, el cubrebocas funciona como un dispositivo de ofuscación facial por sí mismo*
+Los módulos que conforman esta aplicación cumplen funciones básicas que se pueden conducir para proyectos específicos*
+En este caso hay dos tipos de ofuscación: sonora y visual*
 
 *** Segunda escena
 
+# Principal, hablar de la ofuscación 
+
 II
 
+"La ofuscación se refiere a encubrir el significado de una comunicación haciéndola más confusa y complicada de interpretar"
+# qr wikipedia 
+Los componentes utilizados se pueden utilizar en la vida cotidiana*
 ¿Es posible desmantelar dispositivos y recomponerlos para el cuidado personal y colectivo?
 Si es posible hacerlo con el reconocmiento de puntos de referencia faciales entonces también es posible hacerlo con casi cualquier tecnología que nos atraviesa
 Abrir una caja negra para encontrar más cajas negras
 # qr latour 
 ¿ Hasta dónde podemos llegar? 
-Esta obra está montada en un servidor privado en algún lugar de EU
-
+Esta obra está montada en un servidor privado
+Frente a la cámara, frente a la pantalla 
 
 *** Intermedio
 
-# Silencio 
-Para continuar, deja de verte
+# Silencio
+Para continuar, difuminate*
+Cierra los ojos*
 # se activa el detector de iris
 
-*** Tercera escena 
+*** Tercera escena
+
+# Audio rasposo 
 
 III
+
+Difuminación*
 
 ** Final / reinicio
 
 Epilogo
 
 Espera tantos segundos para reiniciar 
-
-
+En cada vuelta hay una versión distinta 
