@@ -260,7 +260,7 @@ let txtPosY2 = 1;
 
 let sprite, sprite2;
 
-let matPoints; 
+let matPoints, matPoints2; 
 
 // Puedo usar los textos como arreglo 
 
@@ -355,9 +355,7 @@ let loop, loopTxt, loopDescanso;
 // Textos generales 
 
 loop = new Tone.Loop((time) => {
-    // triggered every eighth note.
-    //console.log(time);
-    
+
     chtexto(
 	txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
 	txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
@@ -375,8 +373,6 @@ loop = new Tone.Loop((time) => {
 // Instrucciones 
 
 loopTxt = new Tone.Loop((time) => {
-    // triggered every eighth note.
-    //console.log(time);
     
     chtexto(
 	txtInstrucciones[Math.floor(Math.random()*txtInstrucciones.length)],
@@ -392,8 +388,6 @@ loopTxt = new Tone.Loop((time) => {
 // Descanso 
 
 loopDescanso = new Tone.Loop((time) => {
-    // triggered every eighth note.
-    //console.log(time);
     
     chtexto(
 	txtDescanso[Math.floor(Math.random()*txtDescanso.length)],
@@ -567,15 +561,15 @@ async function renderPrediction() {
 
 		if( getIsVoluntaryBlink(blinked) ){
 		    // console.log(prediction.annotations.rightEyeUpper0); 
-		    console.log("parpadeo");
+		    // console.log("parpadeo");
 		    //blinkSignal = Date.now(); 
 		    // aquí hay que agregar un contador. Si pasa cierto número de tiempo entonces miau
 		    blinkConta++;
 
-		    console.log(blinkConta); 
+		    // console.log(blinkConta); 
 
-		    if(blinkConta > 50){
-			console.log("ojos cerrados"); 
+		    if(blinkConta == 50){
+			console.log("ojos cerrados o muchos parpadeos"); 
 		    }
 		    
 		}
