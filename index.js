@@ -268,7 +268,7 @@ let matPoints;
 
 let txtPrueba = [
 
-    "Predicciones",
+    "Presencia de predicciones",
     "Los comentarios pueden repartirse\ncomo indicaciones y como programacion",
     "Una buena parte del trabajo invertido\nse concentra en la\ndelimitacion escenica",
     "Otra parte del trabajo invertido\n esta en la infraestructura",
@@ -281,6 +281,19 @@ let txtPrueba = [
 
 ];
 
+let txtInstrucciones = [
+
+    "En espera",
+    "Ausencia de predicciones", 
+    "La pantalla de bloqueo\nse activa cuando la cámara\n detecta uno o más rostros",
+    "Por favor,\nacércate para activar la interacción.\nPueden participar hasta tres personas", 
+    "Iniciamos cuando hay un rostro\n dentro del rango de la cámara", 
+    "Será necesario que te quites el cubrebocas\n y mantengas 1.5 m de distancia", 
+    "Es posible acceder\na la versión web de esta aplicación",
+    "También hay un repositorio\nque conduce a los módulos\nque conforman esta aplicación"
+    // qr del repo 
+    
+]
 // y hacer coincidir el índice con los audios
 
 var voz = new Tone.Players({
@@ -327,13 +340,37 @@ loop = new Tone.Loop((time) => {
 
     let fondosAl = Math.floor(Math.random()*14);
     fondos.player(fondosAl.toString()).start(time);
+        
+}, "10");
+
+// Instrucciones 
+
+loopTxt = new Tone.Loop((time) => {
+    // triggered every eighth note.
+    //console.log(time);
     
-    //intervalo = Math.random() * 20;
-    console.log(fondosAl); 
+    chtexto(
+	txtInstrucciones[Math.floor(Math.random()*txtInstrucciones.length)],
+	txtInstrucciones[Math.floor(Math.random()*txtInstrucciones.length)],
+	Math.random()*40 - 20,
+	Math.random()*40 - 20,
+	Math.random()*40 - 20,
+	Math.random()*40 - 20
+    ); 
     
 }, "10");
 
-    Tone.Transport.start();
+Tone.Transport.start();
+
+let blinkRate;
+let blinked = false;
+let tempBlinkRate = 0;
+let rendering = true;
+let rateInterval;
+const EAR_THRESHOLD = 0.27;
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////
 
 // /////////// Setupear la cámara
 
@@ -357,8 +394,59 @@ async function setupCamera() {
     return new Promise((resolve) => {
 	video.onloadedmetadata = () => {
 	    resolve(video);
+	    initBlinkRateCalculator();
 	};
     });
+}
+
+
+//////////////////////////////////////
+//////////////////// PARPADEO
+//////////////////////////////////////
+
+
+function initBlinkRateCalculator() {
+  rateInterval = setInterval(() => {
+    blinkRate = tempBlinkRate * 6;
+    tempBlinkRate = 0;
+  }, 10000);
+}
+
+function updateBlinkRate() {
+  tempBlinkRate++;
+}
+
+function getEucledianDistance(x1, y1, x2, y2) {
+  return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+}
+
+function getEAR(upper, lower) {
+  return (
+    (getEucledianDistance(upper[5][0], upper[5][1], lower[4][0], lower[4][1]) +
+      getEucledianDistance(
+        upper[3][0],
+        upper[3][1],
+        lower[2][0],
+        lower[2][1]
+      )) /
+    (2 *
+      getEucledianDistance(upper[0][0], upper[0][1], upper[8][0], upper[8][1]))
+  );
+}
+
+function getIsVoluntaryBlink(blinkDetected) {
+  // NOTE: checking if blink is detected twice in a row, anything more than that takes more deleberate effort by user.
+  // NOTE: adding this to separate intentional blinks
+  if (blinkDetected) {
+    if (blinked) {
+      return true;
+    }
+    blinked = true;
+  } else {
+    blinked = false;
+  }
+
+  return false;
 }
 
 async function renderPrediction() {
@@ -376,7 +464,7 @@ async function renderPrediction() {
 	input: video,
 	returnTensors: false,
 	flipHorizontal: false,
-	predictIrises: irises,
+	predictIrises: true,
     });
 
     if (prueba != predictions.length) {
@@ -398,7 +486,9 @@ async function renderPrediction() {
 		    TRIANGULATION[i * 3 + 2],
 		].map((index) => keypoints[index]);
 	    }
-	   
+
+	    // aquí tendría que haber más animsc hay que probar 
+	    
 	    if (buscando) {
 		switch ( escena % numsc ) {
 		case 0:
@@ -409,6 +499,30 @@ async function renderPrediction() {
 		    break;
 		}
 	    }
+
+	    //// parpadeo
+
+	    let lowerRight = prediction.annotations.rightEyeUpper0;
+            let upperRight = prediction.annotations.rightEyeLower0;
+            const rightEAR = getEAR(upperRight, lowerRight);
+	    
+            let lowerLeft = prediction.annotations.leftEyeUpper0;
+            let upperLeft = prediction.annotations.leftEyeLower0;
+            const leftEAR = getEAR(upperLeft, lowerLeft);
+	    
+            let blinked = leftEAR <= EAR_THRESHOLD && rightEAR <= EAR_THRESHOLD;
+            if (blinked) {
+		updateBlinkRate();
+            }
+
+	    if( blinked ){
+		// console.log(prediction.annotations.rightEyeUpper0); 
+		console.log("parpa");
+		// aquí hay que agregar un contador. Si pasa cierto número de tiempo entonces miau 
+	    }
+
+	    // console.log(getIsVoluntaryBlink(blinked)); 
+	    
 	});
     }
 
@@ -425,17 +539,21 @@ async function renderPrediction() {
 
 	text.position.x = keypoints[0][0]* 0.1 -35 + txtPosX;
 	text.position.y = keypoints[0][1]* 0.1 -30 + txtPosY;
-	text.position.z = keypoints[0][2] * 0.1 + 10;
+	//text.position.z = keypoints[0][2] * 0.1 + 10;
 
 	text2.position.x = keypoints[0][0]* 0.1 -35 + txtPosX2;
 	text2.position.y = keypoints[0][1]* 0.1 -30 + txtPosY2;
-	text2.position.z = keypoints[0][2] * 0.1 + 10;
+	//text2.position.z = keypoints[0][2] * 0.1 + 10;
 	
     } else {
 	
 	text.position.x = txtPosX;
 	text.position.y = txtPosY;
-	text.position.z = 0;
+	
+	text2.position.x = txtPosX2;
+	text2.position.y = txtPosY2;
+	
+	//text.position.z = 0;
 	
     }
 
@@ -641,8 +759,9 @@ async function init() {
     model = await faceLandmarksDetection.load(
 	faceLandmarksDetection.SupportedPackages.mediapipeFacemesh,
 	{maxFaces: 3,
-	 shouldLoadIrisModel: false,
-	 maxContinuousChecks: 120});
+	 shouldLoadIrisModel: true, // recargar el modelo ? 
+	 // maxContinuousChecks: 120
+	});
 
     detonar();
     
@@ -660,6 +779,7 @@ function initsc0() {
     
     if ( predictions.length < 1 ) {
 
+	loopTxt.start(0); 
 	loop.stop(0); 
 	out.start();
 	scene.add(planeVideo); 
@@ -709,7 +829,8 @@ function initsc0() {
 
     } else {
 
-	loop.start(0); 
+	loop.start(0);
+	loopTxt.stop(0); 
 	planeVideo.geometry.dispose();
 	const geometryVideoNew = new THREE.PlaneGeometry( 640/7, 480/7 ); // Dos modalidades, abierta y ajustada para cel
 
@@ -979,37 +1100,6 @@ function rmbloomsc(){
 
 }
 
-// Escena oscura 2
-
-function initbloomsc2(){
-
-    suspendido = true;
-    scene.remove( cuboGrande );
-    respawn.start();
-
-
-    	chtexto(
-	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
-	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
-	    Math.random()*40 - 20,
-	    Math.random()*40 - 20,
-	    Math.random()*40 - 20,
-	    Math.random()*40 - 20
-	); 
-	
-    
-    scene.remove( planeVideo ); 
-    // quitar texto
-    // agregar texto
-    
-}
-
-function animbloomsc2(){
-}
-
-function rmbloomsc2(){
-}
-
 
 // Podría ser que hasta aquí haya más texto que en las escenas anteriores 
 
@@ -1018,6 +1108,7 @@ function initIrises(){
 }
 
 function animIrises(){
+    console.log(keypoints[469][0]); 
 }
 
 function rmIrises(){
@@ -1052,7 +1143,7 @@ function texto() {
     loader1.load( 'fonts/techno.json', function( font ) {
 
 	const message = txtPrueba[2];
-	const shapes = font.generateShapes( message, 4 );
+	const shapes = font.generateShapes( message, 2 );
 	const geometry = new THREE.ShapeGeometry( shapes );
 	geometry.computeBoundingBox();
 
@@ -1061,7 +1152,7 @@ function texto() {
 	text = new THREE.Mesh( geometry, matLite );
 	text.position.z = 5;
 	// text.rotation.x = Math.PI;
-	// text.rotation.y = Math.PI;
+	// text.rotation.y =q Math.PI;
 	text.rotation.z = Math.PI;
 	scene.add( text );
 
@@ -1079,6 +1170,7 @@ function texto() {
 function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
     
     const loader1 = new THREE.FontLoader();
+ 
     loader1.load( 'fonts/techno.json', function( font ) {
 	
 	txtPosX = posX;
@@ -1106,7 +1198,7 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
     } );
 	
 	const message = mensaje; 
-	const shapes = font.generateShapes( message, 1 );
+	const shapes = font.generateShapes( message, 1.5 );
 	const geometry = new THREE.ShapeGeometry( shapes );
 	geometry.computeBoundingBox();
 	const xMid = - 0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
@@ -1116,7 +1208,7 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 	text.material.dispose();
 
 	const message2 = mensaje2; 
-	const shapes2 = font.generateShapes( message2, 1 );
+	const shapes2 = font.generateShapes( message2, 1.5 );
 	const geometry2 = new THREE.ShapeGeometry( shapes2 );
 	geometry2.computeBoundingBox();
 	const xMid2 = - 0.5 * ( geometry2.boundingBox.max.x - geometry2.boundingBox.min.x );
@@ -1124,7 +1216,6 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 	text2.geometry.dispose(); 
 	text2.geometry= geometry2;
 	text2.material.dispose();
-
 	
 	/*
 	if(!modoOscuro){
