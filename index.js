@@ -308,7 +308,33 @@ var fondos = new Tone.Players({
 }).toDestination();
 
 let perlinValue;
-let perlinAmp; 
+let perlinAmp;
+let cuboGBool = false;
+let loop; 
+
+
+    loop = new Tone.Loop((time) => {
+	// triggered every eighth note.
+	//console.log(time);
+	
+	chtexto(
+	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
+	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
+	    Math.random()*20 - 10,
+	    Math.random()*20 - 10,
+	    Math.random()*20 - 10,
+	    Math.random()*20 - 10
+	); 
+
+	let fondosAl = Math.floor(Math.random()*14);
+	fondos.player(fondosAl.toString()).start(time);
+
+	//intervalo = Math.random() * 20;
+	console.log(fondosAl); 
+	
+    }, "10");
+
+    Tone.Transport.start();
 
 // /////////// Setupear la cámara
 
@@ -424,8 +450,8 @@ async function renderPrediction() {
     text2.position.z = keypoints[0][2] * 0.1 + 10;
     */
 
-    cuboGrande.rotation.x += 0.003;
-    cuboGrande.rotation.y += (degree) * 0.006;
+    cuboGrande.rotation.x += 0.001;
+    cuboGrande.rotation.y += (degree/2) * 0.003;
     ///text.rotation.y = degree * 2 + (Math.PI );
     //text2.rotation.y = degree * 2 + (Math.PI );
 
@@ -460,37 +486,25 @@ async function renderPrediction() {
     // camera.position.y += ( Math.abs(mouseY)- 24 - camera.position.y ) * .05;
 
     camera.lookAt( scene.position );
-
     camera.rotation.z = Math.PI;
-
     stats.update();
-
     renderer.render( scene, camera );
-
     panner.positionX.value = 0;
-
     vertices = [];
-
     composer.render();
 
-    /*
-    if(buscando || suspendido ){
+  
+    if(cuboGBool || suspendido ){
 	vector.x = ( window.innerWidth * dpr / 2 ) - ( textureSize / 2 );
 	vector.y = ( window.innerHeight * dpr / 2 ) - ( textureSize / 2 );
 	
 	renderer.copyFramebufferToTexture( vector, texture );
     }
-    */
-    
-    // rmtexto();
-
-    // activación del glitch solo en escritorio ¿Esto realmente importa? 
-
+   
     if(!mobile){
 	gTranscurso = (gFin - gSignal) / 1000;
-	
 	// console.log(gTranscurso.toFixed()); 
-	if(gTranscurso.toFixed() == 1 && gSegundo != 1){
+	if(gTranscurso.toFixed() == 2 && gSegundo != 2){
 	    // console.log("Cambio");
 	    gSegundo = gTranscurso.toFixed();
 	    glitchPass.goWild = false;
@@ -512,20 +526,12 @@ async function renderPrediction() {
 async function init() {
 
     await tf.setBackend('webgl');
-
     const overlay = document.getElementById( 'overlay' );
     overlay.remove();
-
     const info = document.getElementById( 'info' );
     info.remove();
-
     const fonca = document.getElementById( 'fonca' );
     fonca.remove();
-
-    // loaderHTML.style.display = 'block';
-    // const body = document.getElementById( 'body'); 
-    // body.style.cursor = 'none'; 
-
     container = document.createElement( 'div' );
     document.body.appendChild( container );
     document.body.style.cursor = 'none'; 
@@ -552,11 +558,11 @@ async function init() {
     camera.position.z = 40;
     camera.rotation.z = Math.PI;
 
-    const ambient = new THREE.AmbientLight( 0xffffff );
-    scene.add( ambient );
+    //const ambient = new THREE.AmbientLight( 0xffffff );
+    //scene.add( ambient );
     
-    pointLight = new THREE.PointLight( 0xffffff, 2 );
-    scene.add( pointLight );
+    // pointLight = new THREE.PointLight( 0xffffff, 2 );
+    // scene.add( pointLight );
     
     cols();
 
@@ -564,26 +570,13 @@ async function init() {
     console.log('Resolución:'+ `${width}x${height}`); // 640x480
 
     const geometryVideo = new THREE.PlaneGeometry( width/7, height/7 ); // Dos modalidades, abierta y ajustada para cel
-
-    /*
-    materialVideo = new THREE.MeshStandardMaterial( {
-	color: 0xffffff,
-	refractionRatio: 0.98,
-	reflectivity: 0.9,
-	opacity: 0.7,
-	transparent: true,
-	roughness: 0.1,
-	metalness: 1,
-    } );
-*/
-    
+ 
     materialVideo = new THREE.MeshBasicMaterial( {
 	color: 0xffffff,
 	side: THREE.DoubleSide,
 	transparent: true,
 	opacity: 0.9,
     } );
-
     
     planeVideo = new THREE.Mesh( geometryVideo, materialVideo );
     planeVideo.rotation.x = Math.PI;
@@ -596,15 +589,14 @@ async function init() {
     sprite = new THREE.TextureLoader().load( 'img/smoke_05.png' );
     sprite2 = new THREE.TextureLoader().load( 'img/spark1.png' );
 
-   
     matPoints = new THREE.PointsMaterial( {
 	color: colores[0],
-	size: 4,
+	size: 20,
 	map: sprite,
 	blending: THREE.AdditiveBlending,
 	// transparent: true,
 	//opacity: 0.5,
-	// sizeAttenuation: true,
+	// sizeAttenuation: false,
 	alphaTest: 0.1,
 	// depthTest: false
     } );
@@ -615,6 +607,7 @@ async function init() {
 	pGeometry[i].verticesNeedUpdate = true;
     }
 
+    /*
     const triMat = new THREE.MeshStandardMaterial( {
 	color: 0xccddff,
 	// refractionRatio: 0.98,
@@ -625,59 +618,21 @@ async function init() {
 	metalness: 1,
 
     } );
-
+    */
     // let triMat = new THREE.MeshBasicMaterial( {color: 0x000000, blending: THREE.AdditiveBlending});
-
+/*
     for (var i = 0; i < 25; i++) {
 	triangulos[i] = new THREE.Mesh( triaGeometry[i], triMat );
 	triangulos[i].position.z = 10;
 	triaGeometry[i].verticesNeedUpdate = true;
     }
-
+*/
     geometryB = new THREE.BufferGeometry();
     geometryB.verticesNeedUpdate = true;
 
     let audioSphere = new THREE.BoxGeometry( 400, 400, 400, 8, 8, 8 );
 
-    
-    // cuboGrande = new THREE.Mesh(audioSphere, materialC2 );
-
-    // var geometryGrande = new THREE.BufferGeometry();
-
-    // geometryGrande.copy(cuboGrandeGeometry);
-
-    // cuboGrandeGeometry = new THREE.IcosahedronGeometry( 200, 1 );
-    // cuboGrandeGeometry = new THREE.SphereGeometry( 200, 32, 32 );
-    // scene.add( cuboGrande); 
-    // cuboGrande.visible = false;
-
-    // cuboGrande.position.x = 10;
-    // cuboGrande.position.y = 10;
-    // cuboGrande.position.z = 10;
-    // cuboGrande2 = new THREE.Mesh(audioSphere, materialC2 );
-
-    // audioSphere.computeVertexNormals();
-    // audioSphere.normalsNeedUpdate = true;
-    // audioSphere.verticesNeedUpdate = true;
-
-    /*
-
-    geometryMirr = new THREE.PlaneGeometry( 80, 80 );
-
-    groundMirror = new Reflector( gCube, {
-	// clipBias: 0.003,
-	textureWidth: window.innerWidth * window.devicePixelRatio,
-	textureHeight: window.innerHeight * window.devicePixelRatio,
-	color: 0x889999
-    } );
-
-    // groundMirror.position.y = 10;
-    groundMirror.position.z = -20;
-    groundMirror.position.x = 30;
-    groundMirror.rotateY( - Math.PI / 4 );
-    scene.add( groundMirror );
-
-    */
+    cuboGrande = new THREE.Mesh(audioSphere, materialC2 );
 
     texto();
 
@@ -728,14 +683,15 @@ async function init() {
 
 function initsc0() {
 
-    irises = false; 
-    gSignal = Date.now();
+    irises = false;
     
+    gSignal = Date.now();
     composer.addPass( glitchPass );
     glitchPass.goWild = true;
     
     if ( predictions.length < 1 ) {
-			
+
+	loop.stop(0); 
 	out.start();
 	scene.add(planeVideo); 
 	planeVideo.material.opacity = 1; 
@@ -770,6 +726,7 @@ function initsc0() {
 	buscando = false;
 	scene.remove( cuboGrande ); // necesario disposear todo ?
 
+	// players.stop(); 
 	player.stop();
 	intro.restart();
 	intro.start();
@@ -780,6 +737,7 @@ function initsc0() {
 
     } else {
 
+	loop.start(0); 
 	planeVideo.geometry.dispose();
 	const geometryVideoNew = new THREE.PlaneGeometry( 640/7, 480/7 ); // Dos modalidades, abierta y ajustada para cel
 
@@ -804,7 +762,7 @@ function initsc0() {
 	    Math.random()*40 - 20
 	); 
     
-	buscando = true;
+	 buscando = true;
 	// scene.add( cuboGrande );
 	scene.add( text );
 	scene.add( text2 );
@@ -827,17 +785,23 @@ function initsc0() {
 function initsc1() {
 
     // respawn.start(); // otro sonido que no sea respawn 
+
+
+    gSignal = Date.now();
+    composer.addPass( glitchPass );
+    glitchPass.goWild = true;
     
+    cuboGBool = false; 
     afterimagePass.uniforms['damp'].value = 0.85;
 
     bloomPass.threshold = 0.7;
-    bloomPass.strength = 0.2;
+    bloomPass.strength = 0.3;
     bloomPass.radius = 0;
 
     perlinValue = 0.03;
     perlinAmp = 4; 
     matPoints.map= sprite;
-    matPoints.size=6; 
+    matPoints.size=3; 
     scene.add( planeVideo);
 
     planeVideo.material.opacity = 0; 
@@ -870,10 +834,9 @@ function initsc1() {
 
 function animsc1() {
 
-    // console.log(4-(transcurso/40*4));
+    // console.log(0.03-(transcurso/40*0.03));
 
-    perlinValue = 0.03-(transcurso/40*0.03); 
-    perlinAmp = 4 - (transcurso/40*4); 
+    perlinValue = 0.04-(transcurso/40*0.01); 
     planeVideo.material.opacity = transcurso/40; 
     
     var time2 = Date.now() * 0.0005;
@@ -885,14 +848,14 @@ function animsc1() {
 	let d = perlin.noise(
 	    keypoints[i][0] * perlinValue + time2,
 	    keypoints[i][1] * perlinValue + time2,
-	    keypoints[i][2] * perlinValue + time2) *  perlinAmp; 
+	    keypoints[i][2] * perlinValue + time2) *  1; 
 
 	// let d = 0;
 	
 	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
-	position[vueltas].setX( i, (1+keypoints[i][0] * 0.1 - 33) *(2+d) ); // antes 1+analisis
-	position[vueltas].setY( i, (1+keypoints[i][1] * 0.1 - 25) * (2+d));
-	position[vueltas].setZ( i, keypoints[i][2] * 0.05  * (4+d) );
+	position[vueltas].setX( i, (1+keypoints[i][0] * 0.1 - 33) *(1+d) ); // antes 1+analisis
+	position[vueltas].setY( i, (1+keypoints[i][1] * 0.1 - 28) * (1+d));
+	position[vueltas].setZ( i, keypoints[i][2] * 0.05  + (4+d) );
     }
 
     planeB[vueltas].geometry.computeVertexNormals();
@@ -911,19 +874,34 @@ function rmsc1() {
 
 function initsc2() {
 
-    respawn.start();
+    
+    gSignal = Date.now();
+    composer.addPass( glitchPass );
+    glitchPass.goWild = true;
 
-    afterimagePass.uniforms['damp'].value = 0.5;
+    // planeVideo.material.opacity = 0.8; 
+    
+    cuboGBool = true; 
+    // respawn.start();
 
-    bloomPass.threshold = 0.5;
+    afterimagePass.uniforms['damp'].value = 0.85;
+
+    bloomPass.threshold = 0.9;
     bloomPass.strength = 0.1;
     bloomPass.radius = 0;
     
-    matPoints.map= sprite;
-    matPoints.size= 5; 
+    //matPoints.map= sprite;
+    // matPoints.size= 4;
+    perlinValue = 0.003;
+    perlinAmp = 2;
 
-    planeVideo.material.opacity = 0; 
-    scene.add( planeVideo);
+    // matPoints.blending = THREE.AdditiveBlending;
+    // matPoints.color = new THREE.Color(0x000000); 
+    
+    cuboGrande.material.opacity = 0; 
+    scene.add(cuboGrande); 
+    // planeVideo.material.opacity = 0; 
+    // scene.add( planeVideo);
     
     chtexto(
 	txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
@@ -950,6 +928,11 @@ function initsc2() {
 // dos correcciones de acuerdo a la resolución. Pienso que esto tiene que ver con el modo horizontal o vertical. Cada navegador hace lo que quiere y firefox nunca me deja jalar la cámara en módo vertical 
 
 function animsc2() {
+
+    perlinValue = 0.04-((transcurso-40)/40*0.005); 
+
+    // console.log((transcurso-40)/40); 
+    // cuboGrande.material.opacity = (transcurso-40)/40; 
     
     var time2 = Date.now() * 0.0005;
 
@@ -957,13 +940,15 @@ function animsc2() {
 
 	// Blet d = perlin.noise(keypoints[i][0] * 0.003  + time2, keypoints[i][1]*0.003+time2, keypoints[i][2]* 0.003+time2) * 4; 
 
-	let d = perlin.noise(keypoints[i][0] * 0.003  + time2, keypoints[i][1]*0.003+time2, keypoints[i][2]* 0.003+time2) *  1; 
+	let d = perlin.noise(keypoints[i][0] * perlinValue + time2,
+			     keypoints[i][1] * perlinValue + time2,
+			     keypoints[i][2] * perlinValue + time2) *  perlinAmp; 
 
 	// let d = 0;
 	
 	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
-	position[vueltas].setX( i, (1+keypoints[i][0] * 0.1 - 33) *(1+d) ); // antes 1+analisis
-	position[vueltas].setY( i, (1+keypoints[i][1] * 0.1 - 25) * (1+d));
+	position[vueltas].setX( i, (1+keypoints[i][0] * 0.1 - 33) +(1+d) ); // antes 1+analisis
+	position[vueltas].setY( i, (1+keypoints[i][1] * 0.1 - 25) + (1+d));
 	position[vueltas].setZ( i, keypoints[i][2] * 0.05  * (4+d) );
     }
 
@@ -1076,7 +1061,7 @@ function texto() {
     loader1.load( 'fonts/techno.json', function( font ) {
 
 	const message = txtPrueba[2];
-	const shapes = font.generateShapes( message, 2 );
+	const shapes = font.generateShapes( message, 4 );
 	const geometry = new THREE.ShapeGeometry( shapes );
 	geometry.computeBoundingBox();
 
@@ -1130,7 +1115,7 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
     } );
 	
 	const message = mensaje; 
-	const shapes = font.generateShapes( message, 0.75 );
+	const shapes = font.generateShapes( message, 1 );
 	const geometry = new THREE.ShapeGeometry( shapes );
 	geometry.computeBoundingBox();
 	const xMid = - 0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
@@ -1140,7 +1125,7 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 	text.material.dispose();
 
 	const message2 = mensaje2; 
-	const shapes2 = font.generateShapes( message2, 0.75 );
+	const shapes2 = font.generateShapes( message2, 1 );
 	const geometry2 = new THREE.ShapeGeometry( shapes2 );
 	geometry2.computeBoundingBox();
 	const xMid2 = - 0.5 * ( geometry2.boundingBox.max.x - geometry2.boundingBox.min.x );
@@ -1174,29 +1159,7 @@ async function sonido() {
     // esto tiene que ver con escenas
 
     // let intervalo; 
-   
-    const loop = new Tone.Loop((time) => {
-	// triggered every eighth note.
-	//console.log(time);
-	
-	chtexto(
-	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
-	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
-	    Math.random()*20 - 10,
-	    Math.random()*20 - 10,
-	    Math.random()*20 - 10,
-	    Math.random()*20 - 10
-	); 
-
-	let fondosAl = Math.floor(Math.random()*14);
-	fondos.player(fondosAl.toString()).start(time);
-
-	//intervalo = Math.random() * 20;
-	console.log(fondosAl); 
-	
-    }, "10").start(0);
-
-    Tone.Transport.start();
+    
    
 }
 
@@ -1342,6 +1305,7 @@ function materiales() {
     materialC2 = new THREE.MeshBasicMaterial( {
 	map: texture,
 	side: THREE.DoubleSide,
+	// transparent: true,
 	// color: diffuseColor,
 	// reflectivity: beta,
 	// envMap: alpha < 0.5 ? reflectionCube : null
