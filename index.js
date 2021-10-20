@@ -1,3 +1,11 @@
+/////////////////////////////////////////////////
+//  HOLA, ESTAS REDY PARA LOS PROBLEMAS DE MULTIPLAYER?
+////////////////////////////////////////////////
+
+
+
+
+
 / ////////////////////////////////
 // ///////// 4NT1 /////////////////
 // ////////////////////////////////
@@ -134,11 +142,6 @@ let numsc = 3;
 
 let ofTexture;
 
-// let wet = [0.1, 0.2, 0, 0.04]; let wetActual;
-// let reverse = [true, false, false, true, false]; let reverseActual; let reverseCambio = 0;
-// let pitch = [0, -12, 0, -12, 12, 7, -7]; let pitchActual; let pitchCambio = 0;
-// let start = [0.1, 0.5, 0.7, 0.3, 0.9, 1.5, 2.0]; let startActual; let startCambio = 0;
-
 let cambioC = 0;
 
 let pitchShift, reverb, dist;
@@ -207,9 +210,6 @@ let triangulos = [];
 
 let contador = 0;
 
-// let audioSphere = new THREE.SphereBufferGeometry(300, 32, 32);
-// let audioSphere2 = new THREE.SphereBufferGeometry(300, 32, 32);
-
 // /////////// Camera
 
 let mouseX = 0;
@@ -231,8 +231,6 @@ const perlin = new ImprovedNoise();
 let intro; 
 let gSegundo; 
 
-player = new Tone.Player('audio/fondos/intro.mp3').connect(panner);
-player.loop = true;
 antiKick = new Tone.Player('audio/perc/antiKick.mp3').toDestination();
 const respawn = new Tone.Player('audio/perc/respawn.mp3').toDestination(); 
 const out = new Tone.Player('audio/perc/out.mp3').toDestination(); 
@@ -278,7 +276,19 @@ let txtPrueba = [
 // # qr con la referencia a la reflexión de documenta 
     "El cubrebocas funciona\ncomo un dispositivo de ofuscacion facial\npor si mismo",
     "Dos tipos de ofuscacion: sonora y visual",
-
+    "¿La distancia temporal está asociada al contexto?",
+    "¿Qué estoy haciendo?",
+    "la app se controla\n con la presencia/no presencia",
+    "y algunos gestos",
+    "si te quedas, las escenas continuan",
+    "Falta 1 MB de texto plano\npara el siguiente proyecto",
+    "Continúa",
+    "Ningún dato queda almacenado",
+    "La ofuscación es un motivo",
+    "Si estás en un espacio cerrado\nsal",
+    "Si estás en un espacio cerrado\nlas escenas continúan",
+    "¿Necesitas más tiempo?",
+    "En cada vuelta hay una variación distinta", 
 ];
 
 let txtInstrucciones = [
@@ -290,9 +300,22 @@ let txtInstrucciones = [
     "Iniciamos cuando hay un rostro\n dentro del rango de la cámara", 
     "Será necesario que te quites el cubrebocas\n y mantengas 1.5 m de distancia", 
     "Es posible acceder\na la versión web de esta aplicación",
-    "También hay un repositorio\nque conduce a los módulos\nque conforman esta aplicación"
+    "También hay un repositorio\nque conduce a los módulos\nque conforman esta aplicación",
     // qr del repo 
     
+]
+
+let txtDescanso = [
+    "descansa",
+    "cierra los ojos",
+    "un par de segundos\ny continuamos",
+    "difuminate",
+    "deja de ver la pantalla",
+    "un par de segundos",
+    "cierra los ojos",
+    "un par de segundos y continuamos",
+    "no hay limite de tiempo",
+    "Más que un instante"
 ]
 // y hacer coincidir el índice con los audios
 
@@ -317,13 +340,19 @@ var fondos = new Tone.Players({
     "12": "audio/fondos/12.mp3",
     "13": "audio/fondos/13.mp3",
     "14": "audio/fondos/14.mp3",
-  // "snare":"samples/505/snare.mp3"
+    "15": "audio/fondos/15.mp3"
 }).toDestination();
+
+
+fondos.volume.value = -6;
+
 
 let perlinValue;
 let perlinAmp;
 let cuboGBool = false;
-let loop; 
+let loop, loopTxt, loopDescanso; 
+
+// Textos generales 
 
 loop = new Tone.Loop((time) => {
     // triggered every eighth note.
@@ -360,6 +389,23 @@ loopTxt = new Tone.Loop((time) => {
     
 }, "10");
 
+// Descanso 
+
+loopDescanso = new Tone.Loop((time) => {
+    // triggered every eighth note.
+    //console.log(time);
+    
+    chtexto(
+	txtDescanso[Math.floor(Math.random()*txtDescanso.length)],
+	txtDescanso[Math.floor(Math.random()*txtDescanso.length)],
+	Math.random()*40 - 20,
+	Math.random()*40 - 20,
+	Math.random()*40 - 20,
+	Math.random()*40 - 20
+    ); 
+    
+}, "5");
+
 Tone.Transport.start();
 
 let blinkRate;
@@ -369,6 +415,7 @@ let rendering = true;
 let rateInterval;
 const EAR_THRESHOLD = 0.27;
 
+let blinkConta = 0; 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -464,7 +511,7 @@ async function renderPrediction() {
 	input: video,
 	returnTensors: false,
 	flipHorizontal: false,
-	predictIrises: true,
+	predictIrises: irises,
     });
 
     if (prueba != predictions.length) {
@@ -502,27 +549,41 @@ async function renderPrediction() {
 
 	    //// parpadeo
 
-	    let lowerRight = prediction.annotations.rightEyeUpper0;
-            let upperRight = prediction.annotations.rightEyeLower0;
-            const rightEAR = getEAR(upperRight, lowerRight);
+	    if(irises){
+		
+		let lowerRight = prediction.annotations.rightEyeUpper0;
+		let upperRight = prediction.annotations.rightEyeLower0;
+		const rightEAR = getEAR(upperRight, lowerRight);
 	    
-            let lowerLeft = prediction.annotations.leftEyeUpper0;
-            let upperLeft = prediction.annotations.leftEyeLower0;
-            const leftEAR = getEAR(upperLeft, lowerLeft);
-	    
-            let blinked = leftEAR <= EAR_THRESHOLD && rightEAR <= EAR_THRESHOLD;
-            if (blinked) {
-		updateBlinkRate();
-            }
+		let lowerLeft = prediction.annotations.leftEyeUpper0;
+		let upperLeft = prediction.annotations.leftEyeLower0;
+		const leftEAR = getEAR(upperLeft, lowerLeft);
+		
+		let blinked = leftEAR <= EAR_THRESHOLD && rightEAR <= EAR_THRESHOLD;
+		if (blinked) {
+		    updateBlinkRate();
+		}
 
-	    if( blinked ){
-		// console.log(prediction.annotations.rightEyeUpper0); 
-		console.log("parpa");
-		// aquí hay que agregar un contador. Si pasa cierto número de tiempo entonces miau 
-	    }
 
+		if( getIsVoluntaryBlink(blinked) ){
+		    // console.log(prediction.annotations.rightEyeUpper0); 
+		    console.log("parpadeo");
+		    //blinkSignal = Date.now(); 
+		    // aquí hay que agregar un contador. Si pasa cierto número de tiempo entonces miau
+		    blinkConta++;
+
+		    console.log(blinkConta); 
+
+		    if(blinkConta > 50){
+			console.log("ojos cerrados"); 
+		    }
+		    
+		}
+
+		// blinkConta = 0; 
+		
 	    // console.log(getIsVoluntaryBlink(blinked)); 
-	    
+	    }
 	});
     }
 
@@ -557,8 +618,8 @@ async function renderPrediction() {
 	
     }
 
-    cuboGrande.rotation.x += 0.001;
-    cuboGrande.rotation.y += (degree/2) * 0.003;
+    cuboGrande.rotation.x += 0.003;
+    cuboGrande.rotation.y += (degree/2) * 0.006;
     ///text.rotation.y = degree * 2 + (Math.PI );
     //text2.rotation.y = degree * 2 + (Math.PI );
 
@@ -589,7 +650,7 @@ async function renderPrediction() {
     if(!mobile){
 	gTranscurso = (gFin - gSignal) / 1000;
 	// console.log(gTranscurso.toFixed()); 
-	if(gTranscurso.toFixed() == 2 && gSegundo != 2){
+	if(gTranscurso.toFixed() == 1 && gSegundo != 1){
 	    // console.log("Cambio");
 	    gSegundo = gTranscurso.toFixed();
 	    glitchPass.goWild = false;
@@ -643,12 +704,6 @@ async function init() {
     camera.position.z = 40;
     camera.rotation.z = Math.PI;
 
-    //const ambient = new THREE.AmbientLight( 0xffffff );
-    //scene.add( ambient );
-    
-    // pointLight = new THREE.PointLight( 0xffffff, 2 );
-    // scene.add( pointLight );
-    
     cols();
 
     let {width, height} = stream.getTracks()[0].getSettings();
@@ -685,33 +740,26 @@ async function init() {
 	alphaTest: 0.1,
 	// depthTest: false
     } );
-   
+
+    
+    matPoints2 = new THREE.PointsMaterial( {
+	color: 0x000000,
+	size: 2,
+	// map: sprite,
+	blending: THREE.AdditiveBlending,
+	// transparent: true,
+	//opacity: 0.5,
+	// sizeAttenuation: false,
+	alphaTest: 0.1,
+	// depthTest: false
+    } );
+
     planeB = [new THREE.Points( pGeometry[0], matPoints ), new THREE.Points( pGeometry[1], matPoints ), new THREE.Points( pGeometry[2], matPoints )];
 
     for (var i = 0; i < 3; i++) {
 	pGeometry[i].verticesNeedUpdate = true;
     }
 
-    /*
-    const triMat = new THREE.MeshStandardMaterial( {
-	color: 0xccddff,
-	// refractionRatio: 0.98,
-	// reflectivity: 0.9,
-	opacity: 0.7,
-	transparent: true,
-	roughness: 0.1,
-	metalness: 1,
-
-    } );
-    */
-    // let triMat = new THREE.MeshBasicMaterial( {color: 0x000000, blending: THREE.AdditiveBlending});
-/*
-    for (var i = 0; i < 25; i++) {
-	triangulos[i] = new THREE.Mesh( triaGeometry[i], triMat );
-	triangulos[i].position.z = 10;
-	triaGeometry[i].verticesNeedUpdate = true;
-    }
-*/
     geometryB = new THREE.BufferGeometry();
     geometryB.verticesNeedUpdate = true;
 
@@ -769,13 +817,9 @@ async function init() {
 
 function initsc0() {
 
-    irises = false;
+    // irises = false;
 
-    if(!mobile){
-	gSignal = Date.now();
-	composer.addPass( glitchPass );
-	glitchPass.goWild = true;
-    }
+    loopDescanso.stop(); 
     
     if ( predictions.length < 1 ) {
 
@@ -801,7 +845,7 @@ function initsc0() {
 	
 	rmsc1();
 	rmsc2();
-	rmbloomsc();
+	
 	modoOscuro = true;
 
 	// este chtexto tendría que llevar el modo correspondiente 
@@ -819,7 +863,7 @@ function initsc0() {
 	scene.remove( cuboGrande ); // necesario disposear todo ?
 
 	// players.stop(); 
-	player.stop();
+	// player.stop();
 	intro.restart();
 	intro.start();
 
@@ -845,8 +889,8 @@ function initsc0() {
 	inicio = Date.now();
 	segundo = 0;
 	
-	// antes aquí iba un switch, ahora score se encarga del problema 
-
+	// antes aquí iba un switch, ahora la parti se encarga del problema 
+ 
 	modoOscuro = false;
 
 	
@@ -868,13 +912,13 @@ function initsc0() {
 	player.mute = false;
 	intro.mute = true; 
 	*/
-	player.restart(); 
+	// player.restart(); 
 	// player.start(); // Revisar si esto es necesario 
 	intro.stop();
 
-	bloomPass.threshold = 0.9;
-	bloomPass.strength = 0.2;
-	bloomPass.radius = 0;
+	//bloomPass.threshold = 0.9;
+	//bloomPass.strength = 0.2;
+	// bloomPass.radius = 0;
 
     }
 }
@@ -883,28 +927,26 @@ function initsc1() {
 
     // respawn.start(); // otro sonido que no sea respawn 
 
-    if(!mobile){
-	gSignal = Date.now();
-	composer.addPass( glitchPass );
-	glitchPass.goWild = true;
-    }
+    irises = false;
     
     cuboGBool = false; 
-    afterimagePass.uniforms['damp'].value = 0.85;
+    afterimagePass.uniforms['damp'].value = 0.8;
 
     bloomPass.threshold = 0.7;
-    bloomPass.strength = 0.3;
-    bloomPass.radius = 0;
+    bloomPass.strength = 0.6;
+    bloomPass.radius = 0.1;
 
     perlinValue = 0.03;
     perlinAmp = 4; 
     matPoints.map= sprite;
-    matPoints.size=3; 
+    matPoints.size=8; 
+    planeB[0].material = matPoints; 
+
     scene.add( planeVideo);
 
     planeVideo.material.opacity = 0; 
     // scene.remove( planeVideo ); 
-    // scene.add(cuboGrande); 
+    scene.remove(cuboGrande); 
     
     chtexto(
 	txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
@@ -937,8 +979,8 @@ function animsc1() {
 
     // console.log(0.03-(transcurso/40*0.03));
 
-    perlinValue = 0.04-(transcurso/40*0.01); 
-    planeVideo.material.opacity = transcurso/40; 
+    perlinValue = 0.003-(transcurso/60*0.003); 
+    planeVideo.material.opacity = transcurso/60; 
     
     var time2 = Date.now() * 0.0005;
 
@@ -954,8 +996,8 @@ function animsc1() {
 	// let d = 0;
 	
 	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
-	position[vueltas].setX( i, (1+keypoints[i][0] * 0.1 - 33) *(1+d) ); // antes 1+analisis
-	position[vueltas].setY( i, (1+keypoints[i][1] * 0.1 - 28) * (1+d));
+	position[vueltas].setX( i, (1+keypoints[i][0] * 0.1 - 33) *(1.5+d) ); // antes 1+analisis
+	position[vueltas].setY( i, (1+keypoints[i][1] * 0.1 - 28) * (1.5+d));
 	position[vueltas].setZ( i, keypoints[i][2] * 0.05  + (4+d) );
     }
 
@@ -981,24 +1023,31 @@ function initsc2() {
 	glitchPass.goWild = true;
     }
     
-    // planeVideo.material.opacity = 0.8; 
+    // planeVideo.material.opacity = 0.5; 
     
     cuboGBool = true; 
     // respawn.start();
 
-    afterimagePass.uniforms['damp'].value = 0.85;
+    afterimagePass.uniforms['damp'].value = 0.8;
 
-    bloomPass.threshold = 0.9;
-    bloomPass.strength = 0.1;
+    bloomPass.threshold = 0.95;
+    bloomPass.strength = 0;
     bloomPass.radius = 0;
-    
+
+    // matPoints.color = new THREE.Color(0x000000); 
+    matPoints.map.dispose(); 
     //matPoints.map= sprite;
-    // matPoints.size= 4;
+    matPoints.size= 4;
     perlinValue = 0.003;
     perlinAmp = 2;
 
+    planeB[0].material = matPoints2; 
+
     // matPoints.blending = THREE.AdditiveBlending;
-    // matPoints.color = new THREE.Color(0x000000); 
+    text.material.blending = THREE.AdditiveBlending; 
+    text2.material.blending = THREE.AdditiveBlending; 
+
+    // text.material.color = new THREE.Color(0x000000); 
     
     cuboGrande.material.opacity = 0; 
     scene.add(cuboGrande); 
@@ -1034,8 +1083,10 @@ function initsc2() {
 
 function animsc2() {
 
-    perlinValue = 0.04-((transcurso-40)/40*0.005); 
+    perlinValue = 0.05-((transcurso-60)/60*0.05); 
 
+    planeVideo.material.opacity = 1 - (transcurso-60)/60; 
+    
     // console.log((transcurso-40)/40); 
     // cuboGrande.material.opacity = (transcurso-40)/40; 
     
@@ -1047,7 +1098,7 @@ function animsc2() {
 
 	let d = perlin.noise(keypoints[i][0] * perlinValue + time2,
 			     keypoints[i][1] * perlinValue + time2,
-			     keypoints[i][2] * perlinValue + time2) *  perlinAmp; 
+			     keypoints[i][2] * perlinValue + time2) *  4; 
 
 	// let d = 0;
 	
@@ -1069,50 +1120,86 @@ function rmsc2() {
     }
 }
 
+// Podría ser que hasta aquí haya más texto que en las escenas anteriores 
 
-// Escena obscura1
+function initIrises(){
 
-function initbloomsc(){
+    text2.material.blending = THREE.AdditiveBlending; 
+    text.material.color = new THREE.Color(0xE4E6EB); 
+    text.material.blending = THREE.NoBlending;
+    text2.material.blending = THREE.NoBlending; 
 
-    suspendido = true;
-    scene.remove( cuboGrande );
-    respawn.start();
-
-    
     chtexto(
-	txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
-	txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
+	txtDescanso[Math.floor(Math.random()*txtDescanso.length)],
+	txtDescanso[Math.floor(Math.random()*txtDescanso.length)],
 	Math.random()*40 - 20,
 	Math.random()*40 - 20,
 	Math.random()*40 - 20,
 	Math.random()*40 - 20
     ); 
-	
-    scene.remove( planeVideo ); 
+    
+    irises = true;
+    scene.remove(planeVideo);
+    scene.remove(cuboGrande);
+    // y lo demás
+    loopTxt.stop(0);
+    loop.stop(0); 
+    // sonido loco
+
+    loopDescanso.start(0); 
     
 }
 
-function animbloomsc(){
-
-}
-
-function rmbloomsc(){
-
-}
-
-
-// Podría ser que hasta aquí haya más texto que en las escenas anteriores 
-
-function initIrises(){
-    irises = true;
-}
-
 function animIrises(){
-    console.log(keypoints[469][0]); 
+    console.log("hay alguien ahí?"); 
 }
 
 function rmIrises(){
     irises = false; 
+}
+
+// Ajustar duraciones
+
+///////////////////////////////////////////////7
+//// IMPORTANTE: ¿Con esto es necesario activar/desactivar con initsc0? Sip
+//// iMPORTANTE2: ¿Podría hacerse con los secuenciadores de tone.js ? No se sabe
+///////////////////////////////////////////////
+
+function score() {
+
+    if(buscando){
+
+    // Por defecto inicia en la primer escena 
+    
+	if ( transcurso.toFixed() == 60 && segundo != 60 ) {
+	    console.log("segunda escena"); 
+	    segundo = transcurso.toFixed();
+	    // aquí puede ir algo asociado a las predicciones 
+	    modoOscuro = false; 
+	    escena = 1;
+	    
+	    rmsc1();
+	    rmsc2();
+
+	    initsc2();
+	    
+	}
+
+	if ( transcurso.toFixed() == 120 && segundo != 120 ) {
+	    console.log("tercera escena"); 
+	    segundo = transcurso.toFixed();
+	    modoOscuro = true;
+	    irises = true; 
+	    escena = 2;
+
+	    rmsc1();
+	    rmsc2();
+
+	    initIrises();
+	    
+	}	
+	
+    }
 }
 
 function texto() {
@@ -1121,7 +1208,7 @@ function texto() {
     const color = 0xffffff;
 
     const matLite = new THREE.MeshBasicMaterial( {
-	color: 0xffffff,
+	color: 0xE4E6EB,
 	// transparent: true,
 	// opacity: 0.8,
 	side: THREE.DoubleSide,
@@ -1129,21 +1216,12 @@ function texto() {
 	// transparent: true,
     } );
 
-    const matLite2 = new THREE.MeshBasicMaterial( {
-	    color: 0xffffff,
-	    // transparent: true,
-	    // opacity: 0.8,
-	    side: THREE.DoubleSide,
-	//blending: THREE.AdditiveBlending,
-	    // transparent: true,
-    } );
-
     const loader1 = new THREE.FontLoader();
 
-    loader1.load( 'fonts/techno.json', function( font ) {
+    loader1.load( 'fonts/square.json', function( font ) {
 
 	const message = txtPrueba[2];
-	const shapes = font.generateShapes( message, 2 );
+	const shapes = font.generateShapes( message, 4 );
 	const geometry = new THREE.ShapeGeometry( shapes );
 	geometry.computeBoundingBox();
 
@@ -1156,7 +1234,7 @@ function texto() {
 	text.rotation.z = Math.PI;
 	scene.add( text );
 
-	text2 = new THREE.Mesh( geometry, matLite2 );
+	text2 = new THREE.Mesh( geometry, matLite );
 	text2.position.z = 5;
 	// text.rotation.x = Math.PI;
 	// text.rotation.y = Math.PI;
@@ -1168,10 +1246,16 @@ function texto() {
 }
 
 function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
-    
+
+    if(!mobile){
+	gSignal = Date.now();
+	composer.addPass( glitchPass );
+	glitchPass.goWild = true;
+    }
+
     const loader1 = new THREE.FontLoader();
  
-    loader1.load( 'fonts/techno.json', function( font ) {
+    loader1.load( 'fonts/square.json', function( font ) {
 	
 	txtPosX = posX;
 	txtPosY = posY;
@@ -1179,26 +1263,8 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 	txtPosX2 = posX2;
 	txtPosY2 = posY2;
 	
-	const matLite = new THREE.MeshBasicMaterial( {
-	    color: 0xffffff,
-	    // transparent: true,
-	    // opacity: 0.8,
-	    side: THREE.DoubleSide,
-	    blending: THREE.AdditiveBlending,
-	    // transparent: true,
-	} );
-	
-	const matLite2 = new THREE.MeshBasicMaterial( {
-	    color: 0xffffff,
-	    // transparent: true,
-	    // opacity: 0.8,
-	    side: THREE.DoubleSide,
-	    // blending: THREE.AdditiveBlending,
-	    // transparent: true,
-    } );
-	
 	const message = mensaje; 
-	const shapes = font.generateShapes( message, 1.5 );
+	const shapes = font.generateShapes( message, 1 );
 	const geometry = new THREE.ShapeGeometry( shapes );
 	geometry.computeBoundingBox();
 	const xMid = - 0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
@@ -1208,7 +1274,7 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 	text.material.dispose();
 
 	const message2 = mensaje2; 
-	const shapes2 = font.generateShapes( message2, 1.5 );
+	const shapes2 = font.generateShapes( message2, 1 );
 	const geometry2 = new THREE.ShapeGeometry( shapes2 );
 	geometry2.computeBoundingBox();
 	const xMid2 = - 0.5 * ( geometry2.boundingBox.max.x - geometry2.boundingBox.min.x );
@@ -1236,15 +1302,6 @@ function retro() {
     texture.magFilter = THREE.NearestFilter;
 }
 
-async function sonido() {
-
-    // esto tiene que ver con escenas
-
-    // let intervalo; 
-    
-   
-}
-
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -1253,101 +1310,12 @@ function onWindowResize() {
 
 async function detonar() {
     await renderPrediction();
-    sonido();
+    // sonido();
     console.log('██╗  ██╗███╗   ██╗████████╗ ██╗\n██║  ██║████╗  ██║╚══██╔══╝███║\n███████║██╔██╗ ██║   ██║   ╚██║\n╚════██║██║╚██╗██║   ██║    ██║\n     ██║██║ ╚████║   ██║    ██║\n     ╚═╝╚═╝  ╚═══╝   ╚═╝    ╚═╝'); // fps();
     inicio = Date.now();
     respawn.start(); 
 }
 
-// Ajustar duraciones
-
-///////////////////////////////////////////////7
-//// IMPORTANTE: ¿Con esto es necesario activar/desactivar con initsc0? Sip
-//// iMPORTANTE2: ¿Podría hacerse con los secuenciadores de tone.js ? No se sabe
-///////////////////////////////////////////////
-
-function score() {
-
-    if(buscando){
-
-    // Por defecto inicia en la primer escena 
-    
-	if ( transcurso.toFixed() == 40 && segundo != 40 ) {
-	    console.log("primera escena"); 
-	    segundo = transcurso.toFixed();
-	    // aquí puede ir algo asociado a las predicciones 
-	    modoOscuro = false; 
-	    escena = 1;
-	    
-	    rmsc1();
-	    rmsc2();
-	    rmbloomsc();
-	    rmbloomsc2(); 
-
-	    initsc2();
-	    
-	}
-
-	if ( transcurso.toFixed() == 80 && segundo != 80 ) {
-	    console.log("segunda escena"); 
-	    segundo = transcurso.toFixed();
-	    modoOscuro = true; 
-	    escena = 2;
-	    rmsc1();
-	    rmsc2();
-	    rmbloomsc();
-	    rmbloomsc2();
-	    
-	    initbloomsc();
-	    
-	}
-
-
-	if ( transcurso.toFixed() == 120 && segundo != 120 ) {
-	    console.log("tercera escena"); 
-	    segundo = transcurso.toFixed();
-	    modoOscuro = true; 
-	    escena = 2;
-
-	    rmsc1();
-	    rmsc2();
-	    rmbloomsc();
-	    rmbloomsc2();
-	    
-	    initbloomsc2();
-	    
-	}
-
-	
-	if ( transcurso.toFixed() == 160 && segundo != 160 ) {
-	    console.log("cuarta escena"); 
-	    segundo = transcurso.toFixed();
-	    modoOscuro = true; 
-	    escena = 2;
-
-	    rmsc1();
-	    rmsc2();
-	    rmbloomsc();
-	    rmbloomsc2();
-	    
-	    initIrises();
-	    
-	}
-
-	
-	if ( transcurso.toFixed() == 200 && segundo != 200 ) {
-	    console.log("quinta escena transición"); 
-	    segundo = transcurso.toFixed();
-	    modoOscuro = true; 
-	    escena = 2;
-	    rmsc1();
-	    rmsc2();
-	    rmbloomsc(); 
-	    initbloomsc(); 
-	}		
-	
-    }
-}
 
 
 function cols() {
@@ -1393,8 +1361,9 @@ function materiales() {
 	// envMap: alpha < 0.5 ? reflectionCube : null
     } );
 
-    ofTexture = new THREE.TextureLoader().load( 'img/of8.jpg' );
+    // ofTexture = new THREE.TextureLoader().load( 'img/of8.jpg' );
 
+    /*
     ofTexture.wrapS = ofTexture.wrapT = THREE.RepeatWrapping;
     ofTexture.offset.set( 0, 0 );
     ofTexture.repeat.set( 64, 64 );
@@ -1407,6 +1376,7 @@ function materiales() {
 	map: ofTexture,
 	side: THREE.DoubleSide,
     } );
+    */
 }
 
 
