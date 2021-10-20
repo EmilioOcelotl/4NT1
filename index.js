@@ -312,27 +312,26 @@ let perlinAmp;
 let cuboGBool = false;
 let loop; 
 
+loop = new Tone.Loop((time) => {
+    // triggered every eighth note.
+    //console.log(time);
+    
+    chtexto(
+	txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
+	txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
+	Math.random()*40 - 20,
+	Math.random()*40 - 20,
+	Math.random()*40 - 20,
+	Math.random()*40 - 20
+    ); 
 
-    loop = new Tone.Loop((time) => {
-	// triggered every eighth note.
-	//console.log(time);
-	
-	chtexto(
-	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
-	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
-	    Math.random()*20 - 10,
-	    Math.random()*20 - 10,
-	    Math.random()*20 - 10,
-	    Math.random()*20 - 10
-	); 
-
-	let fondosAl = Math.floor(Math.random()*14);
-	fondos.player(fondosAl.toString()).start(time);
-
-	//intervalo = Math.random() * 20;
-	console.log(fondosAl); 
-	
-    }, "10");
+    let fondosAl = Math.floor(Math.random()*14);
+    fondos.player(fondosAl.toString()).start(time);
+    
+    //intervalo = Math.random() * 20;
+    console.log(fondosAl); 
+    
+}, "10");
 
     Tone.Transport.start();
 
@@ -432,50 +431,18 @@ async function renderPrediction() {
 	text2.position.y = keypoints[0][1]* 0.1 -30 + txtPosY2;
 	text2.position.z = keypoints[0][2] * 0.1 + 10;
 	
-	
     } else {
 	
 	text.position.x = txtPosX;
 	text.position.y = txtPosY;
 	text.position.z = 0;
-
 	
     }
-
-   
-    
-    /*
-    text2.position.x = keypoints[0][0]* 0.1 - 40;
-    text2.position.y = keypoints[0][1]* 0.1 - 20;
-    text2.position.z = keypoints[0][2] * 0.1 + 10;
-    */
 
     cuboGrande.rotation.x += 0.001;
     cuboGrande.rotation.y += (degree/2) * 0.003;
     ///text.rotation.y = degree * 2 + (Math.PI );
     //text2.rotation.y = degree * 2 + (Math.PI );
-
-
-    /*
-    audioSphere.computeVertexNormals();
-    audioSphere.normalsNeedUpdate = true;
-    audioSphere.verticesNeedUpdate = true;
-
-    let vertss = audioSphere.attributes.position.array.count;
-    console.log(vertss)
-    console.log(triaGeometry[0].vertices);
-
-    if(buscando){
-
-	for(var i  = 0; i < audioSphere.attributes.position.count; i++){
-
-	    const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
-	    audioSphere.attributes.position.array[i].x = audioSphere2.attributes.position.array[i].x * analisis;
-
-	}
-
-    }
-    */
 
     //mouseX = ( keypoints[168][0] - windowHalfX ) / 10;
     //mouseY = ( keypoints[168][1] - windowHalfY ) / 10;
@@ -684,10 +651,12 @@ async function init() {
 function initsc0() {
 
     irises = false;
-    
-    gSignal = Date.now();
-    composer.addPass( glitchPass );
-    glitchPass.goWild = true;
+
+    if(!mobile){
+	gSignal = Date.now();
+	composer.addPass( glitchPass );
+	glitchPass.goWild = true;
+    }
     
     if ( predictions.length < 1 ) {
 
@@ -717,12 +686,15 @@ function initsc0() {
 
 	// este chtexto tendría que llevar el modo correspondiente 
 
-	chtexto(
+    	chtexto(
 	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
+	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
+	    Math.random()*40 - 20,
+	    Math.random()*40 - 20,
 	    Math.random()*40 - 20,
 	    Math.random()*40 - 20
 	); 
-    	
+	
 	buscando = false;
 	scene.remove( cuboGrande ); // necesario disposear todo ?
 
@@ -756,13 +728,17 @@ function initsc0() {
 
 	modoOscuro = false;
 
-	chtexto(
+	
+    	chtexto(
 	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
+	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
+	    Math.random()*40 - 20,
+	    Math.random()*40 - 20,
 	    Math.random()*40 - 20,
 	    Math.random()*40 - 20
 	); 
-    
-	 buscando = true;
+	
+	buscando = true;
 	// scene.add( cuboGrande );
 	scene.add( text );
 	scene.add( text2 );
@@ -786,10 +762,11 @@ function initsc1() {
 
     // respawn.start(); // otro sonido que no sea respawn 
 
-
-    gSignal = Date.now();
-    composer.addPass( glitchPass );
-    glitchPass.goWild = true;
+    if(!mobile){
+	gSignal = Date.now();
+	composer.addPass( glitchPass );
+	glitchPass.goWild = true;
+    }
     
     cuboGBool = false; 
     afterimagePass.uniforms['damp'].value = 0.85;
@@ -810,10 +787,13 @@ function initsc1() {
     
     chtexto(
 	txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
+	txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
+	Math.random()*40 - 20,
+	Math.random()*40 - 20,
 	Math.random()*40 - 20,
 	Math.random()*40 - 20
     ); 
-    
+	
     if (predictions.length > 0) {
 	for (let i = 0; i < planeB.length; i++) {
 	    scene.remove( planeB[i] );
@@ -874,11 +854,12 @@ function rmsc1() {
 
 function initsc2() {
 
+    if(!mobile){
+	gSignal = Date.now();
+	composer.addPass( glitchPass );
+	glitchPass.goWild = true;
+    }
     
-    gSignal = Date.now();
-    composer.addPass( glitchPass );
-    glitchPass.goWild = true;
-
     // planeVideo.material.opacity = 0.8; 
     
     cuboGBool = true; 
@@ -902,13 +883,16 @@ function initsc2() {
     scene.add(cuboGrande); 
     // planeVideo.material.opacity = 0; 
     // scene.add( planeVideo);
-    
+
     chtexto(
 	txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
+	txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
+	Math.random()*40 - 20,
+	Math.random()*40 - 20,
 	Math.random()*40 - 20,
 	Math.random()*40 - 20
     ); 
-    
+	
     if (predictions.length > 0) {
 	for (let i = 0; i < planeB.length; i++) {
 	    scene.remove( planeB[i] );
@@ -973,12 +957,16 @@ function initbloomsc(){
     scene.remove( cuboGrande );
     respawn.start();
 
+    
     chtexto(
 	txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
+	txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
+	Math.random()*40 - 20,
+	Math.random()*40 - 20,
 	Math.random()*40 - 20,
 	Math.random()*40 - 20
-   ); 
-    
+    ); 
+	
     scene.remove( planeVideo ); 
     
 }
@@ -1000,12 +988,15 @@ function initbloomsc2(){
     respawn.start();
 
 
-    chtexto(txtPrueba[
-	Math.floor(Math.random()*txtPrueba.length),
-	Math.random()*20 - 10,
-	Math.random()*20 - 10
-    ]); 
-
+    	chtexto(
+	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
+	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
+	    Math.random()*40 - 20,
+	    Math.random()*40 - 20,
+	    Math.random()*40 - 20,
+	    Math.random()*40 - 20
+	); 
+	
     
     scene.remove( planeVideo ); 
     // quitar texto
