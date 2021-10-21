@@ -231,6 +231,8 @@ const perlin = new ImprovedNoise();
 let intro; 
 let gSegundo; 
 
+const line = new Tone.Player('audio/fondos/line.mp3').toDestination(); 
+
 antiKick = new Tone.Player('audio/perc/antiKick.mp3').toDestination();
 const respawn = new Tone.Player('audio/perc/respawn.mp3').toDestination(); 
 const out = new Tone.Player('audio/perc/out.mp3').toDestination(); 
@@ -566,17 +568,19 @@ async function renderPrediction() {
 		    // aquí hay que agregar un contador. Si pasa cierto número de tiempo entonces miau
 		    blinkConta++;
 
-		    // console.log(blinkConta); 
+		    console.log(blinkConta); 
 
 		    if(blinkConta == 50){
 			console.log("ojos cerrados o muchos parpadeos"); 
-		    }
+		    } 
 		    
-		}
+		} else {
+		    blinkConta = 0; 
 
 		// blinkConta = 0; 
 		
 	    // console.log(getIsVoluntaryBlink(blinked)); 
+		}
 	    }
 	});
     }
@@ -684,6 +688,8 @@ async function init() {
     video.play(); 
 
     ////////////////////////////////////////////////////////////////////
+
+    // Esto tiene que ver con que no se pueda usar el modo retrato 
     
     videoWidth = video.videoWidth;
     videoHeight = video.videoHeight;
@@ -774,9 +780,7 @@ async function init() {
     */
     
     document.body.appendChild( renderer.domElement );
-
     window.addEventListener( 'resize', onWindowResize );
-
     container.appendChild( stats.dom );
 
     // renderer.setPixelRatio(0.75);
@@ -784,24 +788,19 @@ async function init() {
     const renderScene = new RenderPass( scene, camera );
 
     bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.4, 0.85 );
-
     composer = new EffectComposer( renderer );
     composer.addPass( renderScene );
-
     composer.addPass( bloomPass );
-
     afterimagePass = new AfterimagePass();
     composer.addPass( afterimagePass );
-
     afterimagePass.uniforms['damp'].value = 0.85;
-
     glitchPass = new GlitchPass();
     // composer.addPass( glitchPass );
 
     model = await faceLandmarksDetection.load(
 	faceLandmarksDetection.SupportedPackages.mediapipeFacemesh,
 	{maxFaces: 3,
-	 shouldLoadIrisModel: true, // recargar el modelo ? 
+	 shouldLoadIrisModel: true, // Hay que cargar un poco más de archivos 
 	 // maxContinuousChecks: 120
 	});
 
@@ -810,8 +809,6 @@ async function init() {
 }
 
 function initsc0() {
-
-    // irises = false;
 
     loopDescanso.stop(); 
     
@@ -831,18 +828,11 @@ function initsc0() {
 
 	planeVideo.geometry = geometryVideoNew; 
 	// materialVideo.map.rotation.y = Math.PI / 2; // por alguna razon hay que comentar esto 
-
-	// sustituir el switch por un TODO se resetea 
-
-	// escena = 0; 
-	// transcurso = 0; 
 	
 	rmsc1();
 	rmsc2();
 	
 	modoOscuro = true;
-
-	// este chtexto tendría que llevar el modo correspondiente 
 
     	chtexto(
 	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
@@ -854,10 +844,10 @@ function initsc0() {
 	); 
 	
 	buscando = false;
-	scene.remove( cuboGrande ); // necesario disposear todo ?
+	scene.remove( cuboGrande );
 
-	// players.stop(); 
-	// player.stop();
+	// necesario disposear todo ?
+
 	intro.restart();
 	intro.start();
 
@@ -886,7 +876,6 @@ function initsc0() {
 	// antes aquí iba un switch, ahora la parti se encarga del problema 
  
 	modoOscuro = false;
-
 	
     	chtexto(
 	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
@@ -901,18 +890,10 @@ function initsc0() {
 	// scene.add( cuboGrande );
 	scene.add( text );
 	scene.add( text2 );
-	// Tone.Destination.mute = false;
-	/*
-	player.mute = false;
-	intro.mute = true; 
-	*/
-	// player.restart(); 
-	// player.start(); // Revisar si esto es necesario 
-	intro.stop();
 
-	//bloomPass.threshold = 0.9;
-	//bloomPass.strength = 0.2;
-	// bloomPass.radius = 0;
+	// Tone.Destination.mute = false; 
+
+	intro.stop();
 
     }
 }
@@ -926,14 +907,14 @@ function initsc1() {
     cuboGBool = false; 
     afterimagePass.uniforms['damp'].value = 0.8;
 
-    bloomPass.threshold = 0.7;
-    bloomPass.strength = 0.6;
+    bloomPass.threshold = 0.9;
+    bloomPass.strength = 0.2;
     bloomPass.radius = 0.1;
 
     perlinValue = 0.03;
     perlinAmp = 4; 
     matPoints.map= sprite;
-    matPoints.size=8; 
+    matPoints.size=6; 
     planeB[0].material = matPoints; 
 
     scene.add( planeVideo);
@@ -971,9 +952,7 @@ function initsc1() {
 
 function animsc1() {
 
-    // console.log(0.03-(transcurso/40*0.03));
-
-    perlinValue = 0.003-(transcurso/60*0.003); 
+    perlinValue = 0.003+(transcurso/60*0.003); 
     planeVideo.material.opacity = transcurso/60; 
     
     var time2 = Date.now() * 0.0005;
@@ -992,7 +971,7 @@ function animsc1() {
 	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
 	position[vueltas].setX( i, (1+keypoints[i][0] * 0.1 - 33) *(1.5+d) ); // antes 1+analisis
 	position[vueltas].setY( i, (1+keypoints[i][1] * 0.1 - 28) * (1.5+d));
-	position[vueltas].setZ( i, keypoints[i][2] * 0.05  + (4+d) );
+	position[vueltas].setZ( i, keypoints[i][2] * 0.05  + (1+d) );
     }
 
     planeB[vueltas].geometry.computeVertexNormals();
@@ -1011,6 +990,8 @@ function rmsc1() {
 
 function initsc2() {
 
+    line.start(); 
+    
     if(!mobile){
 	gSignal = Date.now();
 	composer.addPass( glitchPass );
@@ -1138,7 +1119,6 @@ function initIrises(){
     // y lo demás
     loopTxt.stop(0);
     loop.stop(0); 
-    // sonido loco
 
     loopDescanso.start(0); 
     
@@ -1174,12 +1154,11 @@ function score() {
 	    
 	    rmsc1();
 	    rmsc2();
-
 	    initsc2();
 	    
 	}
 
-	if ( transcurso.toFixed() == 120 && segundo != 120 ) {
+	if ( transcurso.toFixed() == 121 && segundo != 121 ) {
 	    console.log("tercera escena"); 
 	    segundo = transcurso.toFixed();
 	    modoOscuro = true;
@@ -1188,7 +1167,6 @@ function score() {
 
 	    rmsc1();
 	    rmsc2();
-
 	    initIrises();
 	    
 	}	
@@ -1197,8 +1175,6 @@ function score() {
 }
 
 function texto() {
-
-    // const color = 0x000000; // para el additiveblending
     const color = 0xffffff;
 
     const matLite = new THREE.MeshBasicMaterial( {
@@ -1241,19 +1217,20 @@ function texto() {
 
 function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 
+    /*
     if(!mobile){
 	gSignal = Date.now();
 	composer.addPass( glitchPass );
 	glitchPass.goWild = true;
     }
+    */ 
 
     const loader1 = new THREE.FontLoader();
  
     loader1.load( 'fonts/square.json', function( font ) {
 	
 	txtPosX = posX;
-	txtPosY = posY;
-	
+	txtPosY = posY;	
 	txtPosX2 = posX2;
 	txtPosY2 = posY2;
 	
@@ -1276,14 +1253,6 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 	text2.geometry.dispose(); 
 	text2.geometry= geometry2;
 	text2.material.dispose();
-	
-	/*
-	if(!modoOscuro){
-	    text.material= matLite;
-	} else {
-	    text.material= matLite2; 
-	}
-	*/
 	
     });
 }
@@ -1355,22 +1324,6 @@ function materiales() {
 	// envMap: alpha < 0.5 ? reflectionCube : null
     } );
 
-    // ofTexture = new THREE.TextureLoader().load( 'img/of8.jpg' );
-
-    /*
-    ofTexture.wrapS = ofTexture.wrapT = THREE.RepeatWrapping;
-    ofTexture.offset.set( 0, 0 );
-    ofTexture.repeat.set( 64, 64 );
-
-    matofTexture = new THREE.MeshStandardMaterial( {
-	roughness: 0.6,
-	color: 0xffffff,
-	metalness: 0.2,
-	bumpScale: 0.0005,
-	map: ofTexture,
-	side: THREE.DoubleSide,
-    } );
-    */
 }
 
 

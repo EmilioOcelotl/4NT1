@@ -2,11 +2,10 @@
 //////////// 4NT1 ///////////////
 /////////////////////////////////
 
-// p = ProxySpace.push(s.boot);
+//p = ProxySpace.push(s.boot);
 
 s.boot
-
-i = Buffer.read(s, "/home/emi/Música/4NT1/uxmal.wav");
+i = Buffer.read(s, "/home/emi/Música/4NT1/voz/prueba1Instrucciones.wav");
 
 a = []; b = []; c = []; // inicializar arreglos
 
@@ -23,16 +22,16 @@ SynthDef(\kp, {
 
     var inA, chainA, inB, chainB, chain, sin, rand, outS, outD, lim;
 
-	rand = Demand.kr(Impulse.kr(10), 0, Drand([0, 1, 0, 0, 1, 0, 0, 0, 0, 0], inf));
+	rand = Demand.kr(Impulse.kr(100), 0, Drand([0, 1, 0, 0, 1, 1, 0, 0, 1, 0], inf));
     sin = SinOsc.ar(0.1, 0, 2, 8);
 
-	inA = PMOsc.ar(freq1,freq2, index, 0, 0.6).sum;
-	// inB = SoundIn.ar(0);
-	inB = PlayBuf.ar(1, i, BufRateScale.kr(i), doneAction: Done.freeSelf)
+	inA = PMOsc.ar(freq1,freq2, index, 0, 0.1).sum;
+	inB = SoundIn.ar(0);
+	// inB = PlayBuf.ar(2, i, BufRateScale.kr(i)*0.85, loop: 1, doneAction: Done.freeSelf)*0.125/2;
 
 	chainA = FFT(LocalBuf(2048), inA);
     chainB = FFT(LocalBuf(2048), inB);
-	chainB = PV_MagFreeze(chainB, rand > 0.5 );
+	// chainB = PV_MagFreeze(chainB, rand > 0.5 );
 
 	chain = PV_MagMul(chainA, chainB); // writes into bufferA
 
@@ -49,18 +48,23 @@ SynthDef(\kp, {
 )
 
 
-z = Synth(\kp);
+
+
+
 s.meter
 
+z = Synth(\kp);
+
+
 (
-a = Array.fill(15,{100+rand(15000)});
+
+a = Array.fill(15,{10+rand(50.0)*(Scale.hirajoshi.degrees[rand(5)] + 60.midicps)*1});
 z.setn(\freq1, a);
 
-
-b = Array.fill(15,{100+rand(15000)});
+b = Array.fill(15,{10+rand(50.0)*0.125*(Scale.hirajoshi.degrees[rand(5)] + 60.midicps)});
 z.setn(\freq2, b);
 
-c = Array.fill(15,{rand(30)});
+c = Array.fill(15,{rand(50.0)});
 z.setn(\index, c);
 
 )
