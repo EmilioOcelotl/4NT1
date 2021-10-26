@@ -49,8 +49,6 @@ let postB = true;
 // import perlinNoise3d from 'perlin-noise-3d';
 
 
-clock = new THREE.Clock();
-
 const pGeometry = [new THREE.BufferGeometry(), new THREE.BufferGeometry(), new THREE.BufferGeometry];
 
 const pVertices1 = []; const pVertices2 = []; const pVertices3 = [];
@@ -751,11 +749,14 @@ async function init() {
     ////////////////////////////////////////////////////////////////////
 
     // Esto tiene que ver con que no se pueda usar el modo retrato 
-    
+
     videoWidth = video.videoWidth;
     videoHeight = video.videoHeight;
     video.width = videoWidth;
     video.height = videoHeight;
+
+    
+    clock = new THREE.Clock();
 
     scene = new THREE.Scene();
     // scene.background = new THREE.Color( 0x000000 ); // UPDATED
