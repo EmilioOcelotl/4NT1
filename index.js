@@ -269,6 +269,8 @@ let sprite, sprite2;
 
 let matPoints, matPoints2; 
 
+let clock;
+
 // Puedo usar los textos como arreglo 
 
 let txtPrueba = [
