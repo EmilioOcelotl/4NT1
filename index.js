@@ -48,6 +48,9 @@ let postB = true;
 
 // import perlinNoise3d from 'perlin-noise-3d';
 
+
+clock = new THREE.Clock();
+
 const pGeometry = [new THREE.BufferGeometry(), new THREE.BufferGeometry(), new THREE.BufferGeometry];
 
 const pVertices1 = []; const pVertices2 = []; const pVertices3 = [];
@@ -241,6 +244,8 @@ intro.loop = true;
 
 intro.volume.value = -6;
 
+const outline = new Tone.Player('audio/fondos/outline.mp3').toDestination(); 
+
 let glitchPass; 
 
 let stream
@@ -269,37 +274,39 @@ let matPoints, matPoints2;
 let txtPrueba = [
 
     "Presencia de predicciones",
-    "Los comentarios pueden repartirse\ncomo indicaciones y como programacion",
+    "Los comentarios pueden repartirse\ncomo indicaciones y\n como programacion",
     "Una buena parte del trabajo invertido\nse concentra en la\ndelimitacion escenica",
     "Otra parte del trabajo invertido\n esta en la infraestructura",
-    "El análisis de las imágenes\nes una posibilidad de interaccion\n con la maquina",
+    "El análisis de datos\n como una posibilidad\n de interacción",
     "Es necesario algún otro dispositivo\nde interaccion para acceder\na enlaces externos",
-    "¿Es redundante usar qr\npara vincular este espacio fisico\ncon el entramado detrás de la obra?",
+    "¿Es redundante\nvincular un espacio fisico\ncon el entramado digital?",
 // # qr con la referencia a la reflexión de documenta 
-    "El cubrebocas funciona\ncomo un dispositivo de ofuscacion facial\npor si mismo",
-    "Dos tipos de ofuscacion: sonora y visual",
-    "¿La distancia temporal está asociada al contexto?",
-    "¿Qué estoy haciendo?",
-    "la app se controla\n con la presencia/no presencia",
-    "y algunos gestos",
-    "si te quedas, las escenas continuan",
+    "El cubrebocas funciona\ncomo un dispositivo de ofuscacion facial\npor sí mismo",
+    "Dos tipos de ofuscacion:\nsonora y visual",
+    "¿La distancia temporal\nestá asociada al contexto?",
+    "Implicaciones de predecir\n[presencia, ausencia]",
+    "La importancia del gesto",
+    "si te quedas,\nlas escenas continuan",
     "Falta 1 MB de texto plano\npara el siguiente proyecto",
     "Continúa",
-    "Ningún dato queda almacenado",
-    "La ofuscación es un motivo",
+    "Ningún dato\n queda almacenado",
+    "La ofuscación\n es un motivo\n de apertura",
     "Si estás en un espacio cerrado\nsal",
     "Si estás en un espacio cerrado\nlas escenas continúan",
     "¿Necesitas más tiempo?",
-    "En cada vuelta hay una variación distinta", 
+    "En cada vuelta\n hay una variación\ndistinta",
+    "Una oportunidad\n para cuidar la presencia",
+    "Vertices geométricos\n que difuminan la presencia\n pero no la eliminan",
+    "¿Qué hay\n detrás de la máscara?", 
 ];
 
 let txtInstrucciones = [
 
     "En espera",
-    "Ausencia de predicciones", 
+    "No hay predicciones", 
     "La pantalla de bloqueo\nse activa cuando la cámara\n detecta uno o más rostros",
     "Por favor,\nacércate para activar la interacción.\nPueden participar hasta tres personas", 
-    "Iniciamos cuando hay un rostro\n dentro del rango de la cámara", 
+    "Es necesario un rostro\n dentro del rango de la cámara", 
     "Será necesario que te quites el cubrebocas\n y mantengas 1.5 m de distancia", 
     "Es posible acceder\na la versión web de esta aplicación",
     "También hay un repositorio\nque conduce a los módulos\nque conforman esta aplicación",
@@ -317,7 +324,6 @@ let txtDescanso = [
     "cierra los ojos",
     "un par de segundos y continuamos",
     "no hay limite de tiempo",
-    "Más que un instante"
 ]
 // y hacer coincidir el índice con los audios
 
@@ -411,7 +417,11 @@ let rendering = true;
 let rateInterval;
 const EAR_THRESHOLD = 0.27;
 
-let blinkConta = 0; 
+let blinkConta = 0;
+
+let txtPos1 = []; 
+
+let cuboGrandeOrg; 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -644,7 +654,8 @@ async function renderPrediction() {
 	
 	renderer.copyFramebufferToTexture( vector, texture );
     }
-   
+
+    /*
     if(!mobile){
 	gTranscurso = (gFin - gSignal) / 1000;
 	// console.log(gTranscurso.toFixed()); 
@@ -661,7 +672,55 @@ async function renderPrediction() {
 	gFin = Date.now(); 
 	
     }
+    */
+
+    /// texto movimiento
+
+    const delta = clock.getDelta();
+    const time = clock.getElapsedTime() * 10;
+
+    /*
+    // const position = geometry.attributes.position;
     
+    for ( let i = 0; i < txtPos1.count; i ++ ) {
+
+	// let d = perlin.noise(txtPos1[i] * 0.001 +time  ); 
+	const y = 0.5 * Math.sin( i / 5 + ( time + i ) / 7 );
+	
+	txtPos1.setZ( i, y );
+	// txtPos1.setX( i, txtPos1init.attributes.position.x); 
+	
+    }
+
+    
+    txtPos1.needsUpdate = true;
+
+    */
+    
+    if(cuboGBool){
+	const algo = cuboGrande.geometry.attributes.position;
+	
+	algo.needsUpdate = true;
+	// algoOrg.needsUpdate = true; 
+	
+	for ( let i = 0; i < algo.count; i ++ ) {
+
+	    // let d = perlin.noise(txtPos1[i] * 0.001 +time  ); 
+	    const z = 0.5 * Math.sin( i / 1 + ( time + i ) / 2 );
+	    const x = 0.5 * Math.sin( i / 1 + ( time + i ) / 3 );
+	    const y = 0.5 * Math.sin( i / 1 + ( time + i ) / 4 );
+	    
+	    algo.setZ( i,  cuboGrandeOrg.geometry.attributes.position.getZ(i)+z );
+	    algo.setX( i,  cuboGrandeOrg.geometry.attributes.position.getX(i)+x );
+	    algo.setY( i,  cuboGrandeOrg.geometry.attributes.position.getY(i)+y ); 
+	    // txtPos1.setX( i, txtPos1init.attributes.position.x); 
+	    
+	}
+    }
+	
+	
+    // console.log( cuboGrande.geometry.attributes.position.getX(1) ); 
+				
     requestAnimationFrame(renderPrediction);
 };
 
@@ -763,9 +822,11 @@ async function init() {
     geometryB = new THREE.BufferGeometry();
     geometryB.verticesNeedUpdate = true;
 
-    let audioSphere = new THREE.BoxGeometry( 400, 400, 400, 8, 8, 8 );
+    let audioSphere = new THREE.BoxGeometry( 400, 400, 400, 16, 16, 16 );
 
     cuboGrande = new THREE.Mesh(audioSphere, materialC2 );
+
+    cuboGrandeOrg = new THREE.Mesh(audioSphere, materialC2 );
 
     texto();
 
@@ -794,7 +855,7 @@ async function init() {
     afterimagePass = new AfterimagePass();
     composer.addPass( afterimagePass );
     afterimagePass.uniforms['damp'].value = 0.85;
-    glitchPass = new GlitchPass();
+    // glitchPass = new GlitchPass();
     // composer.addPass( glitchPass );
 
     model = await faceLandmarksDetection.load(
@@ -900,16 +961,21 @@ function initsc0() {
 
 function initsc1() {
 
+    text.material.blending = THREE.AdditiveBlending; 
+    text2.material.blending = THREE.AdditiveBlending; 
+    
+    // cuboGBool = true; 
+    
     // respawn.start(); // otro sonido que no sea respawn 
 
     irises = false;
     
-    cuboGBool = false; 
-    afterimagePass.uniforms['damp'].value = 0.8;
+    cuboGBool = true; 
+    afterimagePass.uniforms['damp'].value = 0.9;
 
-    bloomPass.threshold = 0.9;
-    bloomPass.strength = 0.2;
-    bloomPass.radius = 0.1;
+    bloomPass.threshold = 0.95;
+    bloomPass.strength = 0;
+    bloomPass.radius = 0;
 
     perlinValue = 0.03;
     perlinAmp = 4; 
@@ -921,7 +987,7 @@ function initsc1() {
 
     planeVideo.material.opacity = 0; 
     // scene.remove( planeVideo ); 
-    scene.remove(cuboGrande); 
+    scene.add(cuboGrande); 
     
     chtexto(
 	txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
@@ -953,7 +1019,7 @@ function initsc1() {
 function animsc1() {
 
     perlinValue = 0.003+(transcurso/60*0.003); 
-    planeVideo.material.opacity = transcurso/60; 
+    planeVideo.material.opacity = transcurso/60 + 0.4; 
     
     var time2 = Date.now() * 0.0005;
 
@@ -991,19 +1057,21 @@ function rmsc1() {
 function initsc2() {
 
     line.start(); 
-    
+
+    /*
     if(!mobile){
 	gSignal = Date.now();
 	composer.addPass( glitchPass );
 	glitchPass.goWild = true;
     }
+    */ 
     
     // planeVideo.material.opacity = 0.5; 
     
     cuboGBool = true; 
     // respawn.start();
 
-    afterimagePass.uniforms['damp'].value = 0.8;
+    afterimagePass.uniforms['damp'].value = 0.9;
 
     bloomPass.threshold = 0.95;
     bloomPass.strength = 0;
@@ -1099,6 +1167,10 @@ function rmsc2() {
 
 function initIrises(){
 
+    cuboGBool = false; 
+
+    // outline.start();
+    
     text2.material.blending = THREE.AdditiveBlending; 
     text.material.color = new THREE.Color(0xE4E6EB); 
     text.material.blending = THREE.NoBlending;
@@ -1169,7 +1241,13 @@ function score() {
 	    rmsc2();
 	    initIrises();
 	    
-	}	
+	}
+
+	if( transcurso.toFixed() == 115 && segundo != 115 ){
+	    segundo = transcurso.toFixed(); 
+	    outline.start();
+	   
+	}
 	
     }
 }
@@ -1178,7 +1256,7 @@ function texto() {
     const color = 0xffffff;
 
     const matLite = new THREE.MeshBasicMaterial( {
-	color: 0xE4E6EB,
+	color: 0x000000,
 	// transparent: true,
 	// opacity: 0.8,
 	side: THREE.DoubleSide,
@@ -1188,7 +1266,7 @@ function texto() {
 
     const loader1 = new THREE.FontLoader();
 
-    loader1.load( 'fonts/square.json', function( font ) {
+    loader1.load( 'fonts/pixeled.json', function( font ) {
 
 	const message = txtPrueba[2];
 	const shapes = font.generateShapes( message, 4 );
@@ -1223,7 +1301,7 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 	composer.addPass( glitchPass );
 	glitchPass.goWild = true;
     }
-    */ 
+   */ 
 
     const loader1 = new THREE.FontLoader();
  
@@ -1235,7 +1313,7 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 	txtPosY2 = posY2;
 	
 	const message = mensaje; 
-	const shapes = font.generateShapes( message, 1 );
+	const shapes = font.generateShapes( message, 1.5 );
 	const geometry = new THREE.ShapeGeometry( shapes );
 	geometry.computeBoundingBox();
 	const xMid = - 0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
@@ -1245,7 +1323,7 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 	text.material.dispose();
 
 	const message2 = mensaje2; 
-	const shapes2 = font.generateShapes( message2, 1 );
+	const shapes2 = font.generateShapes( message2, 1.5 );
 	const geometry2 = new THREE.ShapeGeometry( shapes2 );
 	geometry2.computeBoundingBox();
 	const xMid2 = - 0.5 * ( geometry2.boundingBox.max.x - geometry2.boundingBox.min.x );
@@ -1253,7 +1331,12 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 	text2.geometry.dispose(); 
 	text2.geometry= geometry2;
 	text2.material.dispose();
-	
+
+	/*
+	txtPos1 = geometry.attributes.position;
+	txtPos1.usage = THREE.DynamicDrawUsage;
+	*/ 
+
     });
 }
 
