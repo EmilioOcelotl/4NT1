@@ -13,7 +13,6 @@
 import * as faceLandmarksDetection from '@tensorflow-models/face-landmarks-detection';
 import * as tf from '@tensorflow/tfjs-core';
 import '@tensorflow/tfjs-backend-webgl';
-// import '@tensorflow/tfjs-backend-cpu';
 import * as THREE from 'three';
 import {TRIANGULATION} from './js/triangulation';
 import * as Tone from 'tone';
@@ -23,12 +22,11 @@ import {EffectComposer} from './jsm/postprocessing/EffectComposer.js';
 import {RenderPass} from './jsm/postprocessing/RenderPass.js';
 import {UnrealBloomPass} from './jsm/postprocessing/UnrealBloomPass.js';
 import {GlitchPass} from './jsm/postprocessing/GlitchPass.js';
-// import { SVGLoader } from '/jsm/loaders/SVGLoader.js';
 import {TTFLoader} from './jsm/loaders/TTFLoader.js';
 import perlinNoise3d from 'perlin-noise-3d';
 // const perlinNoise3d = require('perlin-noise-3d');
 import {AfterimagePass} from './jsm/postprocessing/AfterimagePass.js';
-// import * as blazeface from '@tensorflow-models/blazeface';
+import * as blazeface from '@tensorflow-models/blazeface';
 import {ImprovedNoise} from './jsm/math/ImprovedNoise.js'; 
 
 let matofTexture; 
@@ -47,7 +45,6 @@ let afft = [];
 let postB = true;
 
 // import perlinNoise3d from 'perlin-noise-3d';
-
 
 const pGeometry = [new THREE.BufferGeometry(), new THREE.BufferGeometry(), new THREE.BufferGeometry];
 
@@ -314,15 +311,15 @@ let txtInstrucciones = [
     
 ]
 
+// formas menos ñoñas de hacer referencia al descanso 
+
 let txtDescanso = [
     "descansa",
     "cierra los ojos",
-    "un par de segundos\ny continuamos",
     "difuminate",
     "deja de ver la pantalla",
     "un par de segundos",
     "cierra los ojos",
-    "un par de segundos y continuamos",
     "no hay limite de tiempo",
 ]
 // y hacer coincidir el índice con los audios
@@ -419,23 +416,51 @@ const EAR_THRESHOLD = 0.27;
 
 let blinkConta = 0;
 
-let txtPos1 = []; 
+let txtPos1 = [], txtPos2 = []; 
 
-let cuboGrandeOrg; 
+let cuboGrandeOrg;
+
+let camWidth, camHeight; 
+let wCor, hCor;
+let camSz; 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 // /////////// Setupear la cámara
 
 async function setupCamera() {
+
+    if(navigator.userAgent.match(/firefox|fxios/i)){
+
+	console.log("es firefox");
+	camWidth = 640;
+	camHeight = 480;
+	
+	wCor = (33);
+	hCor = 28;
+
+	camSz = 7; 
+	
+    } else {
+
+	camWidth = 480;
+	camHeight = 640;
+
+	wCor = (33-(33/4));
+	hCor = 28+28;
+
+	camSz = 10; 
+	
+    }
+    
     video = document.getElementById('video');
     stream = await navigator.mediaDevices.getUserMedia({
 	// 'audio': false,
 	'video': {
 	    facingMode: 'user',
 	  
-		width: mobile ? undefined : 640, // antes 640
-		height: mobile ? undefined : 480,    
+		width: camWidth, // antes 640
+		height: camHeight,    
 	    
 	    // frameRate: {ideal: 10, max: 15},
 	}
@@ -448,6 +473,8 @@ async function setupCamera() {
 	video.onloadedmetadata = () => {
 	    resolve(video);
 	    initBlinkRateCalculator();
+	   
+		
 	};
     });
 }
@@ -678,8 +705,7 @@ async function renderPrediction() {
 
     const delta = clock.getDelta();
     const time = clock.getElapsedTime() * 10;
-
-    /*
+    
     // const position = geometry.attributes.position;
     
     for ( let i = 0; i < txtPos1.count; i ++ ) {
@@ -691,12 +717,22 @@ async function renderPrediction() {
 	// txtPos1.setX( i, txtPos1init.attributes.position.x); 
 	
     }
-
     
     txtPos1.needsUpdate = true;
 
-    */
-    
+
+    for ( let i = 0; i < txtPos2.count; i ++ ) {
+
+	// let d = perlin.noise(txtPos1[i] * 0.001 +time  ); 
+	const y = 0.5 * Math.sin( i / 5 + ( time + i ) / 7 );
+	
+	txtPos2.setZ( i, y );
+	// txtPos1.setX( i, txtPos1init.attributes.position.x); 
+	
+    }
+
+    txtPos2.needsUpdate = true;
+        
     if(cuboGBool){
 	const algo = cuboGrande.geometry.attributes.position;
 	
@@ -706,9 +742,9 @@ async function renderPrediction() {
 	for ( let i = 0; i < algo.count; i ++ ) {
 
 	    // let d = perlin.noise(txtPos1[i] * 0.001 +time  ); 
-	    const z = 0.5 * Math.sin( i / 1 + ( time + i ) / 2 );
-	    const x = 0.5 * Math.sin( i / 1 + ( time + i ) / 3 );
-	    const y = 0.5 * Math.sin( i / 1 + ( time + i ) / 4 );
+	    const z = 0.5 * Math.sin( i / 1 + ( time + i ) / 5 );
+	    const x = 0.5 * Math.sin( i / 1 + ( time + i ) / 5 );
+	    const y = 0.5 * Math.sin( i / 1 + ( time + i ) / 5 );
 	    
 	    algo.setZ( i,  cuboGrandeOrg.geometry.attributes.position.getZ(i)+z );
 	    algo.setX( i,  cuboGrandeOrg.geometry.attributes.position.getX(i)+x );
@@ -750,12 +786,11 @@ async function init() {
 
     // Esto tiene que ver con que no se pueda usar el modo retrato 
 
-    videoWidth = video.videoWidth;
-    videoHeight = video.videoHeight;
-    video.width = videoWidth;
-    video.height = videoHeight;
+    // videoWidth = video.videoWidth;
+    // videoHeight = video.videoHeight;
+    // video.width = 640;
+    // video.height = 480;
 
-    
     clock = new THREE.Clock();
 
     scene = new THREE.Scene();
@@ -771,7 +806,7 @@ async function init() {
     let {width, height} = stream.getTracks()[0].getSettings();
     console.log('Resolución:'+ `${width}x${height}`); // 640x480
 
-    const geometryVideo = new THREE.PlaneGeometry( width/7, height/7 ); // Dos modalidades, abierta y ajustada para cel
+    const geometryVideo = new THREE.PlaneGeometry( camWidth/7, camHeight /7 ); // Dos modalidades, abierta y ajustada para cel
  
     materialVideo = new THREE.MeshBasicMaterial( {
 	color: 0xffffff,
@@ -792,10 +827,10 @@ async function init() {
     sprite2 = new THREE.TextureLoader().load( 'img/spark1.png' );
 
     matPoints = new THREE.PointsMaterial( {
-	color: colores[0],
-	size: 20,
+	color: 0x333333,
+	size: 2,
 	map: sprite,
-	blending: THREE.AdditiveBlending,
+	 blending: THREE.AdditiveBlending,
 	// transparent: true,
 	//opacity: 0.5,
 	// sizeAttenuation: false,
@@ -888,7 +923,7 @@ function initsc0() {
 	materialVideo.map.repeat.x = - 1;
 
 	planeVideo.geometry.dispose();
-	const geometryVideoNew = new THREE.PlaneGeometry( 480/15, 640/15 ); // Dos modalidades, abierta y ajustada para cel
+	const geometryVideoNew = new THREE.PlaneGeometry( 640/15, 480/15 ); // Dos modalidades, abierta y ajustada para cel
 
 	planeVideo.geometry = geometryVideoNew; 
 	// materialVideo.map.rotation.y = Math.PI / 2; // por alguna razon hay que comentar esto 
@@ -924,7 +959,7 @@ function initsc0() {
 	loop.start(0);
 	loopTxt.stop(0); 
 	planeVideo.geometry.dispose();
-	const geometryVideoNew = new THREE.PlaneGeometry( 640/7, 480/7 ); // Dos modalidades, abierta y ajustada para cel
+	const geometryVideoNew = new THREE.PlaneGeometry( camWidth/camSz, camHeight/camSz ); // Dos modalidades, abierta y ajustada para cel
 
 	planeVideo.geometry = geometryVideoNew; 
 	materialVideo.map = new THREE.VideoTexture( video );
@@ -964,6 +999,8 @@ function initsc0() {
 
 function initsc1() {
 
+    line.stop();
+    outline.stop(); 
     text.material.blending = THREE.AdditiveBlending; 
     text2.material.blending = THREE.AdditiveBlending; 
     
@@ -983,7 +1020,7 @@ function initsc1() {
     perlinValue = 0.03;
     perlinAmp = 4; 
     matPoints.map= sprite;
-    matPoints.size=6; 
+    matPoints.size=3; 
     planeB[0].material = matPoints; 
 
     scene.add( planeVideo);
@@ -1021,8 +1058,8 @@ function initsc1() {
 
 function animsc1() {
 
-    perlinValue = 0.003+(transcurso/60*0.003); 
-    planeVideo.material.opacity = transcurso/60 + 0.4; 
+    perlinValue = 0.004+(transcurso/60*0.004); 
+    planeVideo.material.opacity = transcurso/60 +0.1; 
     
     var time2 = Date.now() * 0.0005;
 
@@ -1038,9 +1075,9 @@ function animsc1() {
 	// let d = 0;
 	
 	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
-	position[vueltas].setX( i, (1+keypoints[i][0] * 0.1 - 33) *(1.5+d) ); // antes 1+analisis
-	position[vueltas].setY( i, (1+keypoints[i][1] * 0.1 - 28) * (1.5+d));
-	position[vueltas].setZ( i, keypoints[i][2] * 0.05  + (1+d) );
+	position[vueltas].setX( i, (1+keypoints[i][0] * 0.1 - wCor) * (1+d) ); 
+	position[vueltas].setY( i, (1+keypoints[i][1] * 0.15 - hCor) * (1+d) ); // aquí está raro 
+	position[vueltas].setZ( i, keypoints[i][2] * 0.05  );
     }
 
     planeB[vueltas].geometry.computeVertexNormals();
@@ -1129,7 +1166,7 @@ function initsc2() {
 
 function animsc2() {
 
-    perlinValue = 0.05-((transcurso-60)/60*0.05); 
+    perlinValue = 0.06-((transcurso-60)/60*0.06); 
 
     planeVideo.material.opacity = 1 - (transcurso-60)/60; 
     
@@ -1147,11 +1184,12 @@ function animsc2() {
 			     keypoints[i][2] * perlinValue + time2) *  4; 
 
 	// let d = 0;
+
 	
 	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
-	position[vueltas].setX( i, (1+keypoints[i][0] * 0.1 - 33) +(1+d) ); // antes 1+analisis
-	position[vueltas].setY( i, (1+keypoints[i][1] * 0.1 - 25) + (1+d));
-	position[vueltas].setZ( i, keypoints[i][2] * 0.05  * (4+d) );
+	position[vueltas].setX( i, (1+keypoints[i][0] * 0.1 - wCor) + (1+d) ); // antes 1+analisis
+	position[vueltas].setY( i, (1+keypoints[i][1] * 0.15 - hCor) + (1+d) );
+	position[vueltas].setZ( i, keypoints[i][2] * 0.05  );
     }
 
     planeB[vueltas].geometry.computeVertexNormals();
@@ -1223,6 +1261,7 @@ function score() {
 	if ( transcurso.toFixed() == 60 && segundo != 60 ) {
 	    console.log("segunda escena"); 
 	    segundo = transcurso.toFixed();
+	    outline.stop(); 
 	    // aquí puede ir algo asociado a las predicciones 
 	    modoOscuro = false; 
 	    escena = 1;
@@ -1259,7 +1298,7 @@ function texto() {
     const color = 0xffffff;
 
     const matLite = new THREE.MeshBasicMaterial( {
-	color: 0x000000,
+	color: 0x404040,
 	// transparent: true,
 	// opacity: 0.8,
 	side: THREE.DoubleSide,
@@ -1269,10 +1308,10 @@ function texto() {
 
     const loader1 = new THREE.FontLoader();
 
-    loader1.load( 'fonts/pixeled.json', function( font ) {
+    loader1.load( 'fonts/hacked.json', function( font ) {
 
 	const message = txtPrueba[2];
-	const shapes = font.generateShapes( message, 4 );
+	const shapes = font.generateShapes( message, 2 );
 	const geometry = new THREE.ShapeGeometry( shapes );
 	geometry.computeBoundingBox();
 
@@ -1308,7 +1347,7 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 
     const loader1 = new THREE.FontLoader();
  
-    loader1.load( 'fonts/square.json', function( font ) {
+    loader1.load( 'fonts/hacked.json', function( font ) {
 	
 	txtPosX = posX;
 	txtPosY = posY;	
@@ -1316,7 +1355,7 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 	txtPosY2 = posY2;
 	
 	const message = mensaje; 
-	const shapes = font.generateShapes( message, 1.5 );
+	const shapes = font.generateShapes( message, 0.85 );
 	const geometry = new THREE.ShapeGeometry( shapes );
 	geometry.computeBoundingBox();
 	const xMid = - 0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
@@ -1326,7 +1365,7 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 	text.material.dispose();
 
 	const message2 = mensaje2; 
-	const shapes2 = font.generateShapes( message2, 1.5 );
+	const shapes2 = font.generateShapes( message2, 0.85 );
 	const geometry2 = new THREE.ShapeGeometry( shapes2 );
 	geometry2.computeBoundingBox();
 	const xMid2 = - 0.5 * ( geometry2.boundingBox.max.x - geometry2.boundingBox.min.x );
@@ -1335,10 +1374,13 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 	text2.geometry= geometry2;
 	text2.material.dispose();
 
-	/*
+	
 	txtPos1 = geometry.attributes.position;
 	txtPos1.usage = THREE.DynamicDrawUsage;
-	*/ 
+
+	txtPos2 = geometry2.attributes.position;
+	txtPos2.usage = THREE.DynamicDrawUsage;
+ 
 
     });
 }
