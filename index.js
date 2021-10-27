@@ -2,11 +2,11 @@
 //  HOLA, ESTAS REDY PARA LOS PROBLEMAS DE MULTIPLAYER?
 ////////////////////////////////////////////////
 
+// Probar si es problema del blazeface en el teléfono 
 
 
 
-
-/ ////////////////////////////////
+/////////////////////////////////
 // ///////// 4NT1 /////////////////
 // ////////////////////////////////
 
@@ -26,7 +26,7 @@ import {TTFLoader} from './jsm/loaders/TTFLoader.js';
 import perlinNoise3d from 'perlin-noise-3d';
 // const perlinNoise3d = require('perlin-noise-3d');
 import {AfterimagePass} from './jsm/postprocessing/AfterimagePass.js';
-import * as blazeface from '@tensorflow-models/blazeface';
+// import * as blazeface from '@tensorflow-models/blazeface';
 import {ImprovedNoise} from './jsm/math/ImprovedNoise.js'; 
 
 let matofTexture; 
@@ -351,9 +351,7 @@ var fondos = new Tone.Players({
     "15": "audio/fondos/15.mp3"
 }).toDestination();
 
-
 fondos.volume.value = -6;
-
 
 let perlinValue;
 let perlinAmp;
@@ -476,12 +474,10 @@ async function setupCamera() {
 	video.onloadedmetadata = () => {
 	    resolve(video);
 	    initBlinkRateCalculator();
-	   
-		
+	   		
 	};
     });
 }
-
 
 //////////////////////////////////////
 //////////////////// PARPADEO
@@ -788,10 +784,10 @@ async function init() {
 
     // Esto tiene que ver con que no se pueda usar el modo retrato 
 
-    // videoWidth = video.videoWidth;
-    // videoHeight = video.videoHeight;
-    // video.width = 640;
-    // video.height = 480;
+    videoWidth = video.videoWidth;
+    videoHeight = video.videoHeight;
+    video.width = videoWidth;
+    video.height = videoHeight;
 
     clock = new THREE.Clock();
 
