@@ -184,6 +184,7 @@ let vueltas;
 
 // /////////// Segunda escena
 
+/*
 let triaVertices = []; let triaVertices2 = []; let triaVertices3 = []; let triaVertices4 = []; let triaVertices5 = [];
 
 for ( let i = 0; i < 3; i ++ ) {
@@ -207,6 +208,8 @@ for (var i = 0; i < 25; i++) {
 let triangulos = [];
 
 let contador = 0;
+
+*/ 
 
 // /////////// Camera
 
@@ -653,8 +656,8 @@ async function renderPrediction() {
 	
     }
 
-    cuboGrande.rotation.x += 0.003;
-    cuboGrande.rotation.y += (degree/2) * 0.006;
+    cuboGrande.rotation.x += 0.004;
+    cuboGrande.rotation.y += (degree/2) * 0.007;
     ///text.rotation.y = degree * 2 + (Math.PI );
     //text2.rotation.y = degree * 2 + (Math.PI );
 
@@ -670,7 +673,7 @@ async function renderPrediction() {
     camera.rotation.z = Math.PI;
     stats.update();
     renderer.render( scene, camera );
-    panner.positionX.value = 0;
+    panner.positionX.value = 0; // degree reducido 
     vertices = [];
     composer.render();
 
@@ -703,60 +706,59 @@ async function renderPrediction() {
 
     /// texto movimiento
 
-    const delta = clock.getDelta();
-    const time = clock.getElapsedTime() * 10;
-    
-    // const position = geometry.attributes.position;
-    
-    for ( let i = 0; i < txtPos1.count; i ++ ) {
-
-	// let d = perlin.noise(txtPos1[i] * 0.001 +time  ); 
-	const y = 0.5 * Math.sin( i / 5 + ( time + i ) / 7 );
+    if(!mobile){
+	const delta = clock.getDelta();
+	const time = clock.getElapsedTime() * 10;
 	
-	txtPos1.setZ( i, y );
-	// txtPos1.setX( i, txtPos1init.attributes.position.x); 
+	// const position = geometry.attributes.position;
 	
-    }
-    
-    txtPos1.needsUpdate = true;
-
-
-    for ( let i = 0; i < txtPos2.count; i ++ ) {
-
-	// let d = perlin.noise(txtPos1[i] * 0.001 +time  ); 
-	const y = 0.5 * Math.sin( i / 5 + ( time + i ) / 7 );
-	
-	txtPos2.setZ( i, y );
-	// txtPos1.setX( i, txtPos1init.attributes.position.x); 
-	
-    }
-
-    txtPos2.needsUpdate = true;
-        
-    if(cuboGBool){
-	const algo = cuboGrande.geometry.attributes.position;
-	
-	algo.needsUpdate = true;
-	// algoOrg.needsUpdate = true; 
-	
-	for ( let i = 0; i < algo.count; i ++ ) {
-
-	    // let d = perlin.noise(txtPos1[i] * 0.001 +time  ); 
-	    const z = 0.5 * Math.sin( i / 1 + ( time + i ) / 5 );
-	    const x = 0.5 * Math.sin( i / 1 + ( time + i ) / 5 );
-	    const y = 0.5 * Math.sin( i / 1 + ( time + i ) / 5 );
+	for ( let i = 0; i < txtPos1.count; i ++ ) {
 	    
-	    algo.setZ( i,  cuboGrandeOrg.geometry.attributes.position.getZ(i)+z );
-	    algo.setX( i,  cuboGrandeOrg.geometry.attributes.position.getX(i)+x );
-	    algo.setY( i,  cuboGrandeOrg.geometry.attributes.position.getY(i)+y ); 
+	    // let d = perlin.noise(txtPos1[i] * 0.001 +time  ); 
+	    const y = 0.5 * Math.sin( i / 5 + ( time + i ) / 7 );
+	    
+	    txtPos1.setZ( i, y );
 	    // txtPos1.setX( i, txtPos1init.attributes.position.x); 
 	    
 	}
+	
+	txtPos1.needsUpdate = true;
+	
+	
+	for ( let i = 0; i < txtPos2.count; i ++ ) {
+
+	    // let d = perlin.noise(txtPos1[i] * 0.001 +time  ); 
+	    const y = 0.5 * Math.sin( i / 5 + ( time + i ) / 7 );
+	    
+	    txtPos2.setZ( i, y );
+	    // txtPos1.setX( i, txtPos1init.attributes.position.x); 
+	    
+	}
+	
+	txtPos2.needsUpdate = true;
+        
+	if(cuboGBool){
+	    const algo = cuboGrande.geometry.attributes.position;
+	    
+	    algo.needsUpdate = true;
+	    // algoOrg.needsUpdate = true; 
+	    
+	    for ( let i = 0; i < algo.count; i ++ ) {
+		
+		// let d = perlin.noise(txtPos1[i] * 0.001 +time  ); 
+		const z = 0.5 * Math.sin( i / 1 + ( time + i ) / 5 );
+		const x = 0.5 * Math.sin( i / 1 + ( time + i ) / 5 );
+		const y = 0.5 * Math.sin( i / 1 + ( time + i ) / 5 );
+		
+		algo.setZ( i,  cuboGrandeOrg.geometry.attributes.position.getZ(i) + z );
+		algo.setX( i,  cuboGrandeOrg.geometry.attributes.position.getX(i) + x );
+		algo.setY( i,  cuboGrandeOrg.geometry.attributes.position.getY(i) + y ); 
+		// txtPos1.setX( i, txtPos1init.attributes.position.x); 
+		
+	    }
+	}
     }
-	
-	
-    // console.log( cuboGrande.geometry.attributes.position.getX(1) ); 
-				
+					
     requestAnimationFrame(renderPrediction);
 };
 
@@ -794,7 +796,6 @@ async function init() {
     clock = new THREE.Clock();
 
     scene = new THREE.Scene();
-    // scene.background = new THREE.Color( 0x000000 ); // UPDATED
 
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
@@ -838,7 +839,6 @@ async function init() {
 	// depthTest: false
     } );
 
-    
     matPoints2 = new THREE.PointsMaterial( {
 	color: 0x000000,
 	size: 2,
@@ -850,16 +850,18 @@ async function init() {
 	alphaTest: 0.1,
 	// depthTest: false
     } );
-
+    
     planeB = [new THREE.Points( pGeometry[0], matPoints ), new THREE.Points( pGeometry[1], matPoints ), new THREE.Points( pGeometry[2], matPoints )];
 
+   
     for (var i = 0; i < 3; i++) {
 	pGeometry[i].verticesNeedUpdate = true;
     }
 
     geometryB = new THREE.BufferGeometry();
     geometryB.verticesNeedUpdate = true;
-
+   
+    
     let audioSphere = new THREE.BoxGeometry( 400, 400, 400, 16, 16, 16 );
 
     cuboGrande = new THREE.Mesh(audioSphere, materialC2 );
@@ -881,9 +883,6 @@ async function init() {
     document.body.appendChild( renderer.domElement );
     window.addEventListener( 'resize', onWindowResize );
     container.appendChild( stats.dom );
-
-    // renderer.setPixelRatio(0.75);
-
     const renderScene = new RenderPass( scene, camera );
 
     bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.4, 0.85 );
@@ -911,6 +910,9 @@ function initsc0() {
 
     loopDescanso.stop(); 
     
+    cuboGrande.rotation.x = 0;
+    cuboGrande.rotation.y = 0;
+
     if ( predictions.length < 1 ) {
 
 	loopTxt.start(0); 
@@ -923,7 +925,7 @@ function initsc0() {
 	materialVideo.map.repeat.x = - 1;
 
 	planeVideo.geometry.dispose();
-	const geometryVideoNew = new THREE.PlaneGeometry( 640/15, 480/15 ); // Dos modalidades, abierta y ajustada para cel
+	const geometryVideoNew = new THREE.PlaneGeometry( 480/15, 640/15 ); // Dos modalidades, abierta y ajustada para cel
 
 	planeVideo.geometry = geometryVideoNew; 
 	// materialVideo.map.rotation.y = Math.PI / 2; // por alguna razon hay que comentar esto 
@@ -944,8 +946,6 @@ function initsc0() {
 	
 	buscando = false;
 	scene.remove( cuboGrande );
-
-	// necesario disposear todo ?
 
 	intro.restart();
 	intro.start();
@@ -971,8 +971,6 @@ function initsc0() {
 	transcurso = 0; 
 	inicio = Date.now();
 	segundo = 0;
-	
-	// antes aquí iba un switch, ahora la parti se encarga del problema 
  
 	modoOscuro = false;
 	
@@ -1095,8 +1093,8 @@ function rmsc1() {
 // Escena 2
 
 function initsc2() {
-
-    line.start(); 
+ 
+    line.start(0); 
 
     /*
     if(!mobile){
@@ -1208,6 +1206,7 @@ function rmsc2() {
 
 function initIrises(){
 
+    outline.start();
     cuboGBool = false; 
 
     // outline.start();
@@ -1229,7 +1228,7 @@ function initIrises(){
     irises = true;
     scene.remove(planeVideo);
     scene.remove(cuboGrande);
-    // y lo demás
+  
     loopTxt.stop(0);
     loop.stop(0); 
 
@@ -1261,7 +1260,6 @@ function score() {
 	if ( transcurso.toFixed() == 60 && segundo != 60 ) {
 	    console.log("segunda escena"); 
 	    segundo = transcurso.toFixed();
-	    outline.stop(); 
 	    // aquí puede ir algo asociado a las predicciones 
 	    modoOscuro = false; 
 	    escena = 1;
@@ -1287,7 +1285,6 @@ function score() {
 
 	if( transcurso.toFixed() == 115 && segundo != 115 ){
 	    segundo = transcurso.toFixed(); 
-	    outline.start();
 	   
 	}
 	
@@ -1374,13 +1371,15 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 	text2.geometry= geometry2;
 	text2.material.dispose();
 
-	
-	txtPos1 = geometry.attributes.position;
-	txtPos1.usage = THREE.DynamicDrawUsage;
+	if(!mobile){
 
-	txtPos2 = geometry2.attributes.position;
-	txtPos2.usage = THREE.DynamicDrawUsage;
- 
+	    txtPos1 = geometry.attributes.position;
+	    txtPos1.usage = THREE.DynamicDrawUsage;
+	    
+	    txtPos2 = geometry2.attributes.position;
+	    txtPos2.usage = THREE.DynamicDrawUsage;
+	    
+	}
 
     });
 }
