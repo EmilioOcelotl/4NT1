@@ -4,8 +4,6 @@
 
 // Probar si es problema del blazeface en el teléfono 
 
-
-
 /////////////////////////////////
 // ///////// 4NT1 /////////////////
 // ////////////////////////////////
@@ -269,6 +267,8 @@ let matPoints, matPoints2;
 
 let clock;
 
+let boolText = false; 
+
 // Puedo usar los textos como arreglo 
 
 let txtPrueba = [
@@ -362,14 +362,16 @@ let loop, loopTxt, loopDescanso;
 
 loop = new Tone.Loop((time) => {
 
-    chtexto(
-	txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
-	txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
-	Math.random()*40 - 20,
-	Math.random()*40 - 20,
-	Math.random()*40 - 20,
-	Math.random()*40 - 20
-    ); 
+    if(boolText){
+	chtexto(
+	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
+	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
+	    Math.random()*40 - 20,
+	    Math.random()*40 - 20,
+	    Math.random()*40 - 20,
+	    Math.random()*40 - 20
+	);
+    }
 
     let fondosAl = Math.floor(Math.random()*14);
     fondos.player(fondosAl.toString()).start(time);
@@ -379,30 +381,34 @@ loop = new Tone.Loop((time) => {
 // Instrucciones 
 
 loopTxt = new Tone.Loop((time) => {
-    
-    chtexto(
-	txtInstrucciones[Math.floor(Math.random()*txtInstrucciones.length)],
-	txtInstrucciones[Math.floor(Math.random()*txtInstrucciones.length)],
-	Math.random()*40 - 20,
-	Math.random()*40 - 20,
-	Math.random()*40 - 20,
-	Math.random()*40 - 20
-    ); 
-    
+
+    if(boolText){
+	chtexto(
+	    txtInstrucciones[Math.floor(Math.random()*txtInstrucciones.length)],
+	    txtInstrucciones[Math.floor(Math.random()*txtInstrucciones.length)],
+	    Math.random()*40 - 20,
+	    Math.random()*40 - 20,
+	    Math.random()*40 - 20,
+	    Math.random()*40 - 20
+	);
+    }
+	
 }, "10");
 
 // Descanso 
 
 loopDescanso = new Tone.Loop((time) => {
-    
-    chtexto(
-	txtDescanso[Math.floor(Math.random()*txtDescanso.length)],
-	txtDescanso[Math.floor(Math.random()*txtDescanso.length)],
-	Math.random()*40 - 20,
-	Math.random()*40 - 20,
-	Math.random()*40 - 20,
-	Math.random()*40 - 20
-    ); 
+
+    if(boolText){
+	chtexto(
+	    txtDescanso[Math.floor(Math.random()*txtDescanso.length)],
+	    txtDescanso[Math.floor(Math.random()*txtDescanso.length)],
+	    Math.random()*40 - 20,
+	    Math.random()*40 - 20,
+	    Math.random()*40 - 20,
+	    Math.random()*40 - 20
+	); 
+    }
     
 }, "5");
 
@@ -433,14 +439,18 @@ async function setupCamera() {
 
     if(navigator.userAgent.match(/firefox|fxios/i)){
 
-	console.log("es firefox");
+	// console.log("es firefox");
 	camWidth = 640;
 	camHeight = 480;
 	
 	wCor = (33);
 	hCor = 28;
 
-	camSz = 7; 
+	if(!mobile){
+	    camSz = 7;
+	} else {
+	    camSz = 10; 
+	}
 	
     } else {
 
@@ -448,9 +458,13 @@ async function setupCamera() {
 	camHeight = 640;
 
 	wCor = (33-(33/4));
-	hCor = 28+28;
+	hCor = 28+(28/4);
 
-	camSz = 10; 
+	if(!mobile){
+	    camSz = 9;
+	} else {
+	    camSz = 10; 
+	}
 	
     }
     
@@ -788,20 +802,17 @@ async function init() {
     videoHeight = video.videoHeight;
     video.width = videoWidth;
     video.height = videoHeight;
-
-    clock = new THREE.Clock();
-
     scene = new THREE.Scene();
-
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
     camera.position.z = 40;
     camera.rotation.z = Math.PI;
+    
+    clock = new THREE.Clock();
+    cols(); // quitar ? 
 
-    cols();
-
-    let {width, height} = stream.getTracks()[0].getSettings();
-    console.log('Resolución:'+ `${width}x${height}`); // 640x480
+    // let {width, height} = stream.getTracks()[0].getSettings();
+    // console.log('Resolución:'+ `${width}x${height}`); // 640x480
 
     const geometryVideo = new THREE.PlaneGeometry( camWidth/7, camHeight /7 ); // Dos modalidades, abierta y ajustada para cel
  
@@ -824,7 +835,7 @@ async function init() {
     sprite2 = new THREE.TextureLoader().load( 'img/spark1.png' );
 
     matPoints = new THREE.PointsMaterial( {
-	color: 0x333333,
+	color: colores[0],
 	size: 2,
 	map: sprite,
 	 blending: THREE.AdditiveBlending,
@@ -931,14 +942,16 @@ function initsc0() {
 	
 	modoOscuro = true;
 
-    	chtexto(
-	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
-	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
-	    Math.random()*40 - 20,
-	    Math.random()*40 - 20,
-	    Math.random()*40 - 20,
-	    Math.random()*40 - 20
-	); 
+	if(boolText){
+    	    chtexto(
+		txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
+		txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
+		Math.random()*40 - 20,
+		Math.random()*40 - 20,
+		Math.random()*40 - 20,
+		Math.random()*40 - 20
+	    );
+	}
 	
 	buscando = false;
 	scene.remove( cuboGrande );
@@ -969,15 +982,17 @@ function initsc0() {
 	segundo = 0;
  
 	modoOscuro = false;
-	
-    	chtexto(
-	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
-	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
-	    Math.random()*40 - 20,
-	    Math.random()*40 - 20,
-	    Math.random()*40 - 20,
-	    Math.random()*40 - 20
-	); 
+
+	if(boolText){
+    	    chtexto(
+		txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
+		txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
+		Math.random()*40 - 20,
+		Math.random()*40 - 20,
+		Math.random()*40 - 20,
+		Math.random()*40 - 20
+	    );
+	}
 	
 	buscando = true;
 	// scene.add( cuboGrande );
@@ -1014,7 +1029,7 @@ function initsc1() {
     perlinValue = 0.03;
     perlinAmp = 4; 
     matPoints.map= sprite;
-    matPoints.size=3; 
+    matPoints.size=4; 
     planeB[0].material = matPoints; 
 
     scene.add( planeVideo);
@@ -1022,15 +1037,17 @@ function initsc1() {
     planeVideo.material.opacity = 0; 
     // scene.remove( planeVideo ); 
     scene.add(cuboGrande); 
-    
-    chtexto(
-	txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
-	txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
-	Math.random()*40 - 20,
-	Math.random()*40 - 20,
-	Math.random()*40 - 20,
-	Math.random()*40 - 20
-    ); 
+
+    if(boolText){
+	chtexto(
+	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
+	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
+	    Math.random()*40 - 20,
+	    Math.random()*40 - 20,
+	    Math.random()*40 - 20,
+	    Math.random()*40 - 20
+	);
+    }
 	
     if (predictions.length > 0) {
 	for (let i = 0; i < planeB.length; i++) {
@@ -1070,7 +1087,7 @@ function animsc1() {
 	
 	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
 	position[vueltas].setX( i, (1+keypoints[i][0] * 0.1 - wCor) * (1+d) ); 
-	position[vueltas].setY( i, (1+keypoints[i][1] * 0.15 - hCor) * (1+d) ); // aquí está raro 
+	position[vueltas].setY( i, (1+keypoints[i][1] * 0.1 - hCor) * (1+d) ); // aquí está raro 
 	position[vueltas].setZ( i, keypoints[i][2] * 0.05  );
     }
 
@@ -1131,14 +1148,16 @@ function initsc2() {
     // planeVideo.material.opacity = 0; 
     // scene.add( planeVideo);
 
-    chtexto(
-	txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
-	txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
-	Math.random()*40 - 20,
-	Math.random()*40 - 20,
-	Math.random()*40 - 20,
-	Math.random()*40 - 20
-    ); 
+    if(boolText){
+	chtexto(
+	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
+	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
+	    Math.random()*40 - 20,
+	    Math.random()*40 - 20,
+	    Math.random()*40 - 20,
+	    Math.random()*40 - 20
+	);
+    }
 	
     if (predictions.length > 0) {
 	for (let i = 0; i < planeB.length; i++) {
@@ -1182,7 +1201,7 @@ function animsc2() {
 	
 	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
 	position[vueltas].setX( i, (1+keypoints[i][0] * 0.1 - wCor) + (1+d) ); // antes 1+analisis
-	position[vueltas].setY( i, (1+keypoints[i][1] * 0.15 - hCor) + (1+d) );
+	position[vueltas].setY( i, (1+keypoints[i][1] * 0.1 - hCor) + (1+d) );
 	position[vueltas].setZ( i, keypoints[i][2] * 0.05  );
     }
 
@@ -1212,14 +1231,16 @@ function initIrises(){
     text.material.blending = THREE.NoBlending;
     text2.material.blending = THREE.NoBlending; 
 
-    chtexto(
-	txtDescanso[Math.floor(Math.random()*txtDescanso.length)],
-	txtDescanso[Math.floor(Math.random()*txtDescanso.length)],
-	Math.random()*40 - 20,
-	Math.random()*40 - 20,
-	Math.random()*40 - 20,
-	Math.random()*40 - 20
-    ); 
+    if(boolText){
+	chtexto(
+	    txtDescanso[Math.floor(Math.random()*txtDescanso.length)],
+	    txtDescanso[Math.floor(Math.random()*txtDescanso.length)],
+	    Math.random()*40 - 20,
+	    Math.random()*40 - 20,
+	    Math.random()*40 - 20,
+	    Math.random()*40 - 20
+	);
+    }
     
     irises = true;
     scene.remove(planeVideo);
@@ -1288,15 +1309,17 @@ function score() {
 }
 
 function texto() {
-    const color = 0xffffff;
 
-    const matLite = new THREE.MeshBasicMaterial( {
-	color: 0x404040,
+    if(boolText){
+	const color = 0xffffff;
+	
+	const matLite = new THREE.MeshBasicMaterial( {
+	    color: 0x404040,
 	// transparent: true,
-	// opacity: 0.8,
-	side: THREE.DoubleSide,
-	// blending: THREE.AdditiveBlending,
-	// transparent: true,
+	    // opacity: 0.8,
+	    side: THREE.DoubleSide,
+	    // blending: THREE.AdditiveBlending,
+	    // transparent: true,
     } );
 
     const loader1 = new THREE.FontLoader();
@@ -1325,6 +1348,7 @@ function texto() {
 	scene.add( text2 );
 	
     });
+    }
 	
 }
 
