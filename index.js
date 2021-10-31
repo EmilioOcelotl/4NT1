@@ -1,12 +1,14 @@
-/////////////////////////////////////////////////
-//  HOLA, ESTAS REDY PARA LOS PROBLEMAS DE MULTIPLAYER?
-////////////////////////////////////////////////
-
-// Probar si es problema del blazeface en el teléfono 
 
 /////////////////////////////////
 // ///////// 4NT1 /////////////////
 // ////////////////////////////////
+
+// Probar si es problema del blazeface en el teléfono 
+// Aligerar el inicio con una escena sencilla
+// Alternar escenas sencillas
+// Multiplayer
+// Mensaje en caso de que no alcance a leer una cámara
+// Mensajes de vulnerabilidad 
 
 import * as faceLandmarksDetection from '@tensorflow-models/face-landmarks-detection';
 import * as tf from '@tensorflow/tfjs-core';
@@ -26,6 +28,12 @@ import perlinNoise3d from 'perlin-noise-3d';
 import {AfterimagePass} from './jsm/postprocessing/AfterimagePass.js';
 // import * as blazeface from '@tensorflow-models/blazeface';
 import {ImprovedNoise} from './jsm/math/ImprovedNoise.js'; 
+
+///////////////////// Variables importantes
+
+let boolText = true; 
+
+/////////////////////
 
 let matofTexture; 
 let scene, camera, renderer, material, cube, geometryPoints;
@@ -99,8 +107,6 @@ const startButton = document.getElementById( 'startButton' );
 const myProgress = document.getElementById( 'myProgress' );
 const myBar = document.getElementById( 'myBar' );
 const body = document.getElementById( 'body' );
-
-// startButton.addEventListener( 'click', init );
 
 // con boton
 
@@ -180,35 +186,6 @@ let noise = new perlinNoise3d();
 let noiseStep = 0;
 let vueltas;
 
-// /////////// Segunda escena
-
-/*
-let triaVertices = []; let triaVertices2 = []; let triaVertices3 = []; let triaVertices4 = []; let triaVertices5 = [];
-
-for ( let i = 0; i < 3; i ++ ) {
-    const x = Math.random() * 2000 - 1000;
-    const y = Math.random() * 2000 - 1000;
-    const z = Math.random() * 2000 - 1000;
-
-    triaVertices.push( x, y, z );
-}
-
-let triaGeometry = [];
-let triaPosition = [];
-
-for (var i = 0; i < 25; i++) {
-    triaGeometry[i] = new THREE.BufferGeometry();
-    triaGeometry[i].setAttribute( 'position', new THREE.Float32BufferAttribute( triaVertices, 3 ) );
-    triaPosition[i] = triaGeometry[i].attributes.position;
-    triaPosition[i].usage = THREE.DynamicDrawUsage;
-}
-
-let triangulos = [];
-
-let contador = 0;
-
-*/ 
-
 // /////////// Camera
 
 let mouseX = 0;
@@ -265,9 +242,7 @@ let sprite, sprite2;
 
 let matPoints, matPoints2; 
 
-let clock;
-
-let boolText = false; 
+let clock
 
 // Puedo usar los textos como arreglo 
 
@@ -297,7 +272,8 @@ let txtPrueba = [
     "En cada vuelta\n hay una variación\ndistinta",
     "Una oportunidad\n para cuidar la presencia",
     "Vertices geométricos\n que difuminan la presencia\n pero no la eliminan",
-    "¿Qué hay\n detrás de la máscara?", 
+    "¿Qué hay\n detrás de la máscara?",
+    "Triangulaciones"
 ];
 
 let txtInstrucciones = [
@@ -362,6 +338,7 @@ let loop, loopTxt, loopDescanso;
 
 loop = new Tone.Loop((time) => {
 
+   
     if(boolText){
 	chtexto(
 	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
@@ -372,6 +349,7 @@ loop = new Tone.Loop((time) => {
 	    Math.random()*40 - 20
 	);
     }
+
 
     let fondosAl = Math.floor(Math.random()*14);
     fondos.player(fondosAl.toString()).start(time);
@@ -493,55 +471,6 @@ async function setupCamera() {
     });
 }
 
-//////////////////////////////////////
-//////////////////// PARPADEO
-//////////////////////////////////////
-
-
-function initBlinkRateCalculator() {
-  rateInterval = setInterval(() => {
-    blinkRate = tempBlinkRate * 6;
-    tempBlinkRate = 0;
-  }, 10000);
-}
-
-function updateBlinkRate() {
-  tempBlinkRate++;
-}
-
-function getEucledianDistance(x1, y1, x2, y2) {
-  return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
-}
-
-function getEAR(upper, lower) {
-  return (
-    (getEucledianDistance(upper[5][0], upper[5][1], lower[4][0], lower[4][1]) +
-      getEucledianDistance(
-        upper[3][0],
-        upper[3][1],
-        lower[2][0],
-        lower[2][1]
-      )) /
-    (2 *
-      getEucledianDistance(upper[0][0], upper[0][1], upper[8][0], upper[8][1]))
-  );
-}
-
-function getIsVoluntaryBlink(blinkDetected) {
-  // NOTE: checking if blink is detected twice in a row, anything more than that takes more deleberate effort by user.
-  // NOTE: adding this to separate intentional blinks
-  if (blinkDetected) {
-    if (blinked) {
-      return true;
-    }
-    blinked = true;
-  } else {
-    blinked = false;
-  }
-
-  return false;
-}
-
 async function renderPrediction() {
 
     if(buscando){
@@ -609,7 +538,6 @@ async function renderPrediction() {
 		if (blinked) {
 		    updateBlinkRate();
 		}
-
 
 		if( getIsVoluntaryBlink(blinked) ){
 		    // console.log(prediction.annotations.rightEyeUpper0); 
@@ -723,26 +651,20 @@ async function renderPrediction() {
 	// const position = geometry.attributes.position;
 	
 	for ( let i = 0; i < txtPos1.count; i ++ ) {
-	    
 	    // let d = perlin.noise(txtPos1[i] * 0.001 +time  ); 
 	    const y = 0.5 * Math.sin( i / 5 + ( time + i ) / 7 );
-	    
 	    txtPos1.setZ( i, y );
 	    // txtPos1.setX( i, txtPos1init.attributes.position.x); 
-	    
 	}
 	
 	txtPos1.needsUpdate = true;
 	
 	
 	for ( let i = 0; i < txtPos2.count; i ++ ) {
-
 	    // let d = perlin.noise(txtPos1[i] * 0.001 +time  ); 
 	    const y = 0.5 * Math.sin( i / 5 + ( time + i ) / 7 );
-	    
 	    txtPos2.setZ( i, y );
 	    // txtPos1.setX( i, txtPos1init.attributes.position.x); 
-	    
 	}
 	
 	txtPos2.needsUpdate = true;
@@ -754,7 +676,6 @@ async function renderPrediction() {
 	    // algoOrg.needsUpdate = true; 
 	    
 	    for ( let i = 0; i < algo.count; i ++ ) {
-		
 		// let d = perlin.noise(txtPos1[i] * 0.001 +time  ); 
 		const z = 0.5 * Math.sin( i / 1 + ( time + i ) / 5 );
 		const x = 0.5 * Math.sin( i / 1 + ( time + i ) / 5 );
@@ -764,7 +685,6 @@ async function renderPrediction() {
 		algo.setX( i,  cuboGrandeOrg.geometry.attributes.position.getX(i) + x );
 		algo.setY( i,  cuboGrandeOrg.geometry.attributes.position.getY(i) + y ); 
 		// txtPos1.setX( i, txtPos1init.attributes.position.x); 
-		
 	    }
 	}
     }
@@ -786,15 +706,11 @@ async function init() {
     container = document.createElement( 'div' );
     document.body.appendChild( container );
     document.body.style.cursor = 'none'; 
+    loaderHTML.style.display = 'block';
+
     await setupCamera();
-
-    ////////////////////////////////////////////////////////////////////
-
-    // Esto se puede comentar ? // 
     
     video.play(); 
-
-    ////////////////////////////////////////////////////////////////////
 
     // Esto tiene que ver con que no se pueda usar el modo retrato 
 
@@ -924,7 +840,7 @@ function initsc0() {
 
 	loopTxt.start(0); 
 	loop.stop(0); 
-	out.start();
+	out.start(); // out.loop? 
 	scene.add(planeVideo); 
 	planeVideo.material.opacity = 1; 
 	materialVideo.map = new THREE.TextureLoader().load( 'img/siluetaNeg.png' );
@@ -939,6 +855,7 @@ function initsc0() {
 	
 	rmsc1();
 	rmsc2();
+	rmIrises(); 
 	
 	modoOscuro = true;
 
@@ -965,7 +882,6 @@ function initsc0() {
 
     } else {
 
-	loop.start(0);
 	loopTxt.stop(0); 
 	planeVideo.geometry.dispose();
 	const geometryVideoNew = new THREE.PlaneGeometry( camWidth/camSz, camHeight/camSz ); // Dos modalidades, abierta y ajustada para cel
@@ -975,7 +891,7 @@ function initsc0() {
 	respawn.start(); 
 
 	escena = 0; 
-	initsc1();
+	titulo1();
 
 	transcurso = 0; 
 	inicio = Date.now();
@@ -983,6 +899,7 @@ function initsc0() {
  
 	modoOscuro = false;
 
+	/*
 	if(boolText){
     	    chtexto(
 		txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
@@ -993,28 +910,70 @@ function initsc0() {
 		Math.random()*40 - 20
 	    );
 	}
+	*/
 	
 	buscando = true;
 	// scene.add( cuboGrande );
 	scene.add( text );
 	scene.add( text2 );
-
 	// Tone.Destination.mute = false; 
-
 	intro.stop();
 
     }
 }
 
+function titulo1(){
+
+    console.log("titulo 1 "); 
+    loop.stop(0);
+    loopTxt.stop(0); 
+    
+    if(boolText){
+	chtexto(
+	    "I\nLa ofuscación como motivo",
+	    "",
+	    0,
+	    0,
+	    0,
+	    0
+	);
+    }
+
+    
+    scene.remove( planeVideo );
+    scene.remove( cuboGrande ); 
+    text.material.color = new THREE.Color(0xffffff); 
+    cuboGBool = false;
+	
+    if (predictions.length > 0) {
+	for (let i = 0; i < planeB.length; i++) {
+	    scene.remove( planeB[i] );
+	}
+    }
+
+    let cuentaPlane = 0;
+
+    if (predictions.length > 0) {
+	predictions.forEach((prediction) => {
+	    scene.add( planeB[cuentaPlane] );
+	    cuentaPlane++;
+	});
+    }
+    
+}
+
 function initsc1() {
 
+    cuboGBool = true; 
+    loop.start(0);
     line.stop();
     outline.stop(); 
     text.material.blending = THREE.AdditiveBlending; 
     text2.material.blending = THREE.AdditiveBlending; 
+
+    text.material.color = new THREE.Color(0x000000); 
     
     // cuboGBool = true; 
-    
     // respawn.start(); // otro sonido que no sea respawn 
 
     irises = false;
@@ -1037,7 +996,9 @@ function initsc1() {
     planeVideo.material.opacity = 0; 
     // scene.remove( planeVideo ); 
     scene.add(cuboGrande); 
+    scene.add(planeVideo); 
 
+    
     if(boolText){
 	chtexto(
 	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
@@ -1063,6 +1024,7 @@ function initsc1() {
 	    cuentaPlane++;
 	});
     }
+   
 }
 
 // dos correcciones de acuerdo a la resolución. Pienso que esto tiene que ver con el modo horizontal o vertical. Cada navegador hace lo que quiere y firefox nunca me deja jalar la cámara en módo vertical 
@@ -1103,12 +1065,42 @@ function rmsc1() {
     }
 }
 
+function titulo2(){
+
+    loop.stop(0);
+    loopTxt.stop(0); 
+    
+    if(boolText){
+	chtexto(
+	    "II\nLas consecuencias\nno buscadas del rodeo",
+	    "",
+	    0,
+	    0,
+	    0,
+	    0
+	);
+    }
+
+    scene.remove( cuboGrande ); 
+    scene.remove( planeVideo ); 
+    text.material.color = new THREE.Color(0xffffff); 
+    cuboGBool = false; 
+    
+}
+
 // Escena 2
 
 function initsc2() {
- 
-    line.start(0); 
 
+    cuboGBool = true; 
+    loop.start(0); 
+    line.start(0); 
+    loopTxt.start(0); 
+    
+    text.material.color = new THREE.Color(0x000000); 
+
+    scene.add( planeVideo);
+    scene.add( cuboGrande ); 
     /*
     if(!mobile){
 	gSignal = Date.now();
@@ -1197,7 +1189,6 @@ function animsc2() {
 			     keypoints[i][2] * perlinValue + time2) *  4; 
 
 	// let d = 0;
-
 	
 	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
 	position[vueltas].setX( i, (1+keypoints[i][0] * 0.1 - wCor) + (1+d) ); // antes 1+analisis
@@ -1216,6 +1207,31 @@ function rmsc2() {
 	scene.remove( planeB[i] );
     }
 }
+
+
+function titulo3(){
+
+    loop.stop(0);
+    loopTxt.stop(0); 
+    
+    if(boolText){
+	chtexto(
+	    "III\nCompromiso y escritura",
+	    "",
+	    0,
+	    0,
+	    0,
+	    0
+	);
+    }
+
+    scene.remove( cuboGrande ); 
+    scene.remove( planeVideo ); 
+    text.material.color = new THREE.Color(0xffffff); 
+    cuboGBool = false; 
+    
+}
+
 
 // Podría ser que hasta aquí haya más texto que en las escenas anteriores 
 
@@ -1245,7 +1261,6 @@ function initIrises(){
     irises = true;
     scene.remove(planeVideo);
     scene.remove(cuboGrande);
-  
     loopTxt.stop(0);
     loop.stop(0); 
 
@@ -1270,25 +1285,71 @@ function rmIrises(){
 
 function score() {
 
-    if(buscando){
+    /*
 
-    // Por defecto inicia en la primer escena 
+      1. titulo1   000 - 005 s
+      2. initsc1   005 - 065 s
+      3. titulo2   065 - 070 s
+      4. initsc2   070 - 130 s
+      5. titulo3   130 - 135 s
+      6. irises    135 - x s
+      7. epilogo  x   - x + 30 s 
+ 
+     */
     
-	if ( transcurso.toFixed() == 60 && segundo != 60 ) {
-	    console.log("segunda escena"); 
+    if(buscando){
+	
+	if ( transcurso.toFixed() == 5 && segundo != 5 ) {
+	    console.log("Primera Escena"); 
 	    segundo = transcurso.toFixed();
 	    // aquí puede ir algo asociado a las predicciones 
 	    modoOscuro = false; 
 	    escena = 1;
+	    rmsc1();
+	    rmsc2();
+	    rmIrises(); 
+	    initsc1();
 	    
+	}
+
+	// titulo 2
+
+	if ( transcurso.toFixed() == 65 && segundo != 65 ) {
+	    console.log("Título 2");
+	    segundo = transcurso.toFixed(); 
+	    rmsc1();
+	    rmsc2();
+	    rmIrises();
+	    titulo2(); 
+	    
+	}
+	
+    // Por defecto inicia en la primer escena 
+    
+	if ( transcurso.toFixed() == 70 && segundo != 70 ) {
+	    console.log("Segunda Escena"); 
+	    segundo = transcurso.toFixed();
+	    // aquí puede ir algo asociado a las predicciones 
+	    modoOscuro = false; 
+	    escena = 1;
 	    rmsc1();
 	    rmsc2();
 	    initsc2();
 	    
 	}
 
-	if ( transcurso.toFixed() == 121 && segundo != 121 ) {
-	    console.log("tercera escena"); 
+	if ( transcurso.toFixed() == 130 && segundo != 130 ) {
+	    console.log("Título 3");
+	    segundo = transcurso.toFixed(); 
+	    rmsc1();
+	    rmsc2();
+	    rmIrises();
+	    titulo3(); 
+	    
+	}
+	
+	if ( transcurso.toFixed() == 135 && segundo != 135 ) {
+	    console.log("Tercera Escena"); 
 	    segundo = transcurso.toFixed();
 	    modoOscuro = true;
 	    irises = true; 
@@ -1300,10 +1361,12 @@ function score() {
 	    
 	}
 
+	/*
 	if( transcurso.toFixed() == 115 && segundo != 115 ){
 	    segundo = transcurso.toFixed(); 
 	   
 	}
+	*/ 
 	
     }
 }
@@ -1326,7 +1389,7 @@ function texto() {
 
     loader1.load( 'fonts/hacked.json', function( font ) {
 
-	const message = txtPrueba[2];
+	const message = "";
 	const shapes = font.generateShapes( message, 2 );
 	const geometry = new THREE.ShapeGeometry( shapes );
 	geometry.computeBoundingBox();
@@ -1372,7 +1435,7 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 	txtPosY2 = posY2;
 	
 	const message = mensaje; 
-	const shapes = font.generateShapes( message, 0.85 );
+	const shapes = font.generateShapes( message, 0.75 );
 	const geometry = new THREE.ShapeGeometry( shapes );
 	geometry.computeBoundingBox();
 	const xMid = - 0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
@@ -1382,7 +1445,7 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 	text.material.dispose();
 
 	const message2 = mensaje2; 
-	const shapes2 = font.generateShapes( message2, 0.85 );
+	const shapes2 = font.generateShapes( message2, 0.75 );
 	const geometry2 = new THREE.ShapeGeometry( shapes2 );
 	geometry2.computeBoundingBox();
 	const xMid2 = - 0.5 * ( geometry2.boundingBox.max.x - geometry2.boundingBox.min.x );
@@ -1406,7 +1469,6 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 
 function retro() {
     const data = new Uint8Array( textureSize * textureSize * 3 );
-
     texture = new THREE.DataTexture( data, textureSize, textureSize, THREE.RGBFormat );
     texture.minFilter = THREE.NearestFilter;
     texture.magFilter = THREE.NearestFilter;
@@ -1421,12 +1483,12 @@ function onWindowResize() {
 async function detonar() {
     await renderPrediction();
     // sonido();
+    loaderHTML.style.display = 'none';
+
     console.log('██╗  ██╗███╗   ██╗████████╗ ██╗\n██║  ██║████╗  ██║╚══██╔══╝███║\n███████║██╔██╗ ██║   ██║   ╚██║\n╚════██║██║╚██╗██║   ██║    ██║\n     ██║██║ ╚████║   ██║    ██║\n     ╚═╝╚═╝  ╚═══╝   ╚═╝    ╚═╝'); // fps();
     inicio = Date.now();
     respawn.start(); 
 }
-
-
 
 function cols() {
     colores2 = [new THREE.Color( 0x711c91 ),
@@ -1473,6 +1535,54 @@ function materiales() {
 
 }
 
+//////////////////////////////////////
+//////////////////// PARPADEO
+//////////////////////////////////////
+
+
+function initBlinkRateCalculator() {
+  rateInterval = setInterval(() => {
+    blinkRate = tempBlinkRate * 6;
+    tempBlinkRate = 0;
+  }, 10000);
+}
+
+function updateBlinkRate() {
+  tempBlinkRate++;
+}
+
+function getEucledianDistance(x1, y1, x2, y2) {
+  return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+}
+
+function getEAR(upper, lower) {
+  return (
+    (getEucledianDistance(upper[5][0], upper[5][1], lower[4][0], lower[4][1]) +
+      getEucledianDistance(
+        upper[3][0],
+        upper[3][1],
+        lower[2][0],
+        lower[2][1]
+      )) /
+    (2 *
+      getEucledianDistance(upper[0][0], upper[0][1], upper[8][0], upper[8][1]))
+  );
+}
+
+function getIsVoluntaryBlink(blinkDetected) {
+  // NOTE: checking if blink is detected twice in a row, anything more than that takes more deleberate effort by user.
+  // NOTE: adding this to separate intentional blinks
+  if (blinkDetected) {
+    if (blinked) {
+      return true;
+    }
+    blinked = true;
+  } else {
+    blinked = false;
+  }
+
+  return false;
+}
 
 video = document.getElementById( 'video' );
 
