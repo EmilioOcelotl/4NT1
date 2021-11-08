@@ -460,7 +460,7 @@ async function setupCamera() {
 	    // height: camHeight,
 
 	    width: mobile ? undefined : camWidth,
-	    height: mobile ? undefined : camHeight
+	    height: mobile ? undefined : camHeight,
 
 	    
 	    frameRate: {ideal: 10, max: 30},
@@ -652,10 +652,15 @@ async function renderPrediction() {
 
     /// texto movimiento
 
+    let delta, time; 
+
+    if(!mobile || cuboGBool){
+	delta = clock.getDelta();
+	time = clock.getElapsedTime() * 10;
+    }
+    
     if(!mobile){
-	const delta = clock.getDelta();
-	const time = clock.getElapsedTime() * 10;
-	
+
 	// const position = geometry.attributes.position;
 	
 	for ( let i = 0; i < txtPos1.count; i ++ ) {
@@ -697,7 +702,7 @@ async function renderPrediction() {
 		// txtPos1.setX( i, txtPos1init.attributes.position.x); 
 	    }
 	}
-    }
+
 					
     requestAnimationFrame(renderPrediction);
 };
@@ -740,8 +745,7 @@ async function init() {
     // let {width, height} = stream.getTracks()[0].getSettings();
     // console.log('Resolución:'+ `${width}x${height}`); // 640x480
 
-    geometryVideo = new THREE.PlaneGeometry( camWidth/7, camHeight /7, 16, 16); // Dos modalidades, abierta y ajustada para cel
-    
+    const geometryVideo = new THREE.PlaneGeometry( camWidth/7, camHeight /7, 16, 16); // Dos modalidades, abierta y ajustada para cel
     materialVideo = new THREE.MeshBasicMaterial( {
 	color: 0xffffff,
 	side: THREE.DoubleSide,
@@ -886,8 +890,8 @@ function initsc0() {
 	buscando = false;
 	scene.remove( cuboGrande );
 
-	intro.restart();
-	intro.start();
+	intro.restart(); // que se detone hasta que la libería esté cargada 
+	// intro.start();
 
 	bloomPass.threshold = 0.7;
 	bloomPass.strength = 0.5;

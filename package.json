@@ -20,13 +20,13 @@
     "tone": "^14.7.77"
   },
   "scripts": {
-    "watch": "esbuild index.js --servedir=. --bundle --target=es6 --external:os",
-    "build": "./scripts/build-demo.sh",
-    "build-deps": "yarn build-model && yarn build",
-    "build-model": "cd .. && yarn && yarn build-npm",
-    "lint": "eslint .",
-    "link-local": "yalc link @tensorflow-models/face-landmarks-detection",
-    "deployar": "yarn build-model && yarn build && cp -r audio dist && cp -r img dist && cp -r fonts dist"
+      "watch": "esbuild index.js --servedir=. --bundle --target=es6 --external:os",
+      "build": "./scripts/build-demo.sh",
+      "build-deps": "yarn build-model && yarn build",
+      "build-model": "cd .. && yarn && yarn build-npm",
+      "lint": "eslint .",
+      "link-local": "yalc link @tensorflow-models/face-landmarks-detection",
+      "deployar": "sudo rm -r dist node_modules && yarn && yarn build-model && yarn build && cp -r audio dist && cp -r img dist && cp -r fonts dist"
   },
   "browser": {
     "crypto": false
