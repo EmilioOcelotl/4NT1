@@ -273,7 +273,8 @@ let txtPrueba = [
     "Una oportunidad\n para cuidar la presencia",
     "Vertices geométricos\n que difuminan la presencia\n pero no la eliminan",
     "¿Qué hay\n detrás de la máscara?",
-    "Triangulaciones"
+    "Triangulaciones",
+    "El efecto es distracción y evidencia"
 ];
 
 let txtInstrucciones = [
