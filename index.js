@@ -409,6 +409,10 @@ let camWidth, camHeight;
 let wCor, hCor;
 let camSz; 
 
+let gometryVideo; 
+let vidGeometry; 
+let planeVideoOrg;
+
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 // /////////// Setupear la cámara
@@ -452,10 +456,14 @@ async function setupCamera() {
 	'video': {
 	    facingMode: 'user',
 	  
-		width: camWidth, // antes 640
-		height: camHeight,    
+	    // width: camWidth, // antes 640
+	    // height: camHeight,
+
+	    width: mobile ? undefined : camWidth,
+	    height: mobile ? undefined : camHeight
+
 	    
-	    // frameRate: {ideal: 10, max: 15},
+	    frameRate: {ideal: 10, max: 30},
 	}
     });
     
@@ -668,7 +676,9 @@ async function renderPrediction() {
 	}
 	
 	txtPos2.needsUpdate = true;
-        
+	    
+	}
+	
 	if(cuboGBool){
 	    const algo = cuboGrande.geometry.attributes.position;
 	    
@@ -730,8 +740,8 @@ async function init() {
     // let {width, height} = stream.getTracks()[0].getSettings();
     // console.log('Resolución:'+ `${width}x${height}`); // 640x480
 
-    const geometryVideo = new THREE.PlaneGeometry( camWidth/7, camHeight /7 ); // Dos modalidades, abierta y ajustada para cel
- 
+    geometryVideo = new THREE.PlaneGeometry( camWidth/7, camHeight /7, 16, 16); // Dos modalidades, abierta y ajustada para cel
+    
     materialVideo = new THREE.MeshBasicMaterial( {
 	color: 0xffffff,
 	side: THREE.DoubleSide,
@@ -740,6 +750,8 @@ async function init() {
     } );
     
     planeVideo = new THREE.Mesh( geometryVideo, materialVideo );
+    
+    
     planeVideo.rotation.x = Math.PI;
     planeVideo.position.z = -10;
     // scene.add( planeVideo );
@@ -847,6 +859,7 @@ function initsc0() {
 	materialVideo.map.wrapS = THREE.RepeatWrapping;
 	materialVideo.map.repeat.x = - 1;
 
+	text.material.color = new THREE.Color(0xffffff); 
 	planeVideo.geometry.dispose();
 	const geometryVideoNew = new THREE.PlaneGeometry( 480/15, 640/15 ); // Dos modalidades, abierta y ajustada para cel
 
