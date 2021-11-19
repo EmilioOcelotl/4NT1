@@ -21,4 +21,4 @@ yarn rimraf dist/
 yarn rollup -c
 cp index.html dist/
 
-echo "Demo built successfully"
+echo "Ya estufas"

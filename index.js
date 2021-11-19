@@ -1,4 +1,3 @@
-
 /////////////////////////////////
 // ///////// 4NT1 /////////////////
 // ////////////////////////////////
@@ -338,19 +337,17 @@ let loop, loopTxt, loopDescanso;
 // Textos generales 
 
 loop = new Tone.Loop((time) => {
-
    
     if(boolText){
 	chtexto(
 	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
 	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
-	    Math.random()*40 - 20,
-	    Math.random()*40 - 20,
-	    Math.random()*40 - 20,
-	    Math.random()*40 - 20
+	    Math.random()*40 - 0,
+	    Math.random()*40 - 30,
+	    Math.random()*40 - 0,
+	    Math.random()*40 - 30
 	);
     }
-
 
     let fondosAl = Math.floor(Math.random()*14);
     fondos.player(fondosAl.toString()).start(time);
@@ -366,7 +363,7 @@ loopTxt = new Tone.Loop((time) => {
 	    txtInstrucciones[Math.floor(Math.random()*txtInstrucciones.length)],
 	    txtInstrucciones[Math.floor(Math.random()*txtInstrucciones.length)],
 	    Math.random()*40 - 20,
-	    Math.random()*40 - 20,
+	    Math.random()*40  -20,
 	    Math.random()*40 - 20,
 	    Math.random()*40 - 20
 	);
@@ -403,6 +400,8 @@ const EAR_THRESHOLD = 0.27;
 let blinkConta = 0;
 
 let txtPos1 = [], txtPos2 = []; 
+let txtPosCopy1 = [], txtPosCopy2 = []; 
+let textCopy1, textCopy2; 
 
 let cuboGrandeOrg;
 
@@ -574,7 +573,7 @@ async function renderPrediction() {
 
     // ///////////////// rotación en z de la cara
 
-    if (predictions.length > 0) {
+   if (predictions.length > 0) {
 	const {annotations} = predictions[0]; // solo agarra una prediccion
 	const [topX, topY] = annotations['midwayBetweenEyes'][0];
 	const [rightX, rightY] = annotations['rightCheek'][0];
@@ -658,33 +657,52 @@ async function renderPrediction() {
     if(!mobile || cuboGBool){
 	delta = clock.getDelta();
 	time = clock.getElapsedTime() * 10;
+	var time2 = Date.now() * 0.0005;
+
+
     }
-    
+
+   
     if(!mobile){
 
 	// const position = geometry.attributes.position;
+
+	text.geometry.attributes.position.needsUpdate = true;
 	
-	for ( let i = 0; i < txtPos1.count; i ++ ) {
-	    // let d = perlin.noise(txtPos1[i] * 0.001 +time  ); 
-	    const y = 0.5 * Math.sin( i / 5 + ( time + i ) / 7 );
-	    txtPos1.setZ( i, y );
+	for ( let i = 0; i < text.geometry.attributes.position.count; i ++ ) {
+	    // let d = perlin.noise(txtPos1[i] * 0.001 +time  );
+	    
+	let d = perlin.noise(
+	    text.geometry.attributes.position.getX(i) * 0.057+ time2,
+	    text.geometry.attributes.position.getY(i) * 0.0575 + time2,
+	    text.geometry.attributes.position.getZ(i) * 0.058+ time2) *  0.1; 
+	    
+	    //const y = 0.5 * Math.sin( i / 5 + ( time + i ) / 7 );
+	    
+	    //text.geometry.attributes.position.setX( i, textCopy1.geometry.attributes.position.getX(i) + d );
+	    //text.geometry.attributes.position.setY( i, textCopy1.geometry.attributes.position.getY(i) + d );
+	    text.geometry.attributes.position.setZ( i, textCopy1.geometry.attributes.position.getZ(i) + d );
 	    // txtPos1.setX( i, txtPos1init.attributes.position.x); 
 	}
+
+	text2.geometry.attributes.position.needsUpdate = true;
 	
-	txtPos1.needsUpdate = true;
-	
-	
-	for ( let i = 0; i < txtPos2.count; i ++ ) {
-	    // let d = perlin.noise(txtPos1[i] * 0.001 +time  ); 
-	    const y = 0.5 * Math.sin( i / 5 + ( time + i ) / 7 );
-	    txtPos2.setZ( i, y );
-	    // txtPos1.setX( i, txtPos1init.attributes.position.x); 
-	}
-	
-	txtPos2.needsUpdate = true;
+	for ( let i = 0; i < text2.geometry.attributes.position.count; i ++ ) {
+
+	let d = perlin.noise(
+	    text2.geometry.attributes.position.getX(i) * 0.0575+ time2,
+	    text2.geometry.attributes.position.getY(i) * 0.058 + time2,
+	    text2.geometry.attributes.position.getZ(i) * 0.057+ time2) *  0.1; 
+	    
+	    //const y = 0.5 * Math.sin( i / 5 + ( time + i ) / 7 );
+	    
+	    //text2.geometry.attributes.position.setX( i, textCopy2.geometry.attributes.position.getX(i) + d );
+	    //text2.geometry.attributes.position.setY( i, textCopy2.geometry.attributes.position.getY(i) + d );
+	    text2.geometry.attributes.position.setZ( i, textCopy2.geometry.attributes.position.getZ(i) +d );
 	    
 	}
-	
+    }
+    
 	if(cuboGBool){
 	    const algo = cuboGrande.geometry.attributes.position;
 	    
@@ -792,7 +810,6 @@ async function init() {
     } );
     
     planeB = [new THREE.Points( pGeometry[0], matPoints ), new THREE.Points( pGeometry[1], matPoints ), new THREE.Points( pGeometry[2], matPoints )];
-
    
     for (var i = 0; i < 3; i++) {
 	pGeometry[i].verticesNeedUpdate = true;
@@ -803,9 +820,7 @@ async function init() {
    
     
     let audioSphere = new THREE.BoxGeometry( 400, 400, 400, 16, 16, 16 );
-
     cuboGrande = new THREE.Mesh(audioSphere, materialC2 );
-
     cuboGrandeOrg = new THREE.Mesh(audioSphere, materialC2 );
 
     texto();
@@ -986,10 +1001,11 @@ function initsc1() {
     loop.start(0);
     line.stop();
     outline.stop(); 
-    text.material.blending = THREE.AdditiveBlending; 
-    text2.material.blending = THREE.AdditiveBlending; 
 
-    text.material.color = new THREE.Color(0x000000); 
+    // text.material.blending = THREE.AdditiveBlending; 
+    // text2.material.blending = THREE.AdditiveBlending; 
+
+    text.material.color = new THREE.Color(0xffffff ); 
     
     // cuboGBool = true; 
     // respawn.start(); // otro sonido que no sea respawn 
@@ -1047,7 +1063,7 @@ function initsc1() {
 
 // dos correcciones de acuerdo a la resolución. Pienso que esto tiene que ver con el modo horizontal o vertical. Cada navegador hace lo que quiere y firefox nunca me deja jalar la cámara en módo vertical 
 
-function animsc1() {
+function animsc1() { 
 
     perlinValue = 0.004+(transcurso/60*0.004); 
     planeVideo.material.opacity = transcurso/60 +0.1; 
@@ -1115,7 +1131,7 @@ function initsc2() {
     line.start(0); 
     loopTxt.start(0); 
     
-    text.material.color = new THREE.Color(0x000000); 
+    text.material.color = new THREE.Color(0xffffff); 
 
     scene.add( planeVideo);
     scene.add( cuboGrande ); 
@@ -1405,10 +1421,10 @@ function texto() {
 
     const loader1 = new THREE.FontLoader();
 
-    loader1.load( 'fonts/hacked.json', function( font ) {
+    loader1.load( 'fonts/techno.json', function( font ) {
 
 	const message = "";
-	const shapes = font.generateShapes( message, 2 );
+	const shapes = font.generateShapes( message, 1);
 	const geometry = new THREE.ShapeGeometry( shapes );
 	geometry.computeBoundingBox();
 
@@ -1445,7 +1461,7 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 
     const loader1 = new THREE.FontLoader();
  
-    loader1.load( 'fonts/hacked.json', function( font ) {
+    loader1.load( 'fonts/techno.json', function( font ) {
 	
 	txtPosX = posX;
 	txtPosY = posY;	
@@ -1453,7 +1469,7 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 	txtPosY2 = posY2;
 	
 	const message = mensaje; 
-	const shapes = font.generateShapes( message, 0.75 );
+	const shapes = font.generateShapes( message, 1.5 );
 	const geometry = new THREE.ShapeGeometry( shapes );
 	geometry.computeBoundingBox();
 	const xMid = - 0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
@@ -1463,7 +1479,7 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 	text.material.dispose();
 
 	const message2 = mensaje2; 
-	const shapes2 = font.generateShapes( message2, 0.75 );
+	const shapes2 = font.generateShapes( message2, 1.5 );
 	const geometry2 = new THREE.ShapeGeometry( shapes2 );
 	geometry2.computeBoundingBox();
 	const xMid2 = - 0.5 * ( geometry2.boundingBox.max.x - geometry2.boundingBox.min.x );
@@ -1474,11 +1490,16 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 
 	if(!mobile){
 
-	    txtPos1 = geometry.attributes.position;
-	    txtPos1.usage = THREE.DynamicDrawUsage;
+	    //text2Copy = geometry.attributes.position;
+	    text.geometry.usage = THREE.DynamicDrawUsage;
+	    //txtPosCopy1 = txtPos1.clone(); 
+	    textCopy1 = text.clone(); 
+
 	    
-	    txtPos2 = geometry2.attributes.position;
-	    txtPos2.usage = THREE.DynamicDrawUsage;
+	    // txtPos2 = geometry2.attributes.position;
+	    text2.geometry.usage = THREE.DynamicDrawUsage;
+	    textCopy2 = text2.clone(); 
+	    // txtPosCopy2 = txtPos2.clone(); 
 	    
 	}
 
