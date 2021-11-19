@@ -1,4 +1,4 @@
-![portada](https://github.com/EmilioOcelotl/4NT1/blob/main/img/antiBanner2do.png)
+![portada](https://github.com/EmilioOcelotl/4NT1/blob/main/img/antiyo.png)
 
 # ANT1
 

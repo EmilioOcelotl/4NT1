@@ -2,18 +2,7 @@
 
 ## Pendientes generales
 
-- [ ] ¿Cómo mantener la premisa del proyecto ?
-
-### Texto
-
-- [ ] Escritura del texto que estará dentro de la piezas
-- [ ] El texto que estará fuera de la pieza puede ser un artículo académico que a su vez, podría dar forma a un capítulo de la tesis
-  - [ ] Observaciones transversales a las piezas > fijación, obsolescencia y contexto (cuidado con eso, primero auto-crítica) 
-
-### Audio
-
-- [ ] Remixeo de algunas rolas
-- [x] Mantener los audios sin master para usarlos en algún otro momento 
+¿Cómo mantener la premisa del proyecto ?
 
 ## Avances y pendientes 
 
@@ -40,20 +29,30 @@
 - [x] Generar un qr
 - [x] Qr más grande y negativo 
 - [x] Cambiar archivos de github al server
-- [ ] Cambiar el json de la fuente al server
-- [ ] Hacer referencia a los json de blazeface y facemesh  
+- [x] Cambiar el json de la fuente al server
 - [x] ¿ Dispose y creación de geometrías que no se estén usando ?
-- [ ] Audio reactividad en cubo grande 
-- [ ] Ajustar resolución por defecto de los dispositivos a las acciones del canvas 
-- [ ] Monitores de audio 
-- [ ] El texto puede ser un recurso pero me imagino más grabaciones de la lectura del texto  
+- [x] Audio reactividad en cubo grande 
+- [x] Ajustar resolución por defecto de los dispositivos a las acciones del canvas 
+- [x] Monitores de audio   
 - [x] Streaming vs cargar todos los archivos. Ligeras variaciones en la reproducción de los archivos  
 - [x] Enviar un mouse, activar el wifi con teclado virtual e incluso el inicio 
 - [x] Cámara: en escritorio y en teléfono: 160x120 y 120x160 respectivamente. Probar con esas dos resoluciones. Dos correcciones de acuerdo a la resolución. Pienso que esto tiene que ver con el modo horizontal o vertical
-- [ ] Agregar algunas notas desde tone y muestras distorsionadas
 - [x] Valores iniciales para los keypoints 
+- [x] Sin glitch :( 
+- [x] Escritura del texto que estará dentro de la piezas
+- [x] Mantener los audios sin master para usarlos en algún otro momento
+- [x] Textos más legibles
+- [x] Colores no tan saturados
+- [ ] Distintos órdenes de sonido
+- [ ] Si se va el rostro por 5 s esperar
+- [ ] El texto que estará fuera de la pieza puede ser un artículo académico que a su vez, podría dar forma a un capítulo de la tesis
+- [ ] Observaciones transversales a las piezas > fijación, obsolescencia y contexto (cuidado con eso, primero auto-crítica) 
+- [ ] Remixeo de algunas rolas
+- [ ] El texto puede ser un recurso pero me imagino más grabaciones de la lectura del texto
+- [ ] Hacer referencia a los json de blazeface y facemesh
+- [ ] Gaticidad
+- [ ] Paleta de colores para sprites 
 - [ ] Esperar a tiempos mejores
-- [ ] Sin glitch para el movil 
 
 ## Para la muestra 
 
@@ -66,10 +65,6 @@
 - **Digital**: Enlace para acceder con una compu o un móvil 
 
 - **Ambos Casos**: Versión de escritorio y versión para móvil 
-
-### Preguntas 
-
-- ¿ 10 fps es suficiente en el móvil ? 
 
 ## Para el futuro mediano u otro proyecto
 

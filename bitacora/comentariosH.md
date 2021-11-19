@@ -3,8 +3,8 @@
 # Comentarios 
 
 [x] Que los textos sean mucho más legibles
-- Textos fijos cuando hay escenas 
-- Color rosa no tan saturado, otro color no tan primitivo
+[ ] Textos fijos cuando hay escenas 
+[x] Color rosa no tan saturado, otro color no tan primitivo
 - Ordenes de sonido
 - Experiencia de la pieza › critica de la linealidad de la pieza
   - Sistema responsivo
