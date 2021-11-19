@@ -520,13 +520,20 @@ async function renderPrediction() {
 	    // aquí tendría que haber más animsc hay que probar 
 	    
 	    if (buscando) {
-		switch ( escena % numsc ) {
-		case 0:
+		switch ( escena ) {
+		case 0: // titulo 1
 		    animsc1();
 		    break;
-		case 1:
-		    animsc2();
+		case 1: // escena 1
+		    animsc1();
 		    break;
+		case 2: // titulo 2
+		    animsc1();
+		    break;
+		case 3: // escena 2
+		    animsc1();
+		case 4: // titulo 3
+		    // animsc2(); // sin animación 
 		}
 	    }
 
@@ -602,8 +609,8 @@ async function renderPrediction() {
 	
     }
 
-    cuboGrande.rotation.x += 0.004;
-    cuboGrande.rotation.y += (degree/2) * 0.007;
+    cuboGrande.rotation.x += 0.002;
+    cuboGrande.rotation.y += (degree/8) * 0.004;
     ///text.rotation.y = degree * 2 + (Math.PI );
     //text2.rotation.y = degree * 2 + (Math.PI );
 
@@ -658,11 +665,8 @@ async function renderPrediction() {
 	delta = clock.getDelta();
 	time = clock.getElapsedTime() * 10;
 	var time2 = Date.now() * 0.0005;
-
-
     }
 
-   
     if(!mobile){
 
 	// const position = geometry.attributes.position;
@@ -722,7 +726,6 @@ async function renderPrediction() {
 	    }
 	}
 
-					
     requestAnimationFrame(renderPrediction);
 };
 
@@ -773,8 +776,7 @@ async function init() {
     } );
     
     planeVideo = new THREE.Mesh( geometryVideo, materialVideo );
-    
-    
+   
     planeVideo.rotation.x = Math.PI;
     planeVideo.position.z = -10;
     // scene.add( planeVideo );
@@ -786,7 +788,7 @@ async function init() {
     sprite2 = new THREE.TextureLoader().load( 'img/spark1.png' );
 
     matPoints = new THREE.PointsMaterial( {
-	color: colores[0],
+	color: 0x58181F,
 	size: 2,
 	map: sprite,
 	 blending: THREE.AdditiveBlending,
@@ -972,6 +974,9 @@ function titulo1(){
 	);
     }
 
+    cuboGrande.rotation.x = 0;
+    cuboGrande.rotation.y = 0;
+    cuboGrande.rotation.z = 0; 
     
     scene.remove( planeVideo );
     scene.remove( cuboGrande ); 
@@ -1065,7 +1070,7 @@ function initsc1() {
 
 function animsc1() { 
 
-    perlinValue = 0.004+(transcurso/60*0.004); 
+    perlinValue = 0.03+(transcurso/60*0.03); 
     planeVideo.material.opacity = transcurso/60 +0.1; 
     
     var time2 = Date.now() * 0.0005;
@@ -1129,7 +1134,7 @@ function initsc2() {
     cuboGBool = true; 
     loop.start(0); 
     line.start(0); 
-    loopTxt.start(0); 
+    loop.start(0); 
     
     text.material.color = new THREE.Color(0xffffff); 
 
@@ -1205,7 +1210,7 @@ function initsc2() {
 
 function animsc2() {
 
-    perlinValue = 0.06-((transcurso-60)/60*0.06); 
+    perlinValue = 0.02-((transcurso-60)/60*0.02); 
 
     planeVideo.material.opacity = 1 - (transcurso-60)/60; 
     
@@ -1220,7 +1225,7 @@ function animsc2() {
 
 	let d = perlin.noise(keypoints[i][0] * perlinValue + time2,
 			     keypoints[i][1] * perlinValue + time2,
-			     keypoints[i][2] * perlinValue + time2) *  4; 
+			     keypoints[i][2] * perlinValue + time2) *  2; 
 
 	// let d = 0;
 	
@@ -1350,7 +1355,8 @@ function score() {
 
 	if ( transcurso.toFixed() == 65 && segundo != 65 ) {
 	    console.log("Título 2");
-	    segundo = transcurso.toFixed(); 
+	    segundo = transcurso.toFixed();
+	    escena = 2; 
 	    rmsc1();
 	    rmsc2();
 	    rmIrises();
@@ -1365,7 +1371,7 @@ function score() {
 	    segundo = transcurso.toFixed();
 	    // aquí puede ir algo asociado a las predicciones 
 	    modoOscuro = false; 
-	    escena = 1;
+	    escena = 3;
 	    rmsc1();
 	    rmsc2();
 	    initsc2();
@@ -1374,7 +1380,8 @@ function score() {
 
 	if ( transcurso.toFixed() == 130 && segundo != 130 ) {
 	    console.log("Título 3");
-	    segundo = transcurso.toFixed(); 
+	    segundo = transcurso.toFixed();
+	    escena = 4; 
 	    rmsc1();
 	    rmsc2();
 	    rmIrises();
@@ -1387,8 +1394,7 @@ function score() {
 	    segundo = transcurso.toFixed();
 	    modoOscuro = true;
 	    irises = true; 
-	    escena = 2;
-
+	    escena = 5;
 	    rmsc1();
 	    rmsc2();
 	    initIrises();

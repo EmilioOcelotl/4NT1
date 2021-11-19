@@ -2,7 +2,7 @@
 
 # Comentarios 
 
-- Que los textos sean mucho más legibles
+[x] Que los textos sean mucho más legibles
 - Textos fijos cuando hay escenas 
 - Color rosa no tan saturado, otro color no tan primitivo
 - Ordenes de sonido
