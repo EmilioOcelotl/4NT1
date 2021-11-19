@@ -30,11 +30,11 @@ JS [Three.js + TS.js] en modo local:
 
 `yarn`
 
-`yarn build`
+`yarn watch`
 
-o
+Para el sitio 
 
-`yarn build-deps`
+`yarn deployar`
 
 Es posible activar la comunicación OSC. Para realizar esto es necesario descomentar algunas tripas y ejecutar: 
 

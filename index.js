@@ -243,11 +243,61 @@ let matPoints, matPoints2;
 
 let clock
 
-// Puedo usar los textos como arreglo 
+// Puedo usar los textos como arreglo
+// Algunos mensajes son comunes, otros no
 
+// 1. La ofuscación como motivo 
+
+let txtsc1 = [
+    "Predicciones y presencias",
+    "Una oportunidad\npara el desplazamiento",
+    "Como una inmersión\ninformada",
+    "La sugestión\nde los anzuelos\nen la superficie",
+    "la búsqueda por un espacio alejado\na la geopolítica del servidor", 
+    "Pasos [pequeños, inestables]\nhacia la ofuscación\n[analógica, digital]",
+    "La reinterpretación\nde la [predicción, tecnología]",
+    "Predicciones y presencias",
+    "Pixeles desorganizados\nque enmascaran la presencia",
+    "Interrupción de flujos\nno autorizados",
+    "El software\ncomo una caja negra\nde cajas negras",
+    "La ofuscación integrada\ny conducida por la [auto]gestión\ndel dato",
+    "Sin descuidar\nla importancia del gesto",
+    "Continúa\nel tríptico es breve",
+    "Predicciones y presencias",
+    "La ofuscación\nes un motivo de apertura",
+    "El efecto\nes distracción y evidencia",
+    "La inexactitud de las máquinas\nla retroalimentación humana",
+    "El flujo\nes un ciclo con variaciones",
+    "Una oportunidad\npara cuidar la presencia",
+    "La disensión fluída\nde la identidad",
+    "Triangulaciones\nde la resistencia",
+    "Vertices geométricos\n que difuminan la presencia\n pero no la eliminan",
+    "Los QR son referencias\npara desbordar\nel momento", 
+    "Si necesitas más tiempo\npuedes dar otra vuelta",
+];
+
+// 2. Las consecuencias no buscadas del rodeo
+
+let txtsc2 = [    
+    "Predicciones y presencias",
+    "El texto como un dipositivo multihilo",
+    "La infraestructura como una instancia\ndel trabajo invertido",
+    "El tríptico como vehículo",
+    "[Ejecución, variación]\nde la reflexión fijada",
+    "Instancias no escritas dele conocimiento",
+    "La emergencia del comentario",
+    "Un parpadeo largo\npara concluir",
+    "¿Es redundante\nvincular un espacio fisico\ncon el entramado digital?",
+    "Vertices geométricos\n que difuminan la presencia\n pero no la eliminan",
+    "Los QR son referencias\npara desbordar\nel momento",
+    "Predicciones y presencias",
+    "Si necesitas más tiempo\npuedes dar otra vuelta"
+]; 
+
+/*
 let txtPrueba = [
 
-    "Presencia de predicciones",
+    "Presencia de predicciones", 
     "Los comentarios pueden repartirse\ncomo indicaciones y\n como programacion",
     "Una buena parte del trabajo invertido\nse concentra en la\ndelimitacion escenica",
     "Otra parte del trabajo invertido\n esta en la infraestructura",
@@ -276,16 +326,19 @@ let txtPrueba = [
     "El efecto es distracción y evidencia"
 ];
 
+*/
+
 let txtInstrucciones = [
 
     "En espera",
-    "No hay predicciones", 
+    "Ausencia y predicciones", 
     "La pantalla de bloqueo\nse activa cuando la cámara\n detecta uno o más rostros",
     "Por favor,\nacércate para activar la interacción.\nPueden participar hasta tres personas", 
     "Es necesario un rostro\n dentro del rango de la cámara", 
     "Será necesario que te quites el cubrebocas\n y mantengas 1.5 m de distancia", 
     "Es posible acceder\na la versión web de esta aplicación",
     "También hay un repositorio\nque conduce a los módulos\nque conforman esta aplicación",
+    "Ausencia y predicciones"
     // qr del repo 
     
 ]
@@ -296,7 +349,6 @@ let txtDescanso = [
     "descansa",
     "cierra los ojos",
     "difuminate",
-    "deja de ver la pantalla",
     "un par de segundos",
     "cierra los ojos",
     "no hay limite de tiempo",
@@ -332,19 +384,19 @@ fondos.volume.value = -6;
 let perlinValue;
 let perlinAmp;
 let cuboGBool = false;
-let loop, loopTxt, loopDescanso; 
+let loopOf, loopRod, loopTxt, loopDescanso; 
 
 // Textos generales 
 
-loop = new Tone.Loop((time) => {
+loopOf = new Tone.Loop((time) => {
    
     if(boolText){
 	chtexto(
-	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
-	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
-	    Math.random()*40 - 0,
+	    txtsc1[Math.floor(Math.random()*txtsc1.length)],
+	    txtsc1[Math.floor(Math.random()*txtsc1.length)],
+	    Math.random()*20 - 0,
 	    Math.random()*40 - 30,
-	    Math.random()*40 - 0,
+	    Math.random()*20 - 0,
 	    Math.random()*40 - 30
 	);
     }
@@ -352,7 +404,26 @@ loop = new Tone.Loop((time) => {
     let fondosAl = Math.floor(Math.random()*14);
     fondos.player(fondosAl.toString()).start(time);
         
-}, "10");
+}, "5");
+
+loopRod = new Tone.Loop((time) => {
+   
+    if(boolText){
+	chtexto(
+	    txtsc2[Math.floor(Math.random()*txtsc2.length)],
+	    txtsc2[Math.floor(Math.random()*txtsc2.length)],
+	    Math.random()*20 - 0,
+	    Math.random()*40 - 30,
+	    Math.random()*20 - 0,
+	    Math.random()*40 - 30
+	);
+    }
+
+    let fondosAl = Math.floor(Math.random()*14);
+    fondos.player(fondosAl.toString()).start(time);
+        
+}, "5");
+
 
 // Instrucciones 
 
@@ -379,10 +450,10 @@ loopDescanso = new Tone.Loop((time) => {
 	chtexto(
 	    txtDescanso[Math.floor(Math.random()*txtDescanso.length)],
 	    txtDescanso[Math.floor(Math.random()*txtDescanso.length)],
-	    Math.random()*40 - 20,
-	    Math.random()*40 - 20,
-	    Math.random()*40 - 20,
-	    Math.random()*40 - 20
+	    Math.random()*20 - 0,
+	    Math.random()*40 - 30,
+	    Math.random()*20 - 0,
+	    Math.random()*40 - 30
 	); 
     }
     
@@ -531,7 +602,7 @@ async function renderPrediction() {
 		    animsc1();
 		    break;
 		case 3: // escena 2
-		    animsc1();
+		    animsc2();
 		case 4: // titulo 3
 		    // animsc2(); // sin animación 
 		}
@@ -872,8 +943,11 @@ function initsc0() {
 
     if ( predictions.length < 1 ) {
 
+	outline.stop(0);
+	line.stop(0); 
 	loopTxt.start(0); 
-	loop.stop(0); 
+	loopRod.stop(0);
+	loopOf.stop(0); 
 	out.start(); // out.loop? 
 	scene.add(planeVideo); 
 	planeVideo.material.opacity = 1; 
@@ -896,8 +970,8 @@ function initsc0() {
 
 	if(boolText){
     	    chtexto(
-		txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
-		txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
+		txtsc1[Math.floor(Math.random()*txtsc1.length)],
+		txtsc1[Math.floor(Math.random()*txtsc1.length)],
 		Math.random()*40 - 20,
 		Math.random()*40 - 20,
 		Math.random()*40 - 20,
@@ -959,8 +1033,9 @@ function initsc0() {
 
 function titulo1(){
 
+    outline.stop(0);
+    line.stop(0); 
     console.log("titulo 1 "); 
-    loop.stop(0);
     loopTxt.stop(0); 
     
     if(boolText){
@@ -1003,7 +1078,7 @@ function titulo1(){
 function initsc1() {
 
     cuboGBool = true; 
-    loop.start(0);
+    loopOf.start(0);
     line.stop();
     outline.stop(); 
 
@@ -1036,12 +1111,11 @@ function initsc1() {
     // scene.remove( planeVideo ); 
     scene.add(cuboGrande); 
     scene.add(planeVideo); 
-
     
     if(boolText){
 	chtexto(
-	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
-	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
+	    txtsc1[Math.floor(Math.random()*txtsc1.length)],
+	    txtsc1[Math.floor(Math.random()*txtsc1.length)],
 	    Math.random()*40 - 20,
 	    Math.random()*40 - 20,
 	    Math.random()*40 - 20,
@@ -1106,9 +1180,9 @@ function rmsc1() {
 
 function titulo2(){
 
-    loop.stop(0);
+    loopOf.stop(0);
     loopTxt.stop(0); 
-    
+    line.start(0); 
     if(boolText){
 	chtexto(
 	    "II\nLas consecuencias\nno buscadas del rodeo",
@@ -1132,9 +1206,9 @@ function titulo2(){
 function initsc2() {
 
     cuboGBool = true; 
-    loop.start(0); 
-    line.start(0); 
-    loop.start(0); 
+    loopRod.start(0); 
+    // line.start(0); 
+    // loop.start(0); 
     
     text.material.color = new THREE.Color(0xffffff); 
 
@@ -1181,8 +1255,8 @@ function initsc2() {
 
     if(boolText){
 	chtexto(
-	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
-	    txtPrueba[Math.floor(Math.random()*txtPrueba.length)],
+	    txtsc1[Math.floor(Math.random()*txtsc1.length)],
+	    txtsc1[Math.floor(Math.random()*txtsc1.length)],
 	    Math.random()*40 - 20,
 	    Math.random()*40 - 20,
 	    Math.random()*40 - 20,
@@ -1210,7 +1284,7 @@ function initsc2() {
 
 function animsc2() {
 
-    perlinValue = 0.02-((transcurso-60)/60*0.02); 
+    perlinValue = 0.03-((transcurso-60)/60*0.03); 
 
     planeVideo.material.opacity = 1 - (transcurso-60)/60; 
     
@@ -1225,13 +1299,13 @@ function animsc2() {
 
 	let d = perlin.noise(keypoints[i][0] * perlinValue + time2,
 			     keypoints[i][1] * perlinValue + time2,
-			     keypoints[i][2] * perlinValue + time2) *  2; 
+			     keypoints[i][2] * perlinValue + time2) *  1; 
 
 	// let d = 0;
 	
 	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
-	position[vueltas].setX( i, (1+keypoints[i][0] * 0.1 - wCor) + (1+d) ); // antes 1+analisis
-	position[vueltas].setY( i, (1+keypoints[i][1] * 0.1 - hCor) + (1+d) );
+	position[vueltas].setX( i, (1+keypoints[i][0] * 0.1 - wCor) * (1+d) ); // antes 1+analisis
+	position[vueltas].setY( i, (1+keypoints[i][1] * 0.1 - hCor) * (1+d) );
 	position[vueltas].setZ( i, keypoints[i][2] * 0.05  );
     }
 
@@ -1250,9 +1324,11 @@ function rmsc2() {
 
 function titulo3(){
 
-    loop.stop(0);
-    loopTxt.stop(0); 
-    
+    loopOf.stop(0);
+    loopRod.stop(0); 
+    loopTxt.stop(0);     
+    outline.start();
+
     if(boolText){
 	chtexto(
 	    "III\nCompromiso y escritura",
@@ -1276,7 +1352,6 @@ function titulo3(){
 
 function initIrises(){
 
-    outline.start();
     cuboGBool = false; 
 
     // outline.start();
@@ -1301,7 +1376,8 @@ function initIrises(){
     scene.remove(planeVideo);
     scene.remove(cuboGrande);
     loopTxt.stop(0);
-    loop.stop(0); 
+    loopRod.stop(0);
+    loopOf.stop(0); 
 
     loopDescanso.start(0); 
     
@@ -1378,7 +1454,7 @@ function score() {
 	    
 	}
 
-	if ( transcurso.toFixed() == 130 && segundo != 130 ) {
+	if ( transcurso.toFixed() == 125 && segundo != 125 ) {
 	    console.log("Título 3");
 	    segundo = transcurso.toFixed();
 	    escena = 4; 
@@ -1389,7 +1465,7 @@ function score() {
 	    
 	}
 	
-	if ( transcurso.toFixed() == 135 && segundo != 135 ) {
+	if ( transcurso.toFixed() == 130 && segundo != 130 ) {
 	    console.log("Tercera Escena"); 
 	    segundo = transcurso.toFixed();
 	    modoOscuro = true;
@@ -1475,7 +1551,7 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 	txtPosY2 = posY2;
 	
 	const message = mensaje; 
-	const shapes = font.generateShapes( message, 1.5 );
+	const shapes = font.generateShapes( message, 1 );
 	const geometry = new THREE.ShapeGeometry( shapes );
 	geometry.computeBoundingBox();
 	const xMid = - 0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
@@ -1485,7 +1561,7 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 	text.material.dispose();
 
 	const message2 = mensaje2; 
-	const shapes2 = font.generateShapes( message2, 1.5 );
+	const shapes2 = font.generateShapes( message2, 1 );
 	const geometry2 = new THREE.ShapeGeometry( shapes2 );
 	geometry2.computeBoundingBox();
 	const xMid2 = - 0.5 * ( geometry2.boundingBox.max.x - geometry2.boundingBox.min.x );
