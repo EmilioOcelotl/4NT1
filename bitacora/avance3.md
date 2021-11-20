@@ -43,16 +43,21 @@
 - [x] Mantener los audios sin master para usarlos en algún otro momento
 - [x] Textos más legibles
 - [x] Colores no tan saturados
+- [x] Reinicio y distintos textos por escena
+- [ ] Noise para el cubo Grande
+- [ ] Detonador de qrs
+- [ ] Créditos 
 - [ ] Distintos órdenes de sonido
 - [ ] Si se va el rostro por 5 s esperar
+- [ ] Distintos secuenciadores y ruidos por frase
 - [ ] El texto que estará fuera de la pieza puede ser un artículo académico que a su vez, podría dar forma a un capítulo de la tesis
 - [ ] Observaciones transversales a las piezas > fijación, obsolescencia y contexto (cuidado con eso, primero auto-crítica) 
-- [ ] Remixeo de algunas rolas
 - [ ] El texto puede ser un recurso pero me imagino más grabaciones de la lectura del texto
 - [ ] Hacer referencia a los json de blazeface y facemesh
 - [ ] Gaticidad
 - [ ] Paleta de colores para sprites 
 - [ ] Esperar a tiempos mejores
+
 
 ## Para la muestra 
 

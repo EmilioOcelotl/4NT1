@@ -244,7 +244,8 @@ let txtPosY2 = 1;
 
 let sprite, sprite2;
 
-let matPoints, matPoints2; 
+let matPoints = []; 
+let matPoints2 = [];
 
 let clock;
 
@@ -290,7 +291,7 @@ let txtsc2 = [
     "Predicciones y presencias",
     "El texto como un dipositivo multihilo",
     "La infraestructura como una instancia\ndel trabajo invertido",
-    "El tríptico como vehículo",
+    "Las posilidades del tríptico",
     "[Ejecución, variación]\nde la reflexión fijada",
     "Instancias no escritas dele conocimiento",
     "La emergencia del comentario",
@@ -303,7 +304,11 @@ let txtsc2 = [
     "La [escritura, ejecución]\nde código como improvisación",
     "Ña agencia del error\nen la práctica performática\nde escribir",
     "[Audio, Imagen]\ncomo instancias de conocimiento",
-    "La subjetividad de los ciclos por segundo", 
+    "La subjetividad de los ciclos por segundo",
+    "¿Qué tanto es un 1mb de texto plano?",
+    "Código y reflexión\nen relación\na una escritura automática",
+    "La persecución de premisas históricas",
+    "Espejos o interlocutores", 
 ]; 
 
 /*
@@ -778,9 +783,9 @@ async function renderPrediction() {
 	    // let d = perlin.noise(txtPos1[i] * 0.001 +time  );
 	    
 	let d = perlin.noise(
-	    text.geometry.attributes.position.getX(i) * 0.057+ time2,
-	    text.geometry.attributes.position.getY(i) * 0.0575 + time2,
-	    text.geometry.attributes.position.getZ(i) * 0.058+ time2) *  0.1; 
+	    text.geometry.attributes.position.getX(i) * 0.07+ time2,
+	    text.geometry.attributes.position.getY(i) * 0.07 + time2,
+	    text.geometry.attributes.position.getZ(i) * 0.07+ time2) *  0.25; 
 	    
 	    //const y = 0.5 * Math.sin( i / 5 + ( time + i ) / 7 );
 	    
@@ -795,15 +800,15 @@ async function renderPrediction() {
 	for ( let i = 0; i < text2.geometry.attributes.position.count; i ++ ) {
 
 	let d = perlin.noise(
-	    text2.geometry.attributes.position.getX(i) * 0.0575+ time2,
-	    text2.geometry.attributes.position.getY(i) * 0.058 + time2,
-	    text2.geometry.attributes.position.getZ(i) * 0.057+ time2) *  0.1; 
+	    text2.geometry.attributes.position.getX(i) * 0.07+ time2,
+	    text2.geometry.attributes.position.getY(i) * 0.07 + time2,
+	    text2.geometry.attributes.position.getZ(i) * 0.07+ time2) *  0.25; 
 	    
 	    //const y = 0.5 * Math.sin( i / 5 + ( time + i ) / 7 );
 	    
 	    //text2.geometry.attributes.position.setX( i, textCopy2.geometry.attributes.position.getX(i) + d );
 	    //text2.geometry.attributes.position.setY( i, textCopy2.geometry.attributes.position.getY(i) + d );
-	    text2.geometry.attributes.position.setZ( i, textCopy2.geometry.attributes.position.getZ(i) +d );
+	    text2.geometry.attributes.position.setZ( i, textCopy2.geometry.attributes.position.getZ(i) + d );
 	    
 	}
     }
@@ -888,31 +893,36 @@ async function init() {
     sprite = new THREE.TextureLoader().load( 'img/smoke_05.png' );
     sprite2 = new THREE.TextureLoader().load( 'img/spark1.png' );
 
-    matPoints = new THREE.PointsMaterial( {
-	color: 0x58181F,
-	size: 2,
-	map: sprite,
-	 blending: THREE.AdditiveBlending,
-	// transparent: true,
-	//opacity: 0.5,
-	// sizeAttenuation: false,
-	alphaTest: 0.1,
-	// depthTest: false
-    } );
-
-    matPoints2 = new THREE.PointsMaterial( {
-	color: 0x000000,
-	size: 2,
-	// map: sprite,
-	blending: THREE.AdditiveBlending,
-	// transparent: true,
-	//opacity: 0.5,
-	// sizeAttenuation: false,
-	alphaTest: 0.1,
-	// depthTest: false
-    } );
+    for(let i = 0; i < 3; i++){
     
-    planeB = [new THREE.Points( pGeometry[0], matPoints ), new THREE.Points( pGeometry[1], matPoints ), new THREE.Points( pGeometry[2], matPoints )];
+	matPoints[i] = new THREE.PointsMaterial( {
+	    color: colores[Math.floor(Math.random()*4)],
+	    size: 2,
+	    map: sprite,
+	    blending: THREE.AdditiveBlending,
+	    // transparent: true,
+	    //opacity: 0.5,
+	    // sizeAttenuation: false,
+	    alphaTest: 0.1,
+	    // depthTest: false
+	} );
+
+	matPoints2[i] = new THREE.PointsMaterial( {
+	    color: 0x000000,
+	    size: 2,
+	    // map: sprite,
+	    blending: THREE.AdditiveBlending,
+	    // transparent: true,
+	    //opacity: 0.5,
+	    // sizeAttenuation: false,
+	    alphaTest: 0.1,
+	    // depthTest: false
+	} );
+
+	
+    }
+
+    planeB = [new THREE.Points( pGeometry[0], matPoints[0] ), new THREE.Points( pGeometry[1], matPoints[1] ), new THREE.Points( pGeometry[2], matPoints[2] )];
    
     for (var i = 0; i < 3; i++) {
 	pGeometry[i].verticesNeedUpdate = true;
@@ -1087,17 +1097,19 @@ function titulo1(){
     scene.remove( cuboGrande ); 
     text.material.color = new THREE.Color(0xffffff); 
     cuboGBool = false;
-	
+
+   
     if (predictions.length > 0) {
 	for (let i = 0; i < planeB.length; i++) {
 	    scene.remove( planeB[i] );
 	}
     }
-
+    
     let cuentaPlane = 0;
 
     if (predictions.length > 0) {
 	predictions.forEach((prediction) => {
+	     planeB[cuentaPlane].material = matPoints[Math.floor(Math.random()*3)]; 
 	    scene.add( planeB[cuentaPlane] );
 	    cuentaPlane++;
 	});
@@ -1133,7 +1145,7 @@ function initsc1() {
     perlinAmp = 4; 
     matPoints.map= sprite;
     matPoints.size=4; 
-    planeB[0].material = matPoints; 
+    // planeB[0].material = matPoints; 
 
     scene.add( planeVideo);
 
@@ -1253,7 +1265,6 @@ function initsc2() {
     */ 
     
     // planeVideo.material.opacity = 0.5; 
-    
     cuboGBool = true; 
     // respawn.start();
 
@@ -1269,8 +1280,6 @@ function initsc2() {
     matPoints.size= 4;
     perlinValue = 0.003;
     perlinAmp = 2;
-
-    planeB[0].material = matPoints2; 
 
     // matPoints.blending = THREE.AdditiveBlending;
     text.material.blending = THREE.AdditiveBlending; 
@@ -1304,6 +1313,7 @@ function initsc2() {
 
     if (predictions.length > 0) {
 	predictions.forEach((prediction) => {
+	    planeB[0].material = matPoints2[Math.floor(Math.random()*3)]; 
 	    scene.add( planeB[cuentaPlane] );
 	    cuentaPlane++;
 	});
@@ -1707,23 +1717,11 @@ async function detonar() {
 }
 
 function cols() {
-    colores2 = [new THREE.Color( 0x711c91 ),
-	       new THREE.Color( 0xea00d9 ),
-	       new THREE.Color( 0x0adbc6 ),
-	       new THREE.Color( 0x133e7c ),
+    colores = [new THREE.Color( 0x59181E ),
+	       new THREE.Color( 0x5C1452 ),
+	       new THREE.Color( 0x45195C ),
+	       new THREE.Color( 0x25145C ),
 	       new THREE.Color( 0x000000 )];
-
-    colores = [new THREE.Color( 0x711c91 ),
-	       new THREE.Color( 0xea00d9 ),
-	       new THREE.Color( 0x0adbc6 ),
-	       new THREE.Color( 0x133e7c ),
-	       new THREE.Color( 0x000000 )];
-
-    colores3 = [new THREE.Color( 0xffffff ),
-		new THREE.Color( 0xffffff ),
-		new THREE.Color( 0xffffff ),
-		new THREE.Color( 0xffffff ),
-		new THREE.Color( 0xffffff )];
 }
 
 function materiales() {
