@@ -3,7 +3,7 @@
 // ////////////////////////////////
 
 // Probar si es problema del blazeface en el teléfono 
-// Aligerar el inicio con una escena sencilla
+// Aligerar el inicio  con una escena sencilla
 // Alternar escenas sencillas
 // Multiplayer
 // Mensaje en caso de que no alcance a leer una cámara
@@ -198,9 +198,14 @@ let aletx=[], alety=[], aletz=[];
 let model2;
 const annotateBoxes = true;
 let landmarks;
+
 let inicio;
 let fin, transcurso;
 let segundo;
+
+let inicioCreditos; 
+let finCreditos, transCreditos = 0;
+let segundoCreditos; 
 
 const perlin = new ImprovedNoise();
 let intro; 
@@ -241,7 +246,9 @@ let sprite, sprite2;
 
 let matPoints, matPoints2; 
 
-let clock
+let clock;
+
+let creditos = false; 
 
 // Puedo usar los textos como arreglo
 // Algunos mensajes son comunes, otros no
@@ -274,6 +281,7 @@ let txtsc1 = [
     "Vertices geométricos\n que difuminan la presencia\n pero no la eliminan",
     "Los QR son referencias\npara desbordar\nel momento", 
     "Si necesitas más tiempo\npuedes dar otra vuelta",
+    "Interlocuciones modulares",
 ];
 
 // 2. Las consecuencias no buscadas del rodeo
@@ -291,7 +299,11 @@ let txtsc2 = [
     "Vertices geométricos\n que difuminan la presencia\n pero no la eliminan",
     "Los QR son referencias\npara desbordar\nel momento",
     "Predicciones y presencias",
-    "Si necesitas más tiempo\npuedes dar otra vuelta"
+    "Si necesitas más tiempo\npuedes dar otra vuelta",
+    "La [escritura, ejecución]\nde código como improvisación",
+    "Ña agencia del error\nen la práctica performática\nde escribir",
+    "[Audio, Imagen]\ncomo instancias de conocimiento",
+    "La subjetividad de los ciclos por segundo", 
 ]; 
 
 /*
@@ -555,7 +567,12 @@ async function renderPrediction() {
     if(buscando){
 	fin = Date.now();
 	transcurso = (fin - inicio) / 1000;
-     }
+    }
+
+    if(buscando && creditos){
+	finCreditos = Date.now();
+	transCreditos = ( finCreditos - inicioCreditos) / 1000; 
+    }
     
     // score(transcurso, 10);
 
@@ -592,19 +609,32 @@ async function renderPrediction() {
 	    
 	    if (buscando) {
 		switch ( escena ) {
-		case 0: // titulo 1
+		case 0: // 0 - titulo 1
 		    animsc1();
 		    break;
-		case 1: // escena 1
+		case 1: // 1 - escena 1
 		    animsc1();
 		    break;
-		case 2: // titulo 2
+		case 2: // 2 - titulo 2
 		    animsc1();
 		    break;
-		case 3: // escena 2
+		case 3: // 3 - escena 2
 		    animsc2();
-		case 4: // titulo 3
-		    // animsc2(); // sin animación 
+		    break;
+		case 4: // 4 - titulo 3
+		    //animIrises();
+		    break;
+		case 5: // 5 - escena 5
+		    animIrises();
+		    break; 
+		    // animCreditos(); 
+		case 6: // 6 - Creditos 
+		    animCreditos();
+		    break; 
+		case 7: // epilogo  
+		    break;
+		case 8: // reinicio
+		    break; 
 		}
 	    }
 
@@ -634,9 +664,9 @@ async function renderPrediction() {
 
 		    console.log(blinkConta); 
 
-		    if(blinkConta == 50){
-			console.log("ojos cerrados o muchos parpadeos"); 
-		    } 
+		    //if(blinkConta == 50){
+			//console.log("ojos cerrados o muchos parpadeos"); 
+		    //} 
 		    
 		} else {
 		    blinkConta = 0; 
@@ -1384,11 +1414,35 @@ function initIrises(){
 }
 
 function animIrises(){
-    console.log("hay alguien ahí?"); 
+    
+    // console.log("hay alguien ahí?");
+    if(blinkConta == 50){
+	console.log("creditos");
+	creditos = true;
+	escena = 6;
+	inicioCreditos = Date.now();
+	// nuevo contador 
+    } 
+
 }
 
 function rmIrises(){
     irises = false; 
+}
+
+function initCreditos(){
+}
+
+function animCreditos(){
+}
+
+function rmCreditos(){
+} 
+
+function initEpilogo(){
+}
+
+function reinicio(){
 }
 
 // Ajustar duraciones
@@ -1462,7 +1516,6 @@ function score() {
 	    rmsc2();
 	    rmIrises();
 	    titulo3(); 
-	    
 	}
 	
 	if ( transcurso.toFixed() == 130 && segundo != 130 ) {
@@ -1473,16 +1526,58 @@ function score() {
 	    escena = 5;
 	    rmsc1();
 	    rmsc2();
-	    initIrises();
-	    
+	    initIrises();	    
 	}
 
-	/*
-	if( transcurso.toFixed() == 115 && segundo != 115 ){
-	    segundo = transcurso.toFixed(); 
-	   
+	if ( transcurso.toFixed() == 160 && segundo != 160 ) {
+	    console.log("Epilogo"); 
+	    segundo = transcurso.toFixed();
+	    // modoOscuro = true; 
+	    escena = 7;
+	    rmsc1();
+	    rmsc2();
+	    rmIrises();	    
 	}
-	*/ 
+
+	// Si paso ese tiempo y no parpadearon entonces reinicia
+	
+	if ( transcurso.toFixed() == 165 && segundo != 165 && !creditos ) {
+	    console.log("Reinicio"); 
+	    segundo = transcurso.toFixed();
+	    // modoOscuro = true; 
+	    escena = 8;
+	    rmsc1();
+	    rmsc2();
+	    rmIrises();
+	    // initsc1();
+	    transcurso = 0;
+	    inicio = Date.now();
+	    // fin = 0; 
+	}
+
+	// Creditos 
+
+	if( transCreditos.toFixed() == 5 && segundoCreditos != 5 ){
+	    segundoCreditos = transCreditos.toFixed(); 
+	    initCreditos();
+	    escena = 6; 
+	}
+
+	if( transCreditos.toFixed() == 30 && segundoCreditos != 30 ){
+	    segundoCreditos = transCreditos.toFixed(); 
+	    console.log("Epilogo Creditos "); 
+	    escena = 7;
+	    rmCreditos();
+	    creditos = false; 
+	}
+
+	if( transCreditos.toFixed() == 35 && segundoCreditos != 35 ){
+	    segundoCreditos = transCreditos.toFixed();
+	    console.log("Reinicio créditos");
+	    escena = 8;
+	    transcurso = 0;
+	    transCreditos = 0; 
+	}
 	
     }
 }
