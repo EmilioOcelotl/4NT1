@@ -1569,7 +1569,12 @@
   resolved "https://registry.yarnpkg.com/@swc/helpers/-/helpers-0.2.13.tgz#95d69aaed0998040d455832efbe1342ed79d0809"
   integrity sha512-HxfZHtTgDlME7fH+KIwBrm1B1+2iB3UpbcSbPCZzDAHxZ3z+qfjflHverm33sXrdyQYx4s3J7r6ot76433mwEg==
 
-"@tensorflow-models/blazeface@0.0.7":
+"@tensorflow-models/blazeface@0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@tensorflow-models/blazeface/-/blazeface-0.0.5.tgz#6261fcc5de61a283ea409b69f6a851f44a809826"
+  integrity sha512-bIMJDV2CD8rr7v9OrIDdDZVh9sbk0EhlZdHaDFpgWUw3Lp21wUN7GSifOJVE5hV2ngmpzM+J12OH8bG1GZoDag==
+
+"@tensorflow-models/blazeface@0.0.7", "@tensorflow-models/blazeface@^0.0.7":
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/@tensorflow-models/blazeface/-/blazeface-0.0.7.tgz#0a16499a0cc97fc87e11ae1f78140731c5f63bf2"
   integrity sha512-+hInPkvHJoubfiXlmNuF3SCucZvU6W1PMC25IV99NSAftJUpKvLokfF93iX8UkOFQCXkPFbnLKacGfGlbjgvMw==
@@ -1585,6 +1590,14 @@
 "@tensorflow-models/face-landmarks-detection@link:../dist":
   version "0.0.0"
   uid ""
+
+"@tensorflow-models/facemesh@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@tensorflow-models/facemesh/-/facemesh-0.0.5.tgz#de8fba2c0fe28e08fea1951e080653e1b2fda8ae"
+  integrity sha512-5zn3QxZfMEkUEXDQ1fqjKxK63WpwikwH/SuZpGiNkRjgronkbmCqc/UsLfAPrJjxqcyfRoO+u5fUuqhKe1wyTw==
+  dependencies:
+    "@tensorflow-models/blazeface" "0.0.5"
+    rimraf "^3.0.2"
 
 "@tensorflow/tfjs-backend-cpu@3.9.0":
   version "3.9.0"

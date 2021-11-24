@@ -9,7 +9,9 @@
     "node": ">=8.9.0"
   },
   "dependencies": {
+    "@tensorflow-models/blazeface": "^0.0.7",
     "@tensorflow-models/face-landmarks-detection": "link:../dist",
+    "@tensorflow-models/facemesh": "^0.0.5",
     "@tensorflow/tfjs-backend-webgl": "^3.1.0",
     "@tensorflow/tfjs-converter": "^3.1.0",
     "@tensorflow/tfjs-core": "^3.1.0",
@@ -20,14 +22,14 @@
     "tone": "^14.7.77"
   },
   "scripts": {
-      "watch": "esbuild index.js --servedir=. --bundle --target=es6 --external:os",
-      "build": "./scripts/build-demo.sh",
-      "build-deps": "yarn build-model && yarn build",
-      "build-model": "cd .. && yarn && yarn build-npm",
-      "lint": "eslint .",
-      "link-local": "yalc link @tensorflow-models/face-landmarks-detection",
-      "deployar": "yarn && yarn build-model && yarn build && cp -r audio dist && cp -r img dist && cp -r fonts dist",
-      "limpiar": "sudo rm -r dist node_modules"
+    "watch": "esbuild index.js --servedir=. --bundle --target=es6 --external:os",
+    "build": "./scripts/build-demo.sh",
+    "build-deps": "yarn build-model && yarn build",
+    "build-model": "cd .. && yarn && yarn build-npm",
+    "lint": "eslint .",
+    "link-local": "yalc link @tensorflow-models/face-landmarks-detection",
+    "deployar": "yarn && yarn build-model && yarn build && cp -r audio dist && cp -r img dist && cp -r fonts dist",
+    "limpiar": "sudo rm -r dist node_modules"
   },
   "browser": {
     "crypto": false

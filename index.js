@@ -2,10 +2,7 @@
 // ///////// 4NT1 /////////////////
 // ////////////////////////////////
 
-// Probar si es problema del blazeface en el teléfono 
-// Aligerar el inicio  con una escena sencilla
 // Alternar escenas sencillas
-// Multiplayer
 // Mensaje en caso de que no alcance a leer una cámara
 // Mensajes de vulnerabilidad 
 
@@ -22,11 +19,14 @@ import {RenderPass} from './jsm/postprocessing/RenderPass.js';
 import {UnrealBloomPass} from './jsm/postprocessing/UnrealBloomPass.js';
 import {GlitchPass} from './jsm/postprocessing/GlitchPass.js';
 import {TTFLoader} from './jsm/loaders/TTFLoader.js';
-import perlinNoise3d from 'perlin-noise-3d';
+// import perlinNoise3d from 'perlin-noise-3d';
 // const perlinNoise3d = require('perlin-noise-3d');
 import {AfterimagePass} from './jsm/postprocessing/AfterimagePass.js';
 // import * as blazeface from '@tensorflow-models/blazeface';
-import {ImprovedNoise} from './jsm/math/ImprovedNoise.js'; 
+import {ImprovedNoise} from './jsm/math/ImprovedNoise.js';
+//import '@tensorflow-models/facemesh';
+//import '@tensorflow-models/blazeface';
+
 
 ///////////////////// Variables importantes
 
@@ -181,7 +181,7 @@ const vector = new THREE.Vector2();
 let afterimagePass, bloomPass; 
 let porcentaje;
 
-let noise = new perlinNoise3d();
+// let noise = new perlinNoise3d();
 let noiseStep = 0;
 let vueltas;
 
@@ -250,6 +250,7 @@ let matPoints2 = [];
 let clock;
 
 let creditos = false; 
+let antifont; 
 
 // Puedo usar los textos como arreglo
 // Algunos mensajes son comunes, otros no
@@ -938,6 +939,8 @@ async function init() {
 
     texto();
 
+    loadFont(); 
+    
     renderer = new THREE.WebGLRenderer({antialias: true});
 
     renderer.setPixelRatio( window.devicePixelRatio );
@@ -1599,12 +1602,12 @@ function texto() {
 	
 	const matLite = new THREE.MeshBasicMaterial( {
 	    color: 0x404040,
-	// transparent: true,
+	    // transparent: true,
 	    // opacity: 0.8,
 	    side: THREE.DoubleSide,
 	    // blending: THREE.AdditiveBlending,
 	    // transparent: true,
-    } );
+	} );
 
     const loader1 = new THREE.FontLoader();
 
@@ -1646,9 +1649,9 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
     }
    */ 
 
-    const loader1 = new THREE.FontLoader();
+    //const loader1 = new THREE.FontLoader();
  
-    loader1.load( 'fonts/techno.json', function( font ) {
+    //loader1.load( 'fonts/techno.json', function( font ) {
 	
 	txtPosX = posX;
 	txtPosY = posY;	
@@ -1656,7 +1659,7 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 	txtPosY2 = posY2;
 	
 	const message = mensaje; 
-	const shapes = font.generateShapes( message, 1 );
+	const shapes = antifont.generateShapes( message, 1 );
 	const geometry = new THREE.ShapeGeometry( shapes );
 	geometry.computeBoundingBox();
 	const xMid = - 0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
@@ -1666,7 +1669,7 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 	text.material.dispose();
 
 	const message2 = mensaje2; 
-	const shapes2 = font.generateShapes( message2, 1 );
+	const shapes2 = antifont.generateShapes( message2, 1 );
 	const geometry2 = new THREE.ShapeGeometry( shapes2 );
 	geometry2.computeBoundingBox();
 	const xMid2 = - 0.5 * ( geometry2.boundingBox.max.x - geometry2.boundingBox.min.x );
@@ -1688,9 +1691,9 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 	    textCopy2 = text2.clone(); 
 	    // txtPosCopy2 = txtPos2.clone(); 
 	    
-	}
+	// }
 
-    });
+	}
 }
 
 function retro() {
@@ -1796,6 +1799,18 @@ function getIsVoluntaryBlink(blinkDetected) {
   }
 
   return false;
+}
+
+function loadFont(){
+
+    const loader = new THREE.FontLoader();
+    loader.load( 'fonts/techno.json', function ( response ) {
+	
+	antifont = response;
+	
+	//refreshText();
+	
+    } );
 }
 
 video = document.getElementById( 'video' );

@@ -4,6 +4,8 @@
 
 ¿Cómo mantener la premisa del proyecto ?
 
+Accesible y poco costoso 
+
 ## Avances y pendientes 
 
 - [x] Modificar la textura del video
@@ -23,7 +25,7 @@
 - [x] Score en la consola
 - [x] Distintas resoluciones de la textura para móviles y para escritorio 
 - [x] Tiempo en segundos y no en ciclos de animación - diferencias de fps
-- [x] Texto más extenso, extractos que se detonan a partir de ciertas acciones. Secciones de acuerdo la presencia y no presencia de prediccciones 
+- [x] Texto más extenso, extractos que se detonan a partir de ciertas acciones. Secciones de acuerdo la presencia y no presencia de predicciones 
 - [x] Checar las dependencias del nuevo demo para resolver optimización y vulnerabilidades
 - [x] Manual online y offline de montaje para anexarlo a la entrega
 - [x] Generar un qr
@@ -44,6 +46,7 @@
 - [x] Textos más legibles
 - [x] Colores no tan saturados
 - [x] Reinicio y distintos textos por escena
+- [x] Paleta de colores para sprites 
 - [ ] Noise para el cubo Grande
 - [ ] Detonador de qrs
 - [ ] Créditos 
@@ -55,9 +58,9 @@
 - [ ] El texto puede ser un recurso pero me imagino más grabaciones de la lectura del texto
 - [ ] Hacer referencia a los json de blazeface y facemesh
 - [ ] Gaticidad
-- [ ] Paleta de colores para sprites 
 - [ ] Esperar a tiempos mejores
-
+- [ ] Reescribir el README: Título, subtítulo, resumen corto y resumen largo
+- [ ] Checar el multiplayer cada cierto tiempo 
 
 ## Para la muestra 
 
