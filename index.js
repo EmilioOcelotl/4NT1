@@ -284,6 +284,13 @@ let txtsc1 = [
     "Los QR son referencias\npara desbordar\nel momento", 
     "Si necesitas más tiempo\npuedes dar otra vuelta",
     "Interlocuciones modulares",
+    "El reflejo\nde los espejos electrónicos",
+    "Consecuencias\nde las transfiguraciones corporales",
+    "La percepción analítica\nde las imágenes que no es solamente técnica",
+    "Autobservación, percepción y encarnación\nde modos y espectativas",
+    "Predicciones y presencias",
+    "[Inclusión, Exclusión]\nen la escalada de recursos tecnológicos",
+    "Restar agencia a las plataformas digitales"
 ];
 
 // 2. Las consecuencias no buscadas del rodeo
@@ -309,7 +316,15 @@ let txtsc2 = [
     "¿Qué tanto es un 1mb de texto plano?",
     "Código y reflexión\nen relación\na una escritura automática",
     "La persecución de premisas históricas",
-    "Espejos o interlocutores", 
+    "Espejos o interlocutores",
+    "La estructura tecnológica\nes condición para la estructura",
+    "La revelación\ndel resultado inesperado\ndel procesamiento",
+    "Tiempo insuficiente\npara extender la reflexión extendida",
+    "Una federación\n de iniciativas\npara decentralizar lo sensible",
+    "La escala de tiempo\npara escapar a la\nreflexión instantánea",
+    "1mb de texto plano\npara iniciar\nel díalogo dislocado del tiempo",
+    "Tiempo",
+    "Predicciones y presencias"
 ]; 
 
 /*
@@ -898,7 +913,7 @@ async function init() {
     
 	matPoints[i] = new THREE.PointsMaterial( {
 	    color: colores[Math.floor(Math.random()*4)],
-	    size: 2,
+	    size: 3,
 	    map: sprite,
 	    blending: THREE.AdditiveBlending,
 	    // transparent: true,
@@ -910,7 +925,7 @@ async function init() {
 
 	matPoints2[i] = new THREE.PointsMaterial( {
 	    color: 0x000000,
-	    size: 2,
+	    size: 3,
 	    // map: sprite,
 	    blending: THREE.AdditiveBlending,
 	    // transparent: true,

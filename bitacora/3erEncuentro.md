@@ -9,13 +9,18 @@ Resultados finales:
 
 ## Retos
 
-Dependencia a una conexión constante 
+- Dependencia a una conexión constante 
+- Economía de recursos 
+- Audio
+- Escritura 
 
-## Organización
+## Posibilidades 
 
-## Capas
+La pieza puede ejecutarse localmente o en línea
+Diversos materiales existen paralelamente al archivo que ejecuta el código principal
 
-### Infraestructura
+## Futuro
 
-### Estructura
+Extensión como parte del proyecto de investigación
+Incorporación a la modularidad tecnológica 
 

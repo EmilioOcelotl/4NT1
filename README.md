@@ -4,20 +4,22 @@
 
 La ofuscación como motivo, la escritura como rodeo. 
 
+Anti es un llamado a la responsabilidad de los datos, al compromiso y el cuidado y a la realización de usuarixs que desdibujan las fronteras de la pasividad política y económica teniendo como epicentro lo sensible.
+
 [Ejecución](https://github.com/EmilioOcelotl/4NT1/tree/main/ejecucion.md)
 
 [Bitácora](https://github.com/EmilioOcelotl/anti/tree/main/bitacora) 
 
 [Diagrama de montaje](https://github.com/EmilioOcelotl/anti/tree/main/pdf/antiEx.pdf) 
 
+[Recursos](https://github.com/EmilioOcelotl/4NT1/tree/main/recursos.md)
+
 ## Escritura
 
-Algunas ideas-reflexiones relacionadas con este proyecto se encuentran en:
+Algunas ideas-reflexiones previas/paralelas relacionadas con este proyecto se encuentran en:
 
 - [Panorama](https://piranhalab.github.io/panorama/). Escritura de espacios libres e inmersivos para el performance audiovisual - Dorian Sotomayor, Marianne Teixido y Emilio Ocelotl (en proceso). 
 - [Tres Estudios Abiertos](https://emilioocelotl.github.io/tres-estudios-abiertos/). Prácticas performáticas, audiovisuales y experimentales en el navegador - Emilio Ocelotl
-
-[Recursos](https://github.com/EmilioOcelotl/4NT1/tree/main/recursos.md)
 
 ## Referencias
 
