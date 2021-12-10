@@ -14,7 +14,7 @@ Anti es un pedazo de software que tiene dos funciones: expresar, por medio de lo
 
 El modo exhibición de anti es narrativo y expresa dos momentos centrales de la reflexión resultante del proyecto: 
 
-## u s o c o t i d i a no
+## Uso cotidiano 
 
 El uso cotidiano implica la reconexión y el ruteo del resultado audiovisual ofuscado hacia aplicaciones como zoom, meets etc. 
 
