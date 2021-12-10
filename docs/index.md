@@ -58,19 +58,19 @@ Enlace 2
 
 # Recursos
 
-- https://itnext.io/promise-loading-with-three-js-78a6297652a5
-- https://github.com/tweenjs/tween.js/
-- https://github.com/theankurkedia/blink-detection
-- https://github.com/Tonejs/Tone.js/wiki/Time
-- https://tonejs.github.io/docs/r13/CrossFade
-- https://webrtchacks.github.io/WebRTC-Camera-Resolution/
-- https://www.linux-magazine.com/Online/Features/Generating-QR-Codes-in-Linux
-- https://hackaday.com/2021/09/24/adversarial-makeup-your-contouring-skills-could-defeat-facial-recognition/?
-- https://www.latercera.com/la-tercera-domingo/noticia/la-tecnodiversidad-una-filosofia-contra-el-apocalipsis/FQD4XYJWMVCYZHMLEAQH25VCLU/
-- https://gist.github.com/rampfox/085bf3ffb9ff51e114bf7afdf3ced71b
-- https://github.com/tensorflow/tfjs-models/tree/master/blazeface
-- https://github.com/justadudewhohacks/face-api.js/
-- https://github.com/AndersJessen/FaceAPIJS-ThreeJS
+- [](https://itnext.io/promise-loading-with-three-js-78a6297652a5)
+- [](https://github.com/tweenjs/tween.js/)
+- [](https://github.com/theankurkedia/blink-detection)
+- [](https://github.com/Tonejs/Tone.js/wiki/Time)
+- [](https://tonejs.github.io/docs/r13/CrossFade)
+- [](https://webrtchacks.github.io/WebRTC-Camera-Resolution/)
+- [](https://www.linux-magazine.com/Online/Features/Generating-QR-Codes-in-Linux)
+- [](https://hackaday.com/2021/09/24/adversarial-makeup-your-contouring-skills-could-defeat-facial-recognition/?)
+- [](https://www.latercera.com/la-tercera-domingo/noticia/la-tecnodiversidad-una-filosofia-contra-el-apocalipsis/FQD4XYJWMVCYZHMLEAQH25VCLU/)
+- [](https://gist.github.com/rampfox/085bf3ffb9ff51e114bf7afdf3ced71b)
+- [](https://github.com/tensorflow/tfjs-models/tree/master/blazeface)
+- [](https://github.com/justadudewhohacks/face-api.js/)
+- [](https://github.com/AndersJessen/FaceAPIJS-ThreeJS)
 - https://google.github.io/mediapipe/solutions/face_detection.html
 - https://github.55860.com/jeeliz/jeelizFaceFilter
 - https://www.html5rocks.com/es/tutorials/getusermedia/intro/
