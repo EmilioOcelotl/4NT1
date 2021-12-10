@@ -6,6 +6,8 @@ Utiliza tecnología de detección de puntos de referencia faciales [face-landmar
 
 Sobre esta información se dibuja una capa que permite ofuscar la imagen que se genera a partir de la captura de la cámara web de una computadora.
 
+[Sitio](https://anti.ocelotl.cc) 
+
 ## Modo exhibición
 
 Anti es un pedazo de software que tiene dos funciones: expresar, por medio de lo sensible, reflexiones sobre el papel de la persona en redes sociales, las tecnologías digitales de vigilancia y ofuscación y la escritura de y con software. 
@@ -24,7 +26,9 @@ Demo
 
 OBS Studio es la forma más fácil de transmitir video como una cámara web virtual. 
 
-Basta con dar clic en iniciar cámara virtual y seleccionar la cámara en cuestión del lado de la app 
+Basta con dar clic en iniciar cámara virtual y seleccionar la cámara en cuestión del lado de la app
+
+![obs](https://github.com/EmilioOcelotl/4NT1/blob/main/docs/assets/img/obs.png)
 
 ### Video con v4l2loopback y Ffmpeg (linux)
 
@@ -56,10 +60,14 @@ Enlace 1
 
 Enlace 2
 
+## Escritura
+
+Proximamente... 
+
 # Recursos
 
-- [](https://itnext.io/promise-loading-with-three-js-78a6297652a5)
-- [](https://github.com/tweenjs/tween.js/)
+- [!l](https://itnext.io/promise-loading-with-three-js-78a6297652a5)
+- [!l](https://github.com/tweenjs/tween.js/)
 - [](https://github.com/theankurkedia/blink-detection)
 - [](https://github.com/Tonejs/Tone.js/wiki/Time)
 - [](https://tonejs.github.io/docs/r13/CrossFade)
