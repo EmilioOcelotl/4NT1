@@ -8,13 +8,13 @@ Sobre esta información se dibuja una capa que permite ofuscar la imagen que se 
 
 [Sitio](https://anti.ocelotl.cc) 
 
-## Modo exhibición
+## e x h i b i c i ó n 
 
 Anti es un pedazo de software que tiene dos funciones: expresar, por medio de lo sensible, reflexiones sobre el papel de la persona en redes sociales, las tecnologías digitales de vigilancia y ofuscación y la escritura de y con software. 
 
 El modo exhibición de anti es narrativo y expresa dos momentos centrales de la reflexión resultante del proyecto: 
 
-## Manual de uso cotidiano
+## u s o c o t i d i a no
 
 El uso cotidiano implica la reconexión y el ruteo del resultado audiovisual ofuscado hacia aplicaciones como zoom, meets etc. 
 
@@ -58,46 +58,46 @@ Enlace 1
 
 Enlace 2
 
-## Escritura
+## e s c r i t u r a
 
 Proximamente... 
 
-# Recursos
+# r e c u r s o s 
 
 - [https://itnext.io/promise-loading-with-three-js-78a6297652a5](https://itnext.io/promise-loading-with-three-js-78a6297652a5)
 - [https://github.com/tweenjs/tween.js/](https://github.com/tweenjs/tween.js/)
 - [https://github.com/theankurkedia/blink-detection](https://github.com/theankurkedia/blink-detection)
-- [](https://github.com/Tonejs/Tone.js/wiki/Time)
-- [](https://tonejs.github.io/docs/r13/CrossFade)
-- [](https://webrtchacks.github.io/WebRTC-Camera-Resolution/)
-- [](https://www.linux-magazine.com/Online/Features/Generating-QR-Codes-in-Linux)
-- [](https://hackaday.com/2021/09/24/adversarial-makeup-your-contouring-skills-could-defeat-facial-recognition/?)
-- [](https://www.latercera.com/la-tercera-domingo/noticia/la-tecnodiversidad-una-filosofia-contra-el-apocalipsis/FQD4XYJWMVCYZHMLEAQH25VCLU/)
-- [](https://gist.github.com/rampfox/085bf3ffb9ff51e114bf7afdf3ced71b)
-- [](https://github.com/tensorflow/tfjs-models/tree/master/blazeface)
-- [](https://github.com/justadudewhohacks/face-api.js/)
-- [](https://github.com/AndersJessen/FaceAPIJS-ThreeJS)
-- https://google.github.io/mediapipe/solutions/face_detection.html
-- https://github.55860.com/jeeliz/jeelizFaceFilter
-- https://www.html5rocks.com/es/tutorials/getusermedia/intro/
-- http://phrogz.net/tmp/image_move_sprites_canvas.html
-- https://towardsdatascience.com/face-landmarks-detection-with-mediapipe-facemesh-555fa2e10b06
-- https://www.npmjs.com/package/perlin-noise-3d
-- https://stackoverflow.com/questions/26415778/getusermedia-video-size-in-firefox-chrome-differs
-- https://github.com/keijiro/Skinner
-- https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-18-04
-- https://nicknetvideos.com/blog/post/how-to-run-a-website-in-a-subdomain-in-digital-ocean
-- https://tonejs.github.io/
-- https://doc.sccode.org/Guides/FFT-Overview.html
-- http://www.whole-play.com/post/chuck-browser-communication-with-osc/
-- https://github.com/adzialocha/osc-js
-- https://github.com/MylesBorins/node-osc
-- https://developers.google.com/web/updates/2017/12/audio-worklet
-- https://github.com/umlaeute/v4l2loopback
-- https://scsynth.org/t/tutorial-supercollider-server-plugins-in-c/
-- https://github.com/tensorflow/tfjs-models/tree/master/face-landmarks-detection
-- https://threejs.org/
-- https://supercollider.github.io/
-- https://developer.mozilla.org/es/docs/Web/API/Web_Audio_API	
-- https://github.com/PAIR-code/scatter-gl
-- https://github.com/kylemcdonald/ofxFaceTracker
+- [https://github.com/Tonejs/Tone.js/wiki/Time](https://github.com/Tonejs/Tone.js/wiki/Time)
+- [https://tonejs.github.io/docs/r13/CrossFade](https://tonejs.github.io/docs/r13/CrossFade)
+- [https://webrtchacks.github.io/WebRTC-Camera-Resolution/](https://webrtchacks.github.io/WebRTC-Camera-Resolution/)
+- [https://www.linux-magazine.com/Online/Features/Generating-QR-Codes-in-Linux](https://www.linux-magazine.com/Online/Features/Generating-QR-Codes-in-Linux)
+- [https://hackaday.com/2021/09/24/adversarial-makeup-your-contouring-skills-could-defeat-facial-recognition/?](https://hackaday.com/2021/09/24/adversarial-makeup-your-contouring-skills-could-defeat-facial-recognition/?)
+- [https://www.latercera.com/la-tercera-domingo/noticia/la-tecnodiversidad-una-filosofia-contra-el-apocalipsis/FQD4XYJWMVCYZHMLEAQH25VCLU/](https://www.latercera.com/la-tercera-domingo/noticia/la-tecnodiversidad-una-filosofia-contra-el-apocalipsis/FQD4XYJWMVCYZHMLEAQH25VCLU/)
+- [https://gist.github.com/rampfox/085bf3ffb9ff51e114bf7afdf3ced71b](https://gist.github.com/rampfox/085bf3ffb9ff51e114bf7afdf3ced71b)
+- [https://github.com/tensorflow/tfjs-models/tree/master/blazeface](https://github.com/tensorflow/tfjs-models/tree/master/blazeface)
+- [https://github.com/justadudewhohacks/face-api.js/](https://github.com/justadudewhohacks/face-api.js/)
+- [https://github.com/AndersJessen/FaceAPIJS-ThreeJS](https://github.com/AndersJessen/FaceAPIJS-ThreeJS)
+- [https://google.github.io/mediapipe/solutions/face_detection.html](https://google.github.io/mediapipe/solutions/face_detection.html)
+- [https://github.55860.com/jeeliz/jeelizFaceFilter](https://github.55860.com/jeeliz/jeelizFaceFilter)
+- [https://www.html5rocks.com/es/tutorials/getusermedia/intro/](https://www.html5rocks.com/es/tutorials/getusermedia/intro/)
+- [http://phrogz.net/tmp/image_move_sprites_canvas.html](http://phrogz.net/tmp/image_move_sprites_canvas.html)
+- [https://towardsdatascience.com/face-landmarks-detection-with-mediapipe-facemesh-555fa2e10b06](https://towardsdatascience.com/face-landmarks-detection-with-mediapipe-facemesh-555fa2e10b06)
+- [https://www.npmjs.com/package/perlin-noise-3d](https://www.npmjs.com/package/perlin-noise-3d)
+- [https://stackoverflow.com/questions/26415778/getusermedia-video-size-in-firefox-chrome-differs](https://stackoverflow.com/questions/26415778/getusermedia-video-size-in-firefox-chrome-differs)
+- [https://github.com/keijiro/Skinner](https://github.com/keijiro/Skinner)
+- [https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-18-04](https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-18-04)
+- [https://nicknetvideos.com/blog/post/how-to-run-a-website-in-a-subdomain-in-digital-ocean](https://nicknetvideos.com/blog/post/how-to-run-a-website-in-a-subdomain-in-digital-ocean)
+- [https://tonejs.github.io/](https://tonejs.github.io/)
+- [https://doc.sccode.org/Guides/FFT-Overview.html](https://doc.sccode.org/Guides/FFT-Overview.html)
+- [http://www.whole-play.com/post/chuck-browser-communication-with-osc/](http://www.whole-play.com/post/chuck-browser-communication-with-osc/)
+- [https://github.com/adzialocha/osc-js](https://github.com/adzialocha/osc-js)
+- [https://github.com/MylesBorins/node-osc](https://github.com/MylesBorins/node-osc)
+- [https://developers.google.com/web/updates/2017/12/audio-worklet](https://developers.google.com/web/updates/2017/12/audio-worklet)
+- [https://github.com/umlaeute/v4l2loopback](https://github.com/umlaeute/v4l2loopback)
+- [https://scsynth.org/t/tutorial-supercollider-server-plugins-in-c/](https://scsynth.org/t/tutorial-supercollider-server-plugins-in-c/)
+- [https://github.com/tensorflow/tfjs-models/tree/master/face-landmarks-detection](https://github.com/tensorflow/tfjs-models/tree/master/face-landmarks-detection)
+- [https://threejs.org/](https://threejs.org/)
+- [https://supercollider.github.io/](https://supercollider.github.io/)
+- [https://developer.mozilla.org/es/docs/Web/API/Web_Audio_API](https://developer.mozilla.org/es/docs/Web/API/Web_Audio_API)	
+- [https://github.com/PAIR-code/scatter-gl](https://github.com/PAIR-code/scatter-gl)
+- [https://github.com/kylemcdonald/ofxFaceTracker](https://github.com/kylemcdonald/ofxFaceTracker)
