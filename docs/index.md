@@ -26,7 +26,7 @@ OBS Studio es la forma más fácil de transmitir video como una cámara web virt
 
 Basta con dar clic en iniciar cámara virtual y seleccionar la cámara en cuestión del lado de la app
 
-![obs](/img/obs.png)
+![obs](/assets/img/obs.png)
 
 ### Video con v4l2loopback y Ffmpeg (linux)
 
@@ -64,9 +64,9 @@ Proximamente...
 
 # Recursos
 
-- [!l](https://itnext.io/promise-loading-with-three-js-78a6297652a5)
-- [!l](https://github.com/tweenjs/tween.js/)
-- [](https://github.com/theankurkedia/blink-detection)
+- [https://itnext.io/promise-loading-with-three-js-78a6297652a5](https://itnext.io/promise-loading-with-three-js-78a6297652a5)
+- [https://github.com/tweenjs/tween.js/](https://github.com/tweenjs/tween.js/)
+- [https://github.com/theankurkedia/blink-detection](https://github.com/theankurkedia/blink-detection)
 - [](https://github.com/Tonejs/Tone.js/wiki/Time)
 - [](https://tonejs.github.io/docs/r13/CrossFade)
 - [](https://webrtchacks.github.io/WebRTC-Camera-Resolution/)
