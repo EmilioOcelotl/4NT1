@@ -1,4 +1,4 @@
-# a n t i
+# Anti 
 
 Anti es un llamado a la responsabilidad de los datos, al compromiso y el cuidado y a la realización de usuarixs que desdibujan las fronteras de la pasividad política y económica teniendo como epicentro lo sensible.
 
@@ -8,7 +8,7 @@ Sobre esta información se dibuja una capa que permite ofuscar la imagen que se 
 
 [Sitio](https://anti.ocelotl.cc) 
 
-## e x h i b i c i ó n 
+## Exhibición 
 
 Anti es un pedazo de software que tiene dos funciones: expresar, por medio de lo sensible, reflexiones sobre el papel de la persona en redes sociales, las tecnologías digitales de vigilancia y ofuscación y la escritura de y con software. 
 
@@ -58,11 +58,11 @@ Enlace 1
 
 Enlace 2
 
-## e s c r i t u r a
+## Escritura
 
 Proximamente... 
 
-# r e c u r s o s 
+## Recursos
 
 - [https://itnext.io/promise-loading-with-three-js-78a6297652a5](https://itnext.io/promise-loading-with-three-js-78a6297652a5)
 - [https://github.com/tweenjs/tween.js/](https://github.com/tweenjs/tween.js/)
