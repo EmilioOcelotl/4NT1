@@ -30,16 +30,15 @@ q = Buffer.read(s, "/home/emi/muestras/808/snare__26_.wav");
 
 ~sonFin = {Pan2.ar(LPF.ar(LFSaw.ar(~nota * [0.999, 1.001]).mean * 0.2, ~sweep))};
 
-~demaTempoSin = {Lag.kr(Demand.kr(Impulse.kr(~tempo), 0, Dseq([10, 2, 6]*0.5, inf)), 2)};
+~demaTempoSin = {Lag.kr(Demand.kr(Impulse.kr(~tempo), 0, Dseq([4, 2, 310, 2, 6]*0.25(4, inf)), 2)};
+~sin = {Pan2.ar(SinOsc.ar(~notasin* [3.999, 4.001]/8, 0, 0.4) * Decay.kr(Demand.kr(Impulse.kr(~tempo*1), 0, Dseq([0, 0, 0.25, 0, 0.25, 0, 0].pyramid, inf)) * Impulse.kr(~tempo*~demaTempoSin), 0.2)).fold2(0.1) * 1.5};
 
-~sin = {Pan2.ar(SinOsc.ar(~notasin* [3.999, 4.001]/2, 0, 0.4) * Decay.kr(Demand.kr(Impulse.kr(~tempo*1), 0, Dseq([0, 0, 0.25, 0, 0.25, 0, 0].pyramid, inf)) * Impulse.kr(~tempo*~demaTempoSin), 0.1)).fold2(0.1) * 1.5};
-
-~filtro = {Lag.kr(Demand.kr(Impulse.kr(~tempo*0.125, 1.5), 0, Drand(Array.rand(20, 100, 2500), inf)), 10)};
+~filtro = {Lag.kr(Demand.kr(Impulse.kr(~tempo*0.125, 1.5), 0, Drand(Array.rand(20, 100, 500), inf)), 10)};
 
 ~crack = {LPF.ar(Crackle.ar(1.95, 0.5),  ~filtro)};
 
 ~dema = {Lag.kr(Demand.kr(Impulse.kr(~tempo*0.25), 0, Dseq(Array.rand(20, 0, 0.99999), inf)), 4)};
-~dema2 = {Lag.kr(Demand.kr(Impulse.kr(~demaTempoSin/32), 0, Drand([0.5, 1], inf)), 8)};
+~dema2 = {Lag.kr(Demand.kr(Impulse.kr(~demaTempoSin/32), 0, Drand([0.5, 1]*0.5, inf)), 8)};
 ~dema3 = {Lag.kr(Demand.kr(Impulse.kr(~tempo*0.125), 0, Drand(Array.rand(8, 0.0, 1.0), inf)), 4)};
 
 ~wpA1 = {arg amp = 1; (Pan2.ar(Warp1.ar(1, i, ~dema, ~dema2*[2.1, 1,1.1, 2], 0.1, -1, 8, ~dema3, 4))) * amp};
@@ -49,17 +48,20 @@ q = Buffer.read(s, "/home/emi/muestras/808/snare__26_.wav");
 
 ~pepes = {Pan2.ar(PlayBuf.ar(1, o, BufRateScale.kr(o) * Demand.kr(Impulse.kr(~demaTempoSin), 0, Drand([1], inf)), Impulse.kr(~demaTempoSin * Demand.kr(Impulse.kr(~demaTempoSin/2), 0, Drand([2, 5, 4, 10, 4]*0.25/8, inf))), 0, 0)) * 0.2};
 
-~pepeclap = {Pan2.ar(PlayBuf.ar(1, q, BufRateScale.kr(q) * Lag.kr(Demand.kr(Impulse.kr(~demaTempoSin*0.125/2), 0, Drand([1, 0.125].reverse, inf)), 8), Impulse.kr(~demaTempoSin * Demand.kr(Impulse.kr(~demaTempoSin/4), 0, Dseq([ 2, 5, 16, 10, 4] * 0.125*[0.5, 0.1], inf)), 0.5), 0, 0)) * 0.2};
+	~pepeclap = {Pan2.ar(PlayBuf.ar(1, q, BufRateScale.kr(q) * Lag.kr(Demand.kr(Impulse.kr(~demaTempoSin*0.125/2), 0, Drand([1, 0.125].reverse, inf)), 8), Impulse.kr(~demaTempoSin * Demand.kr(Impulse.kr(~demaTempoSin/4), 0, Dseq([ 2, 5, 16, 10, 4] * 0.125*[0.5, 0.1], inf)),
 
-~out  =  ~pepes + ~pepeclap
+		~out  =  ~crack
+//~dub.free
+	)
 
-)
+		
 
 Scale.hirajoshi.degrees + 60.midicps
 Scale.names
 
 ~out.fadeTime = 0
-
+~out.free
+		
 
 ~out  =  ~wpA1  + ~pepes
 

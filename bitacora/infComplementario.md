@@ -1,0 +1,10 @@
+
+# Puesta en marcha
+
+- No perder la premisa
+- GUI para activar modo fijo e información
+- pitchshift con audio en el navegador
+- contradicciones de enviar del nav a otra app
+  - soluciones: obs loopback
+- (re)escritura de un manual
+- activar/desactivar voz y frases 

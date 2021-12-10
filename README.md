@@ -8,6 +8,8 @@ Anti es un llamado a la responsabilidad de los datos, al compromiso y el cuidado
 
 [Ejecución](https://github.com/EmilioOcelotl/4NT1/tree/main/ejecucion.md)
 
+[Manual](https://github.com/EmilioOcelotl/4NT1/tree/main/manual.md) 
+
 [Bitácora](https://github.com/EmilioOcelotl/anti/tree/main/bitacora) 
 
 [Diagrama de montaje](https://github.com/EmilioOcelotl/anti/tree/main/pdf/antiEx.pdf) 

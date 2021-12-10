@@ -13,6 +13,7 @@ Resultados finales:
 - Economía de recursos 
 - Audio
 - Escritura 
+- Modo exhibición 
 
 ## Posibilidades 
 

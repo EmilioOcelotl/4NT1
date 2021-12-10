@@ -24,6 +24,8 @@ import {TTFLoader} from './jsm/loaders/TTFLoader.js';
 import {AfterimagePass} from './jsm/postprocessing/AfterimagePass.js';
 // import * as blazeface from '@tensorflow-models/blazeface';
 import {ImprovedNoise} from './jsm/math/ImprovedNoise.js';
+import { GUI } from './jsm/libs/dat.gui.module.js';
+
 //import '@tensorflow-models/facemesh';
 //import '@tensorflow-models/blazeface';
 
@@ -145,7 +147,7 @@ let ofTexture;
 
 let cambioC = 0;
 
-let pitchShift, reverb, dist;
+// let pitchShift, reverb, dist;
 let player, antiKick;
 
 let seq1, seq2, seq3;
@@ -171,7 +173,7 @@ if (mobile) {
     textureSize = 512 * dpr;
     console.log('En movimiento');
 } else {
-    textureSize = 1024* dpr;
+    textureSize = 1024 * dpr;
     console.log('Estático');
 }
 
@@ -222,6 +224,34 @@ intro.loop = true;
 intro.volume.value = -6;
 
 const outline = new Tone.Player('audio/fondos/outline.mp3').toDestination(); 
+
+// const distortion = new Tone.Distortion(0.05).toDestination();
+
+/*
+const pitchShift = new Tone.PitchShift().toDestination();
+pitchShift.pitch = -3; // down one octave
+pitchShift.windowSize = 0.03; // down one octave
+
+
+const eq = new Tone.EQ3().connect(pitchShift);
+
+eq.low.value =  Tone.gainToDb(0);
+
+eq.high.value = Tone.gainToDb(0);
+eq.Q.value = 0.01; 
+eq.highFrequency = 2400;
+eq.lowFrequency = 80;
+
+const mic = new Tone.UserMedia();
+
+//.connect( toneFFT );
+
+mic.open().then(() => {
+    openmic = true;
+    mic.connect( eq ); 
+});
+
+*/ 
 
 let glitchPass; 
 
@@ -290,7 +320,11 @@ let txtsc1 = [
     "Autobservación, percepción y encarnación\nde modos y espectativas",
     "Predicciones y presencias",
     "[Inclusión, Exclusión]\nen la escalada de recursos tecnológicos",
-    "Restar agencia a las plataformas digitales"
+    "Restar agencia a las plataformas digitales",
+    "Manuales para la ofuscación",
+    "Servidores de audio\ncomo Jack\npara transformar la voz",
+    "La disulución del ego",
+    "La descentralización\nde la persona\nen la vida cotidiana"
 ];
 
 // 2. Las consecuencias no buscadas del rodeo
@@ -324,8 +358,41 @@ let txtsc2 = [
     "La escala de tiempo\npara escapar a la\nreflexión instantánea",
     "1mb de texto plano\npara iniciar\nel díalogo dislocado del tiempo",
     "Tiempo",
-    "Predicciones y presencias"
+    "Predicciones y presencias",
+    "Temporalidades que se disocian\npero que a veces coinciden",
+    "anti es  un manual",
+    "una aplicación que se inserta\nen un conjunto de módulos",
+    "Un motivo para la reflexión" 
 ]; 
+
+// Instrucciones compartidas para todas las escenas - manual 
+// Visibilizar el manual en modo exhibición 
+
+let txtsc3 =[
+    "Anti es un manual de ofuscación",
+    "Anti es un manual de ofuscación",
+    "Anti es un manual de ofuscación",
+    "Anti corre en modo exhibición",
+    "Anti se ejecuta en modo cotidiano",
+    "El modo exhibición se activa en el navegador",
+    "Es necesario\ncomplementar con la localidad",
+    "El desplazamiento\nde los dispositivos\npara aprovechar\nposibilidades",
+    "Los ajustes de la interfaz de usuarix",
+    "¿Cómo visibilizar el modo exhibición en el manual?",
+    "OBS Studio\nes la forma más fácil\nde transmitir video\ncomo una cámara web virtual.",
+    "Opciones ligeras que solamente pueden ejecutarse en linux",
+    "El rodeo y la necedad\ncomo un aporte\npara el futuro", 
+    "v4l2loopback y Ffmpeg",
+    "modprobe v4l2loopback",
+    "modprobe v4l2loopback",
+    "modprobe v4l2loopback",
+    "ffmpeg -f x11grab -r 20 -s 1920x1080\n-i :0.0+0,0 -vcodec rawvideo\n-pix_fmt yuv420p -threads 0 -f v4l2 /dev/video0",
+    "ffmpeg -f x11grab -r 20 -s 1920x1080\n-i :0.0+0,0 -vcodec rawvideo\n-pix_fmt yuv420p -threads 0 -f v4l2 /dev/video0",
+    "ffmpeg -f x11grab -r 20 -s 1920x1080\n-i :0.0+0,0 -vcodec rawvideo\n-pix_fmt yuv420p -threads 0 -f v4l2 /dev/video0",
+    "Rota\nno hay un centro neutral",
+    
+
+]
 
 /*
 let txtPrueba = [
@@ -419,6 +486,8 @@ let perlinAmp;
 let cuboGBool = false;
 let loopOf, loopRod, loopTxt, loopDescanso; 
 
+
+
 // Textos generales 
 
 loopOf = new Tone.Loop((time) => {
@@ -427,10 +496,10 @@ loopOf = new Tone.Loop((time) => {
 	chtexto(
 	    txtsc1[Math.floor(Math.random()*txtsc1.length)],
 	    txtsc1[Math.floor(Math.random()*txtsc1.length)],
-	    Math.random()*20 - 0,
-	    Math.random()*40 - 30,
-	    Math.random()*20 - 0,
-	    Math.random()*40 - 30
+	    Math.random()*20 - 10,
+	    Math.random()*40 - 20,
+	    Math.random()*20 - 10,
+	    Math.random()*40 - 20
 	);
     }
 
@@ -445,10 +514,10 @@ loopRod = new Tone.Loop((time) => {
 	chtexto(
 	    txtsc2[Math.floor(Math.random()*txtsc2.length)],
 	    txtsc2[Math.floor(Math.random()*txtsc2.length)],
-	    Math.random()*20 - 0,
-	    Math.random()*40 - 30,
-	    Math.random()*20 - 0,
-	    Math.random()*40 - 30
+	    Math.random()*20 - 10,
+	    Math.random()*40 - 20,
+	    Math.random()*20 - 10,
+	    Math.random()*40 - 10
 	);
     }
 
@@ -565,9 +634,8 @@ async function setupCamera() {
 
 	    width: mobile ? undefined : camWidth,
 	    height: mobile ? undefined : camHeight,
-
 	    
-	    frameRate: {ideal: 10, max: 30},
+	    // frameRate: {ideal: 20, max: 60},
 	}
     });
     
@@ -606,9 +674,13 @@ async function renderPrediction() {
 	predictIrises: irises,
     });
 
-    if (prueba != predictions.length) {
+    // y si ya paso cierto tiempo entonces reinicia 
+    
+    if (prueba != predictions.length ) {
 	initsc0();
     }
+
+    // console.log(transcurso); 
 
     prueba = predictions.length;
     // materialVideo.needsUpdate = true;
@@ -711,12 +783,14 @@ async function renderPrediction() {
 	const bottomY = (rightY + leftY) / 2;
 	degree = Math.atan((topY - bottomY) / (topX - bottomX));
 
-	text.position.x = keypoints[0][0]* 0.1 -35 + txtPosX;
-	text.position.y = keypoints[0][1]* 0.1 -30 + txtPosY;
+       // texto anclado al movimiento de la cara
+       
+	//text.position.x = keypoints[0][0]* 0.1 -35 + txtPosX;
+	//text.position.y = keypoints[0][1]* 0.1 -30 + txtPosY;
 	//text.position.z = keypoints[0][2] * 0.1 + 10;
 
-	text2.position.x = keypoints[0][0]* 0.1 -35 + txtPosX2;
-	text2.position.y = keypoints[0][1]* 0.1 -30 + txtPosY2;
+	//text2.position.x = keypoints[0][0]* 0.1 -35 + txtPosX2;
+	//text2.position.y = keypoints[0][1]* 0.1 -30 + txtPosY2;
 	//text2.position.z = keypoints[0][2] * 0.1 + 10;
 	
     } else {
@@ -731,8 +805,8 @@ async function renderPrediction() {
 	
     }
 
-    cuboGrande.rotation.x += 0.002;
-    cuboGrande.rotation.y += (degree/8) * 0.004;
+    cuboGrande.rotation.x += 0.004;
+    cuboGrande.rotation.y += (degree/4) * 0.02;
     ///text.rotation.y = degree * 2 + (Math.PI );
     //text2.rotation.y = degree * 2 + (Math.PI );
 
@@ -754,6 +828,7 @@ async function renderPrediction() {
 
   
     if(cuboGBool || suspendido ){
+	
 	vector.x = ( window.innerWidth * dpr / 2 ) - ( textureSize / 2 );
 	vector.y = ( window.innerHeight * dpr / 2 ) - ( textureSize / 2 );
 	
@@ -799,9 +874,9 @@ async function renderPrediction() {
 	    // let d = perlin.noise(txtPos1[i] * 0.001 +time  );
 	    
 	let d = perlin.noise(
-	    text.geometry.attributes.position.getX(i) * 0.07+ time2,
-	    text.geometry.attributes.position.getY(i) * 0.07 + time2,
-	    text.geometry.attributes.position.getZ(i) * 0.07+ time2) *  0.25; 
+	    text.geometry.attributes.position.getX(i) * 0.04+ time2,
+	    text.geometry.attributes.position.getY(i) * 0.04 + time2,
+	    text.geometry.attributes.position.getZ(i) * 0.04+ time2) *  0.25; 
 	    
 	    //const y = 0.5 * Math.sin( i / 5 + ( time + i ) / 7 );
 	    
@@ -816,9 +891,9 @@ async function renderPrediction() {
 	for ( let i = 0; i < text2.geometry.attributes.position.count; i ++ ) {
 
 	let d = perlin.noise(
-	    text2.geometry.attributes.position.getX(i) * 0.07+ time2,
-	    text2.geometry.attributes.position.getY(i) * 0.07 + time2,
-	    text2.geometry.attributes.position.getZ(i) * 0.07+ time2) *  0.25; 
+	    text2.geometry.attributes.position.getX(i) * 0.04+ time2,
+	    text2.geometry.attributes.position.getY(i) * 0.04 + time2,
+	    text2.geometry.attributes.position.getZ(i) * 0.04+ time2) *  0.25; 
 	    
 	    //const y = 0.5 * Math.sin( i / 5 + ( time + i ) / 7 );
 	    
@@ -836,14 +911,20 @@ async function renderPrediction() {
 	    // algoOrg.needsUpdate = true; 
 	    
 	    for ( let i = 0; i < algo.count; i ++ ) {
+
+		let d = perlin.noise(
+		    algo.getX(i) * 0.01+ time2,
+		    algo.getY(i) * 0.01 + time2,
+		    algo.getZ(i) * 0.01 + time2) *  0.25; 
+
 		// let d = perlin.noise(txtPos1[i] * 0.001 +time  ); 
 		const z = 0.5 * Math.sin( i / 1 + ( time + i ) / 5 );
 		const x = 0.5 * Math.sin( i / 1 + ( time + i ) / 5 );
 		const y = 0.5 * Math.sin( i / 1 + ( time + i ) / 5 );
 		
-		algo.setZ( i,  cuboGrandeOrg.geometry.attributes.position.getZ(i) + z );
-		algo.setX( i,  cuboGrandeOrg.geometry.attributes.position.getX(i) + x );
-		algo.setY( i,  cuboGrandeOrg.geometry.attributes.position.getY(i) + y ); 
+		algo.setZ( i,  cuboGrandeOrg.geometry.attributes.position.getZ(i) + d );
+		algo.setX( i,  cuboGrandeOrg.geometry.attributes.position.getX(i) + d );
+		algo.setY( i,  cuboGrandeOrg.geometry.attributes.position.getY(i) + d ); 
 		// txtPos1.setX( i, txtPos1init.attributes.position.x); 
 	    }
 	}
@@ -903,6 +984,42 @@ async function init() {
     planeVideo.position.z = -10;
     // scene.add( planeVideo );
 
+    //  nuevo gui 
+
+    const gui = new GUI();
+    const modosFolder = gui.addFolder('Modos');
+
+    var options = {
+	exhibición: true,
+	cotidiano: false, 
+    }
+
+    var audioGUI = {
+	vozAjena: true,
+	audio: true,
+	vozPropia: false, 
+    }
+
+    var videoGUI = {
+	texto: true,
+	retro: true,
+	
+    }
+    
+    modosFolder.add(options, 'exhibición', true); 
+    modosFolder.add(options, 'cotidiano', true); 
+
+    const videoFolder = gui.addFolder('Video');
+
+    videoFolder.add(videoGUI, 'texto', true);
+    videoFolder.add(videoGUI, 'retro', true);
+    
+    const audioFolder = gui.addFolder('Audio'); 
+
+    audioFolder.add(audioGUI, 'vozAjena', true); 
+    audioFolder.add(audioGUI, 'audio', true); 
+    audioFolder.add(audioGUI, 'vozPropia', true);
+    
     retro();
     materiales();
 
@@ -913,14 +1030,15 @@ async function init() {
     
 	matPoints[i] = new THREE.PointsMaterial( {
 	    color: colores[Math.floor(Math.random()*4)],
-	    size: 3,
+	    size: 4,
 	    map: sprite,
 	    blending: THREE.AdditiveBlending,
-	    // transparent: true,
-	    //opacity: 0.5,
+	    // rotation: 0.1; 
+	    //transparent: true,
+	    //opacity: 0.75,
 	    // sizeAttenuation: false,
 	    alphaTest: 0.1,
-	    // depthTest: false
+	    //depthTest: false
 	} );
 
 	matPoints2[i] = new THREE.PointsMaterial( {
@@ -931,7 +1049,7 @@ async function init() {
 	    // transparent: true,
 	    //opacity: 0.5,
 	    // sizeAttenuation: false,
-	    alphaTest: 0.1,
+	    alphaTest: 0.9,
 	    // depthTest: false
 	} );
 
@@ -948,7 +1066,7 @@ async function init() {
     geometryB.verticesNeedUpdate = true;
    
     
-    let audioSphere = new THREE.BoxGeometry( 400, 400, 400, 16, 16, 16 );
+    let audioSphere = new THREE.BoxGeometry( 200, 200, 200, 32, 32, 32 );
     cuboGrande = new THREE.Mesh(audioSphere, materialC2 );
     cuboGrandeOrg = new THREE.Mesh(audioSphere, materialC2 );
 
@@ -1124,7 +1242,7 @@ function titulo1(){
     }
     
     let cuentaPlane = 0;
-
+   
     if (predictions.length > 0) {
 	predictions.forEach((prediction) => {
 	     planeB[cuentaPlane].material = matPoints[Math.floor(Math.random()*3)]; 
@@ -1132,6 +1250,7 @@ function titulo1(){
 	    cuentaPlane++;
 	});
     }
+
     
 }
 
@@ -1153,7 +1272,7 @@ function initsc1() {
     irises = false;
     
     cuboGBool = true; 
-    afterimagePass.uniforms['damp'].value = 0.9;
+    afterimagePass.uniforms['damp'].value = 0.85;
 
     bloomPass.threshold = 0.95;
     bloomPass.strength = 0;
@@ -1162,7 +1281,7 @@ function initsc1() {
     perlinValue = 0.03;
     perlinAmp = 4; 
     matPoints.map= sprite;
-    matPoints.size=4; 
+    matPoints.size=6; 
     // planeB[0].material = matPoints; 
 
     scene.add( planeVideo);
@@ -1191,12 +1310,14 @@ function initsc1() {
 
     let cuentaPlane = 0;
 
+   
     if (predictions.length > 0) {
 	predictions.forEach((prediction) => {
 	    scene.add( planeB[cuentaPlane] );
 	    cuentaPlane++;
 	});
     }
+    
    
 }
 
@@ -1204,7 +1325,7 @@ function initsc1() {
 
 function animsc1() { 
 
-    perlinValue = 0.03+(transcurso/60*0.03); 
+    perlinValue = 0.003+(transcurso/60*0.003); 
     planeVideo.material.opacity = transcurso/60 +0.1; 
     
     var time2 = Date.now() * 0.0005;
@@ -1286,7 +1407,7 @@ function initsc2() {
     cuboGBool = true; 
     // respawn.start();
 
-    afterimagePass.uniforms['damp'].value = 0.9;
+    afterimagePass.uniforms['damp'].value = 0.85;
 
     bloomPass.threshold = 0.95;
     bloomPass.strength = 0;
@@ -1295,7 +1416,9 @@ function initsc2() {
     // matPoints.color = new THREE.Color(0x000000); 
     matPoints.map.dispose(); 
     //matPoints.map= sprite;
-    matPoints.size= 4;
+    for(let i = 0; i < 3; i++){	
+	matPoints[i].size= 8;
+    }
     perlinValue = 0.003;
     perlinAmp = 2;
 
@@ -1683,6 +1806,10 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 	text.geometry= geometry;
 	text.material.dispose();
 
+    text.position.x = txtPosX; 
+    text.position.y = txtPosY;
+    text.position.z = 10;
+    
 	const message2 = mensaje2; 
 	const shapes2 = antifont.generateShapes( message2, 1 );
 	const geometry2 = new THREE.ShapeGeometry( shapes2 );
@@ -1693,6 +1820,11 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 	text2.geometry= geometry2;
 	text2.material.dispose();
 
+    text2.position.x = txtPosX2; 
+    text2.position.y = txtPosY2;
+    text2.position.z = 10;
+
+    
 	if(!mobile){
 
 	    //text2Copy = geometry.attributes.position;

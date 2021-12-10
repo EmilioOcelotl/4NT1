@@ -1,0 +1,7 @@
+
+- quitar el trackeo o poner uno más senicillo
+- Elementos adicionales
+- Audio en la exposición (se podrá hacer en el navegador? )
+- Más audios tipo sonido
+- Audio en los dispositivos
+- algún tipo de interacción 
