@@ -1,4 +1,4 @@
-# anti
+# a n t i
 
 Anti es un llamado a la responsabilidad de los datos, al compromiso y el cuidado y a la realización de usuarixs que desdibujan las fronteras de la pasividad política y económica teniendo como epicentro lo sensible.
 
@@ -20,15 +20,13 @@ El uso cotidiano implica la reconexión y el ruteo del resultado audiovisual ofu
 
 [Jack](https://jackaudio.org/) y [OBS Studio](https://obsproject.com/es/download) son las soluciones modulares que mejor se adaptan a Linux, MacOS y Windows. 
 
-Demo
-
 ### Video con OBS (linux, macOS y windows) 
 
 OBS Studio es la forma más fácil de transmitir video como una cámara web virtual. 
 
 Basta con dar clic en iniciar cámara virtual y seleccionar la cámara en cuestión del lado de la app
 
-![obs](https://github.com/EmilioOcelotl/4NT1/blob/main/docs/assets/img/obs.png)
+![obs](/img/obs.png)
 
 ### Video con v4l2loopback y Ffmpeg (linux)
 
