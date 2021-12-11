@@ -6,15 +6,13 @@ La ofuscación como motivo, la escritura como rodeo.
 
 Anti es un llamado a la responsabilidad de los datos, al compromiso y el cuidado y a la realización de usuarixs que desdibujan las fronteras de la pasividad política y económica teniendo como epicentro lo sensible.
 
-[Ejecución](https://github.com/EmilioOcelotl/4NT1/tree/main/ejecucion.md)
+[Modos](https://emilioocelotl.github.io/anti/)
 
-[Manual](https://github.com/EmilioOcelotl/4NT1/tree/main/manual.md) 
+[Ejecución](https://github.com/EmilioOcelotl/4NT1/tree/main/ejecucion.md)
 
 [Bitácora](https://github.com/EmilioOcelotl/anti/tree/main/bitacora) 
 
 [Diagrama de montaje](https://github.com/EmilioOcelotl/anti/tree/main/pdf/antiEx.pdf) 
-
-[Recursos](https://github.com/EmilioOcelotl/4NT1/tree/main/recursos.md)
 
 ## Escritura
 
