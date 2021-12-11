@@ -1,13 +1,5 @@
 # Anti 
 
-Anti es un llamado a la responsabilidad de los datos, al compromiso y el cuidado y a la realización de usuarixs que desdibujan las fronteras de la pasividad política y económica teniendo como epicentro lo sensible.
-
-Utiliza tecnología de detección de puntos de referencia faciales [face-landmarks-detection](https://github.com/tensorflow/tfjs-models/tree/master/face-landmarks-detection) para predecir uno o más rostros.
-
-Sobre esta información se dibuja una capa que permite ofuscar la imagen que se genera a partir de la captura de la cámara web de una computadora.
-
-[Sitio](https://anti.ocelotl.cc) 
-
 Demo 1
 
 Demo 2
