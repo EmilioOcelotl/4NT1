@@ -68,7 +68,7 @@ Versión digital: [https://github.com/EmilioOcelotl/4NT1/tree/main/manualJC](htt
 
 La siguiente imagen es una aproximación gráfica al montaje 
 
-![Diagrama](../img/montaje.jpg)
+![Diagrama](/assets/img/montaje.jpg)
 
 ### Instrucciones de montaje
 
@@ -76,7 +76,7 @@ La siguiente imagen es una aproximación gráfica al montaje
 
 La computadora mac mini es el centro de la configuración tecnológica. Las conexiones son las siguientes: 
 
-![Diagrama](../img/macmini.png)
+![Diagrama](/assets/img/macmini.png)
 
 #### 2. Conexión a Internet
 
@@ -88,17 +88,17 @@ Para conectar la computadora a internet vía WIFI es necesario realizar lo sigui
 
 2.2 Buscar en el escritorio la aplicación Wicd y dar doble clic 
 
-![wifi1](../img/wifi1.png)
+![wifi1](/assets/img/wifi1.png)
 
 2.3 Dar clic en buscar redes, encontrar la red en cuestión
 
 Es posible realizar estas conexiones con el mouse y el teclado incluídos con la entrega.
 
-![wifi2](../img/wifi2.png)
+![wifi2](/assets/img/wifi2.png)
 
 2.3 Dar clic, introducir la contraseña cuando la aplicación lo solicite 
 
-![wifi3](../img/wifi3.png)
+![wifi3](/assets/img/wifi3.png)
 
 Nota: En la entrega se adjunta un mouse para activar estas opciones. Por defecto, cuando se selecciona una casilla, es posible activar un teclado virtual. La entrada de texto puede realizarse con el mouse y el teclado virtual. 
 
@@ -118,7 +118,7 @@ El monitor puede ser calibrado en caso de que sea necesario.
 
 Las conexiones de audio se realizan en la parte posterior del subwoofer como se indica en la siguiente magen:
 
-![](../img/wub.png) 
+![](/assets/img/wub.png) 
 
 El cable jack mini a RCA conecta el audio de la computadora al monitor de audio activo.
 
