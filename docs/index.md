@@ -1,5 +1,13 @@
 # Anti 
 
+Anti es un llamado a la responsabilidad de los datos, al compromiso y el cuidado y a la realización de usuarixs que desdibujan las fronteras de la pasividad política y económica teniendo como epicentro lo sensible.
+
+Utiliza tecnología de detección de puntos de referencia faciales [face-landmarks-detection](https://github.com/tensorflow/tfjs-models/tree/master/face-landmarks-detection) para predecir uno o más rostros.
+
+Sobre esta información se dibuja una capa que permite ofuscar la imagen que se genera a partir de la captura de la cámara web de una computadora.
+
+La aplicación tiene dos modos: el primero (exhibición) es una exploración narrativa de las reflexiones generadas durante la realización del proyecto y el segundo (uso cotidiano) permite utilizar estos módulos en situaciones reales de ofuscación 
+
 Demo 1
 
 Demo 2
@@ -132,6 +140,7 @@ Por el contexto de la pandemia de COVID-19, es necesario que las personas se qui
 
 ## Recursos
 
+- [https://stackoverflow.com/questions/18366229/is-it-possible-to-create-a-button-using-dat-gui](https://stackoverflow.com/questions/18366229/is-it-possible-to-create-a-button-using-dat-gui)
 - [https://itnext.io/promise-loading-with-three-js-78a6297652a5](https://itnext.io/promise-loading-with-three-js-78a6297652a5)
 - [https://github.com/tweenjs/tween.js/](https://github.com/tweenjs/tween.js/)
 - [https://github.com/theankurkedia/blink-detection](https://github.com/theankurkedia/blink-detection)

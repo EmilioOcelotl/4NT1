@@ -84,9 +84,6 @@ let geometryB;
 
 let vertices = [];
 
-const panner = new Tone.Panner3D({
-	panningModel: 'HRTF',
-    }).toDestination();
 
 let points = [];
 let normals = [];
@@ -225,33 +222,28 @@ intro.volume.value = -6;
 
 const outline = new Tone.Player('audio/fondos/outline.mp3').toDestination(); 
 
-// const distortion = new Tone.Distortion(0.05).toDestination();
-
 /*
-const pitchShift = new Tone.PitchShift().toDestination();
+const panner = new Tone.Panner3D({
+	panningModel: 'HRTF',
+    });
+
+*/
+const distortion = new Tone.Distortion(0.5);
+
+const pitchShift = new Tone.PitchShift().connect(distortion);
 pitchShift.pitch = -3; // down one octave
 pitchShift.windowSize = 0.03; // down one octave
 
-
-const eq = new Tone.EQ3().connect(pitchShift);
-
-eq.low.value =  Tone.gainToDb(0);
-
-eq.high.value = Tone.gainToDb(0);
-eq.Q.value = 0.01; 
-eq.highFrequency = 2400;
-eq.lowFrequency = 80;
-
-const mic = new Tone.UserMedia();
+const mic = new Tone.UserMedia(2);
 
 //.connect( toneFFT );
 
 mic.open().then(() => {
     openmic = true;
-    mic.connect( eq ); 
+    mic.connect( pitchShift ); 
 });
 
-*/ 
+
 
 let glitchPass; 
 
@@ -586,6 +578,30 @@ let gometryVideo;
 let vidGeometry; 
 let planeVideoOrg;
 
+let exBool = true;
+// let cotiBool = false; 
+let escenasFolder = []; 
+let objEsc1, objEsc2; 
+
+var params = {
+    opacidad: 0.5,
+    damp: 0.5,
+    tamaño: 4,
+    perlin: 0.01, 
+    rojo: 255,
+    verde: 0,
+    azul: 255,
+    texto: true,
+    retro: true, 
+    sonido: true, 
+    voz: false,
+    grano: 0.01,
+    altura: 0
+}
+
+
+let videoFolder = []; 
+
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 // /////////// Setupear la cámara
@@ -653,10 +669,10 @@ async function setupCamera() {
 
 async function renderPrediction() {
 
-    if(buscando){
+    if( buscando && exBool ){
 	fin = Date.now();
 	transcurso = (fin - inicio) / 1000;
-    }
+    } 
 
     if(buscando && creditos){
 	finCreditos = Date.now();
@@ -805,6 +821,11 @@ async function renderPrediction() {
 	
     }
 
+    
+    // panner.positionX.value = degree *2; // degree reducido
+
+    console.log(degree * 4);
+    
     cuboGrande.rotation.x += 0.004;
     cuboGrande.rotation.y += (degree/4) * 0.02;
     ///text.rotation.y = degree * 2 + (Math.PI );
@@ -822,7 +843,8 @@ async function renderPrediction() {
     camera.rotation.z = Math.PI;
     stats.update();
     renderer.render( scene, camera );
-    panner.positionX.value = 0; // degree reducido 
+ 
+    // console.log(degree); 
     vertices = [];
     composer.render();
 
@@ -929,7 +951,10 @@ async function renderPrediction() {
 	    }
 	}
 
+    // console.log(exBool);
+    
     requestAnimationFrame(renderPrediction);
+    // console.log(params.opacidad); 
 };
 
 // /////////////////////// Inicialización
@@ -983,49 +1008,20 @@ async function init() {
     planeVideo.rotation.x = Math.PI;
     planeVideo.position.z = -10;
     // scene.add( planeVideo );
-
-    //  nuevo gui 
-
-    const gui = new GUI();
-    const modosFolder = gui.addFolder('Modos');
-
-    var options = {
-	exhibición: true,
-	cotidiano: false, 
-    }
-
-    var audioGUI = {
-	vozAjena: true,
-	audio: true,
-	vozPropia: false, 
-    }
-
-    var videoGUI = {
-	texto: true,
-	retro: true,
-	
-    }
     
-    modosFolder.add(options, 'exhibición', true); 
-    modosFolder.add(options, 'cotidiano', true); 
-
-    const videoFolder = gui.addFolder('Video');
-
-    videoFolder.add(videoGUI, 'texto', true);
-    videoFolder.add(videoGUI, 'retro', true);
+    // guiFunc(); 
     
-    const audioFolder = gui.addFolder('Audio'); 
+    
+    // afterimagePass.uniforms['damp'].value = 0.85;
 
-    audioFolder.add(audioGUI, 'vozAjena', true); 
-    audioFolder.add(audioGUI, 'audio', true); 
-    audioFolder.add(audioGUI, 'vozPropia', true);
+	// videoFolder.open(); 
     
     retro();
     materiales();
-
-    sprite = new THREE.TextureLoader().load( 'img/smoke_05.png' );
+						       
+    sprite = new THREE.TextureLoader().load( 'img/part.png' );
     sprite2 = new THREE.TextureLoader().load( 'img/spark1.png' );
-
+						       
     for(let i = 0; i < 3; i++){
     
 	matPoints[i] = new THREE.PointsMaterial( {
@@ -1037,8 +1033,8 @@ async function init() {
 	    //transparent: true,
 	    //opacity: 0.75,
 	    // sizeAttenuation: false,
-	    alphaTest: 0.1,
-	    //depthTest: false
+	    alphaTest: 0.9,
+	    // depthTest: false
 	} );
 
 	matPoints2[i] = new THREE.PointsMaterial( {
@@ -1066,7 +1062,7 @@ async function init() {
     geometryB.verticesNeedUpdate = true;
    
     
-    let audioSphere = new THREE.BoxGeometry( 200, 200, 200, 32, 32, 32 );
+    let audioSphere = new THREE.BoxGeometry( 400, 400, 400, 32, 32, 32 );
     cuboGrande = new THREE.Mesh(audioSphere, materialC2 );
     cuboGrandeOrg = new THREE.Mesh(audioSphere, materialC2 );
 
@@ -1101,7 +1097,7 @@ async function init() {
 
     model = await faceLandmarksDetection.load(
 	faceLandmarksDetection.SupportedPackages.mediapipeFacemesh,
-	{maxFaces: 3,
+	{maxFaces: 1,
 	 shouldLoadIrisModel: true, // Hay que cargar un poco más de archivos 
 	 // maxContinuousChecks: 120
 	});
@@ -1175,8 +1171,18 @@ function initsc0() {
 	materialVideo.map = new THREE.VideoTexture( video );
 	respawn.start(); 
 
-	escena = 0; 
-	titulo1();
+	escena = 0;
+
+	if(exBool){
+	    titulo1();
+	} else {
+	    if(escena == 1){
+		initsc1(); 
+	    }
+	    if(escena == 3){
+		initsc2(); 
+	    }
+	}
 
 	transcurso = 0; 
 	inicio = Date.now();
@@ -1279,9 +1285,10 @@ function initsc1() {
     bloomPass.radius = 0;
 
     perlinValue = 0.03;
-    perlinAmp = 4; 
-    matPoints.map= sprite;
-    matPoints.size=6; 
+    perlinAmp = 4;
+    
+    //matPoints.map= sprite;
+    //matPoints.size=6; 
     // planeB[0].material = matPoints; 
 
     scene.add( planeVideo);
@@ -1313,6 +1320,7 @@ function initsc1() {
    
     if (predictions.length > 0) {
 	predictions.forEach((prediction) => {
+	    planeB[0].material = matPoints[Math.floor(Math.random()*3)]; 
 	    scene.add( planeB[cuentaPlane] );
 	    cuentaPlane++;
 	});
@@ -1325,8 +1333,10 @@ function initsc1() {
 
 function animsc1() { 
 
-    perlinValue = 0.003+(transcurso/60*0.003); 
-    planeVideo.material.opacity = transcurso/60 +0.1; 
+    if(exBool){
+	perlinValue = 0.003+(transcurso/60*0.003); 
+	planeVideo.material.opacity = transcurso/60 +0.1; 
+    }
     
     var time2 = Date.now() * 0.0005;
 
@@ -1414,7 +1424,7 @@ function initsc2() {
     bloomPass.radius = 0;
 
     // matPoints.color = new THREE.Color(0x000000); 
-    matPoints.map.dispose(); 
+    // matPoints.map.dispose(); 
     //matPoints.map= sprite;
     for(let i = 0; i < 3; i++){	
 	matPoints[i].size= 8;
@@ -1465,9 +1475,10 @@ function initsc2() {
 
 function animsc2() {
 
-    perlinValue = 0.03-((transcurso-60)/60*0.03); 
-
-    planeVideo.material.opacity = 1 - (transcurso-60)/60; 
+    if(exBool){
+	perlinValue = 0.03-((transcurso-60)/60*0.03); 
+	planeVideo.material.opacity = 1 - (transcurso-60)/60; 
+    }
     
     // console.log((transcurso-40)/40); 
     // cuboGrande.material.opacity = (transcurso-40)/40; 
@@ -1480,7 +1491,7 @@ function animsc2() {
 
 	let d = perlin.noise(keypoints[i][0] * perlinValue + time2,
 			     keypoints[i][1] * perlinValue + time2,
-			     keypoints[i][2] * perlinValue + time2) *  1; 
+			     keypoints[i][2] * perlinValue + time2) *  0.5; 
 
 	// let d = 0;
 	
@@ -1733,6 +1744,126 @@ function score() {
     }
 }
 
+function guiFunc(){
+
+        //  nuevo gui 
+
+    const gui = new GUI();
+
+    const modosFolder = gui.addFolder('Modos');
+   escenasFolder = gui.addFolder('Escenas'); 
+    
+    var audioGUI = {
+	vozAjena: true,
+	audio: true,
+	vozPropia: false, 
+    }
+
+    var videoGUI = {
+	texto: true,
+	retro: true,
+	
+    }
+    
+    //modosFolder.add(options, 'exhibición').onChange( modoEx ); 
+    // modosFolder.add(options, 'cotidiano' ).onChange( modoCot ); 
+
+    var obj = { clicExhibición:modoEx };
+    modosFolder.add(obj,'clicExhibición');
+
+    var obj2 = { clicUsoCotidiano:modoCot };
+    modosFolder.add(obj2,'clicUsoCotidiano');
+
+    modosFolder.open(); 
+
+    objEsc1 = { escena_1:cotEscena1 };
+    escenasFolder.add(objEsc1, 'escena_1');
+        
+    objEsc2 = { escena_2:cotEscena2 };
+    escenasFolder.add(objEsc2, 'escena_2'); 
+
+    videoFolder = gui.addFolder('Video');
+    
+    videoFolder.add(params, 'opacidad', 0, 1, 0.001).onChange(function(){
+	planeVideo.material.opacity = params.opacidad; 
+    })
+
+    videoFolder.add(params, 'damp', 0, 1, 0.001).onChange(function(){
+	afterimagePass.uniforms['damp'].value = params.damp; 
+    })
+
+    videoFolder.add(params, 'tamaño',  1, 50).onChange(function(){
+	for(let i = 0; i < 3; i++){
+	    matPoints[i].size = params.tamaño; 
+	}
+    })
+
+    videoFolder.add(params, 'perlin',  0.001, 0.05, 0.001).onChange(function(){
+	perlinValue = params.perlin; 
+    })
+
+    
+    videoFolder.add(params, 'rojo',  0, 1, 0.01).onChange(function(){
+	const nuevoColor = new THREE.Color(params.rojo, params.verde, params.azul);
+	for(let i = 0; i < 3; i++){
+	    matPoints[i].color = nuevoColor; 
+	}
+    })
+
+    videoFolder.add(params, 'verde',  0, 1, 0.01).onChange(function(){
+	const nuevoColor = new THREE.Color(params.rojo, params.verde, params.azul);
+	for(let i = 0; i < 3; i++){
+	    matPoints[i].color = nuevoColor; 
+	}
+    })
+
+    videoFolder.add(params, 'azul',  0, 1, 0.01).onChange(function(){
+	const nuevoColor = new THREE.Color(params.rojo, params.verde, params.azul);
+	for(let i = 0; i < 3; i++){
+	    matPoints[i].color = nuevoColor; 
+	}
+    })
+
+    videoFolder.add(params, 'texto', true).onChange(function(){
+	boolText = params.texto; 
+	if(boolText){
+	    scene.add(text);
+	    scene.add(text2); 
+	} else {
+	    scene.remove(text);
+	    scene.remove(text2); 
+	}
+    })
+
+    audioFolder = gui.addFolder('Audio');
+
+    audioFolder.add(params, 'sonido',  true).onChange(function(){
+	const audioBool = params.sonido; 
+	if(audioBool){
+	    fondos.mute = false; 
+	} else {
+	    fondos.mute = true; 
+	}
+    })
+    
+    audioFolder.add(params, 'voz',  true).onChange(function(){
+	if(params.voz){
+	    distortion.toDestination(); 
+	} else {
+	    distortion.disconnect(); 
+	}
+    })
+    
+    audioFolder.add(params, 'grano',  0.001, 0.1, 0.001).onChange(function(){
+	pitchShift.windowSize = params.grano; 
+    })
+
+    audioFolder.add(params, 'altura',  -24, 24, 1).onChange(function(){
+	pitchShift.pitch = params.altura; 
+    })
+
+}
+
 function texto() {
 
     if(boolText){
@@ -1810,16 +1941,16 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
     text.position.y = txtPosY;
     text.position.z = 10;
     
-	const message2 = mensaje2; 
-	const shapes2 = antifont.generateShapes( message2, 1 );
-	const geometry2 = new THREE.ShapeGeometry( shapes2 );
-	geometry2.computeBoundingBox();
-	const xMid2 = - 0.5 * ( geometry2.boundingBox.max.x - geometry2.boundingBox.min.x );
-	geometry2.translate( xMid2, 0, 0 );
-	text2.geometry.dispose(); 
-	text2.geometry= geometry2;
-	text2.material.dispose();
-
+    const message2 = mensaje2; 
+    const shapes2 = antifont.generateShapes( message2, 1 );
+    const geometry2 = new THREE.ShapeGeometry( shapes2 );
+    geometry2.computeBoundingBox();
+    const xMid2 = - 0.5 * ( geometry2.boundingBox.max.x - geometry2.boundingBox.min.x );
+    geometry2.translate( xMid2, 0, 0 );
+    text2.geometry.dispose(); 
+    text2.geometry= geometry2;
+    text2.material.dispose();
+    
     text2.position.x = txtPosX2; 
     text2.position.y = txtPosY2;
     text2.position.z = 10;
@@ -1859,6 +1990,7 @@ function onWindowResize() {
 async function detonar() {
     await renderPrediction();
     // sonido();
+    guiFunc(); 
     loaderHTML.style.display = 'none';
 
     console.log('██╗  ██╗███╗   ██╗████████╗ ██╗\n██║  ██║████╗  ██║╚══██╔══╝███║\n███████║██╔██╗ ██║   ██║   ╚██║\n╚════██║██║╚██╗██║   ██║    ██║\n     ██║██║ ╚████║   ██║    ██║\n     ╚═╝╚═╝  ╚═══╝   ╚═╝    ╚═╝'); // fps();
@@ -1898,6 +2030,49 @@ function materiales() {
     } );
 
 }
+
+function modoEx(){
+    exBool = true;
+    transcurso  = 0; 
+    initsc0(); 
+    escenasFolder.close();
+    videoFolder.close();
+    audioFolder.close(); 
+}
+
+function modoCot(){
+    exBool = false;
+    transcurso = 0;
+    escenasFolder.open();
+    videoFolder.open();
+    audioFolder.open(); 
+    // initsc0();
+    // options['exhibicion']= false; 
+}
+
+function cotEscena1(){
+
+    modoOscuro = false; 
+    escena = 1;
+    rmsc1();
+    rmsc2();
+    rmIrises(); 
+    initsc1();
+
+}
+
+function cotEscena2(){
+    //console.log("Segunda Escena"); 
+    // segundo = transcurso.toFixed();
+    // aquí puede ir algo asociado a las predicciones 
+    modoOscuro = false; 
+    escena = 3;
+    rmsc1();
+    rmsc2();
+    initsc2();
+    //transcurso = 0; 
+}
+
 
 //////////////////////////////////////
 //////////////////// PARPADEO
