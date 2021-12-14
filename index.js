@@ -238,6 +238,8 @@ const mic = new Tone.UserMedia(2);
 
 //.connect( toneFFT );
 
+let openmic; 
+
 mic.open().then(() => {
     openmic = true;
     mic.connect( pitchShift ); 
@@ -601,6 +603,7 @@ var params = {
 
 
 let videoFolder = []; 
+let audioFolder = []; 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -625,12 +628,15 @@ async function setupCamera() {
 	
     } else {
 
-	camWidth = 480;
-	camHeight = 640;
+	camWidth = 640;
+	camHeight = 480;
 
-	wCor = (33-(33/4));
-	hCor = 28+(28/4);
+	//wCor = (33-(33/4));
+	//hCor = 28+(28/4);
 
+	wCor = 33;
+	hCor = 28
+	
 	if(!mobile){
 	    camSz = 9;
 	} else {
@@ -824,10 +830,10 @@ async function renderPrediction() {
     
     // panner.positionX.value = degree *2; // degree reducido
 
-    console.log(degree * 4);
+    //console.log(degree * 4);
     
-    cuboGrande.rotation.x += 0.004;
-    cuboGrande.rotation.y += (degree/4) * 0.02;
+    cuboGrande.rotation.x += 0.002;
+    cuboGrande.rotation.y += (degree/4) * 0.01;
     ///text.rotation.y = degree * 2 + (Math.PI );
     //text2.rotation.y = degree * 2 + (Math.PI );
 
@@ -841,7 +847,7 @@ async function renderPrediction() {
 
     camera.lookAt( scene.position );
     camera.rotation.z = Math.PI;
-    stats.update();
+    // stats.update();
     renderer.render( scene, camera );
  
     // console.log(degree); 
@@ -1039,7 +1045,7 @@ async function init() {
 
 	matPoints2[i] = new THREE.PointsMaterial( {
 	    color: 0x000000,
-	    size: 3,
+	    size: 2,
 	    // map: sprite,
 	    blending: THREE.AdditiveBlending,
 	    // transparent: true,
@@ -1061,7 +1067,6 @@ async function init() {
     geometryB = new THREE.BufferGeometry();
     geometryB.verticesNeedUpdate = true;
    
-    
     let audioSphere = new THREE.BoxGeometry( 400, 400, 400, 32, 32, 32 );
     cuboGrande = new THREE.Mesh(audioSphere, materialC2 );
     cuboGrandeOrg = new THREE.Mesh(audioSphere, materialC2 );
@@ -1082,7 +1087,9 @@ async function init() {
     
     document.body.appendChild( renderer.domElement );
     window.addEventListener( 'resize', onWindowResize );
-    container.appendChild( stats.dom );
+
+    // container.appendChild( stats.dom );
+
     const renderScene = new RenderPass( scene, camera );
 
     bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.4, 0.85 );
@@ -1800,6 +1807,15 @@ function guiFunc(){
 
     videoFolder.add(params, 'perlin',  0.001, 0.05, 0.001).onChange(function(){
 	perlinValue = params.perlin; 
+    })
+
+    videoFolder.add(params, 'retro',  true).onChange(function(){
+	cuboGBool = params.retro;
+	if(cuboGBool){
+	    scene.add(cuboGrande);
+	} else {
+	    scene.remove(cuboGrande); 
+	}
     })
 
     
