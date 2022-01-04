@@ -601,9 +601,22 @@ var params = {
     altura: 0
 }
 
-
 let videoFolder = []; 
 let audioFolder = []; 
+
+
+    let keyactualX = [];
+    let keyanteriorX = [];
+
+    let keyactualY = [];
+    let keyanteriorY = [];
+    let velsX = [], velsY = [], vels = [];
+
+
+let avg;
+
+
+let velarriba, velabajo, velizquierda, velderecha; 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -958,6 +971,43 @@ async function renderPrediction() {
 	}
 
     // console.log(exBool);
+
+    for(let i = 0; i < keypoints.length; i++){
+
+	keyanteriorX[i] = keyactualX[i];
+	keyactualX[i] = keypoints[i][0];
+	velsX[i] = Math.abs(keyanteriorX[i] - keyactualX[i]);
+	
+	keyanteriorY[i] = keyactualY[i];
+	keyactualY[i] = keypoints[i][1];
+	velsY[i] = Math.abs(keyanteriorY[i] - keyactualY[i]);
+
+	vels[i] = (velsX[i] + velsY[i]) / 2;
+	// aqui va el promedio de velocidades por punto 
+	
+    }
+
+    /*
+    const sumX = velsX.reduce((a, b) => a + b, 0);
+    const avgX = (sumX / velsX.length) || 0;
+
+    const sumY = velsY.reduce((a, b) => a + b, 0);
+    const avgY = (sumY / velsY.length) || 0;
+    */
+    
+    const sum = vels.reduce((a, b) => a + b, 0);
+    const avg = (sum / vels.length) || 0;
+
+   
+    // arriba 10
+    // abajo 152
+    // izq 234
+    // der 454
+    
+    // promedio de las velocidades de todos los puntos
+    // promedios dependiendo de puntos específicos
+    
+    console.log( avg ); // Promedio general 
     
     requestAnimationFrame(renderPrediction);
     // console.log(params.opacidad); 
