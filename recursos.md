@@ -1,5 +1,8 @@
 # Recursos
 
+- https://discourse.threejs.org/t/three-js-delaunator/4952
+- https://codepen.io/prisoner849/pen/bQWOjY
+- https://github.com/mapbox/delaunator
 - https://stackoverflow.com/questions/18366229/is-it-possible-to-create-a-button-using-dat-gui
 - https://itnext.io/promise-loading-with-three-js-78a6297652a5
 - https://github.com/tweenjs/tween.js/

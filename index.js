@@ -26,9 +26,13 @@ import {AfterimagePass} from './jsm/postprocessing/AfterimagePass.js';
 import {ImprovedNoise} from './jsm/math/ImprovedNoise.js';
 import { GUI } from './jsm/libs/dat.gui.module.js';
 
+import { OBJLoader } from './jsm/loaders/OBJLoader.js';
+
+
+//import Delaunator from 'delaunator';
+
 //import '@tensorflow-models/facemesh';
 //import '@tensorflow-models/blazeface';
-
 
 ///////////////////// Variables importantes
 
@@ -81,9 +85,7 @@ for (var i = 0; i < 3; i++) {
 // const pGeometry = new THREE.BufferGeometry();
 
 let geometryB;
-
 let vertices = [];
-
 
 let points = [];
 let normals = [];
@@ -109,7 +111,6 @@ const body = document.getElementById( 'body' );
 // con boton
 
 document.querySelector('button').addEventListener('click', async () => {
-
     await Tone.start(); 
     // console.log('audio is ready')
     init(); 
@@ -211,7 +212,6 @@ let intro;
 let gSegundo; 
 
 const line = new Tone.Player('audio/fondos/line.mp3').toDestination(); 
-
 antiKick = new Tone.Player('audio/perc/antiKick.mp3').toDestination();
 const respawn = new Tone.Player('audio/perc/respawn.mp3').toDestination(); 
 const out = new Tone.Player('audio/perc/out.mp3').toDestination(); 
@@ -244,8 +244,6 @@ mic.open().then(() => {
     openmic = true;
     mic.connect( pitchShift ); 
 });
-
-
 
 let glitchPass; 
 
@@ -480,8 +478,6 @@ let perlinAmp;
 let cuboGBool = false;
 let loopOf, loopRod, loopTxt, loopDescanso; 
 
-
-
 // Textos generales 
 
 loopOf = new Tone.Loop((time) => {
@@ -520,7 +516,6 @@ loopRod = new Tone.Loop((time) => {
         
 }, "5");
 
-
 // Instrucciones 
 
 loopTxt = new Tone.Loop((time) => {
@@ -541,7 +536,7 @@ loopTxt = new Tone.Loop((time) => {
 // Descanso 
 
 loopDescanso = new Tone.Loop((time) => {
-
+    
     if(boolText){
 	chtexto(
 	    txtDescanso[Math.floor(Math.random()*txtDescanso.length)],
@@ -615,8 +610,40 @@ let audioFolder = [];
 
 let avg;
 
-
 let velarriba, velabajo, velizquierda, velderecha; 
+
+let object;
+let modelBool;
+
+let trigeom = new THREE.BufferGeometry();
+
+let trimesh = new THREE.Mesh(); 
+
+let triPosiciones = [];
+let triCantidad = 880; 
+let triGeometry = [];
+let triangulos = []; 
+
+let trimaterial = new THREE.MeshBasicMaterial( { color: 0xffaa00, side: THREE.DoubleSide } ); 
+
+for(let i = 0; i < 3; i++){
+
+    const x = Math.random() * 200 - 100;
+    const y = Math.random() * 200 - 100;
+    const z = Math.random() * 200 - 100;
+
+    triPosiciones.push(x, y, z); 
+    
+}
+
+// console.log(triPosiciones); 
+
+triGeometry[0] = new THREE.BufferGeometry();
+triGeometry[0].setAttribute( 'position', new THREE.Float32BufferAttribute( triPosiciones, 3 ) );
+
+triGeometry[0].usage = THREE.DynamicDrawUsage; 
+
+triangulos[0] = new THREE.Mesh( triGeometry[0], trimaterial  );
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -719,10 +746,14 @@ async function renderPrediction() {
 
     prueba = predictions.length;
     // materialVideo.needsUpdate = true;
-
+    let arre = [];
+    
     vueltas = 0;
 
+    triGeometry[0].attributes.position.needsUpdate = true;
+    
     if (predictions.length > 0) {
+
 	predictions.forEach((prediction) => {
 	    keypoints = prediction.scaledMesh;
 
@@ -731,6 +762,16 @@ async function renderPrediction() {
 		    TRIANGULATION[i * 3], TRIANGULATION[i * 3 + 1],
 		    TRIANGULATION[i * 3 + 2],
 		].map((index) => keypoints[index]);
+
+		arre.push(points); 	
+	    }
+
+	    arre = arre.flat(2);
+
+	    for(let i = 0; i < 3; i++){
+		triGeometry[0].attributes.position.setX( i, arre[(i*3)] * 0.1 -wCor); 
+		triGeometry[0].attributes.position.setY( i, arre[(i*3)+1] * 0.1 - hCor );
+		triGeometry[0].attributes.position.setZ( i, arre[(i*3)+2] * 0.05 );
 	    }
 
 	    // aquí tendría que haber más animsc hay que probar 
@@ -839,10 +880,8 @@ async function renderPrediction() {
 	//text.position.z = 0;
 	
     }
-
     
     // panner.positionX.value = degree *2; // degree reducido
-
     //console.log(degree * 4);
     
     cuboGrande.rotation.x += 0.002;
@@ -866,7 +905,6 @@ async function renderPrediction() {
     // console.log(degree); 
     vertices = [];
     composer.render();
-
   
     if(cuboGBool || suspendido ){
 	
@@ -1007,8 +1045,8 @@ async function renderPrediction() {
     // promedio de las velocidades de todos los puntos
     // promedios dependiendo de puntos específicos
     
-    console.log( avg ); // Promedio general 
-    
+    //console.log( avg ); // Promedio general 
+
     requestAnimationFrame(renderPrediction);
     // console.log(params.opacidad); 
 };
@@ -1159,6 +1197,10 @@ async function init() {
 	 // maxContinuousChecks: 120
 	});
 
+    scene.add(triangulos[0]);
+    triangulos[0].position.z = 1;
+    triangulos[0].rotation.y = Math.PI/4;
+    
     detonar();
     
 }
