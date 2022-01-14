@@ -620,7 +620,7 @@ let trigeom = new THREE.BufferGeometry();
 let trimesh = new THREE.Mesh(); 
 
 let triPosiciones = [];
-let triCantidad = 880; 
+let triCantidad = 440; // probar con 100, luego 880  
 let triGeometry = [];
 let triangulos = []; 
 
@@ -638,12 +638,14 @@ for(let i = 0; i < 3; i++){
 
 // console.log(triPosiciones); 
 
-triGeometry[0] = new THREE.BufferGeometry();
-triGeometry[0].setAttribute( 'position', new THREE.Float32BufferAttribute( triPosiciones, 3 ) );
+for(let i = 0; i < triCantidad; i++){
 
-triGeometry[0].usage = THREE.DynamicDrawUsage; 
+    triGeometry[i] = new THREE.BufferGeometry();
+    triGeometry[i].setAttribute( 'position', new THREE.Float32BufferAttribute( triPosiciones, 3 ) );
+    triGeometry[i].usage = THREE.DynamicDrawUsage; 
+    triangulos[i] = new THREE.Mesh( triGeometry[i], trimaterial  );
 
-triangulos[0] = new THREE.Mesh( triGeometry[0], trimaterial  );
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -750,7 +752,9 @@ async function renderPrediction() {
     
     vueltas = 0;
 
-    triGeometry[0].attributes.position.needsUpdate = true;
+    for(let i = 0; i < triCantidad; i++){
+	triGeometry[i].attributes.position.needsUpdate = true;
+    }
     
     if (predictions.length > 0) {
 
@@ -768,11 +772,21 @@ async function renderPrediction() {
 
 	    arre = arre.flat(2);
 
-	    for(let i = 0; i < 3; i++){
-		triGeometry[0].attributes.position.setX( i, arre[(i*3)] * 0.1 -wCor); 
-		triGeometry[0].attributes.position.setY( i, arre[(i*3)+1] * 0.1 - hCor );
-		triGeometry[0].attributes.position.setZ( i, arre[(i*3)+2] * 0.05 );
+	    let triconta = 0;
+	    
+	    for(let j = 0; j < triCantidad; j++){
+		for(let i = 0; i < 3; i++){
+		    triGeometry[j].attributes.position.setX( i, arre[triconta*3] * 0.1 -wCor); 
+		    triGeometry[j].attributes.position.setY( i, arre[(triconta*3)+1] * 0.1 - hCor );
+		    triGeometry[j].attributes.position.setZ( i, arre[(triconta*3)+2] * 0.05 );
+		    triconta++; 
+		}
 	    }
+
+	   
+
+	    
+
 
 	    // aquí tendría que haber más animsc hay que probar 
 	    
@@ -1197,9 +1211,11 @@ async function init() {
 	 // maxContinuousChecks: 120
 	});
 
-    scene.add(triangulos[0]);
-    triangulos[0].position.z = 1;
-    triangulos[0].rotation.y = Math.PI/4;
+    for(let i = 0; i < triCantidad; i++){
+	scene.add(triangulos[i]);
+	triangulos[i].position.z = 1;
+	triangulos[i].rotation.y = Math.PI*2;
+    }
     
     detonar();
     
