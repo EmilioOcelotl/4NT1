@@ -28,6 +28,19 @@ import { GUI } from './jsm/libs/dat.gui.module.js';
 
 import { OBJLoader } from './jsm/loaders/OBJLoader.js';
 
+var hydra = new Hydra({
+    canvas: document.getElementById("myCanvas"),
+    detectAudio: false
+})
+
+const elCanvas = document.getElementById( 'myCanvas');
+elCanvas.style.display = 'none'; 
+
+osc(10, 0.1, 0.8).rotate(0, 0.1).kaleid().color(-1, 1).out()
+
+console.log(hydra ); 
+
+// require("./js/hydra-threejs/threejs-embedded/index.js"); 
 
 //import Delaunator from 'delaunator';
 
@@ -583,7 +596,7 @@ let objEsc1, objEsc2;
 var params = {
     opacidad: 0.5,
     damp: 0.5,
-    tamaño: 4,
+    tamaño: 10,
     perlin: 0.01, 
     rojo: 255,
     verde: 0,
@@ -620,11 +633,28 @@ let trigeom = new THREE.BufferGeometry();
 let trimesh = new THREE.Mesh(); 
 
 let triPosiciones = [];
-let triCantidad = 440; // probar con 100, luego 880  
+let triCantidad = 880; // probar con 100, luego 880  
 let triGeometry = [];
-let triangulos = []; 
 
-let trimaterial = new THREE.MeshBasicMaterial( { color: 0xffaa00, side: THREE.DoubleSide } ); 
+let triangulos = []; 
+let vit;
+vit = new THREE.CanvasTexture(elCanvas);
+
+
+let trimaterial = new THREE.MeshBasicMaterial( { color: 0xffffff,  side: THREE.DoubleSide, map:vit } ); 
+
+const smaterial = new THREE.MeshStandardMaterial( {
+	color: 0xffffff,
+     side: THREE.DoubleSide,
+     map: vit,
+	//envMap: scene.background,
+	// refractionRatio: 0.2,
+     roughness: 0.55,
+     metalness: 0.8,
+     //blending: THREE.AdditiveBlending
+	//envMap: refractionCube
+    } );
+    
 
 for(let i = 0; i < 3; i++){
 
@@ -636,16 +666,33 @@ for(let i = 0; i < 3; i++){
     
 }
 
+let light1, light2, light3, light4;
+
 // console.log(triPosiciones); 
+
+var quad_uvs =
+[
+0.0, 0.0,
+1.0, 0.0,
+1.0, 1.0,
+];
 
 for(let i = 0; i < triCantidad; i++){
 
     triGeometry[i] = new THREE.BufferGeometry();
     triGeometry[i].setAttribute( 'position', new THREE.Float32BufferAttribute( triPosiciones, 3 ) );
+    triGeometry[i].setAttribute( 'uv', new THREE.Float32BufferAttribute( quad_uvs, 2))
     triGeometry[i].usage = THREE.DynamicDrawUsage; 
     triangulos[i] = new THREE.Mesh( triGeometry[i], trimaterial  );
 
 }
+
+const pA = new THREE.Vector3();
+const pB = new THREE.Vector3();
+const pC = new THREE.Vector3();
+
+const cb = new THREE.Vector3();
+const ab = new THREE.Vector3();
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -683,9 +730,8 @@ async function setupCamera() {
 	    camSz = 9;
 	} else {
 	    camSz = 10; 
-	}
-	
-    }
+		
+	}}
     
     video = document.getElementById('video');
     stream = await navigator.mediaDevices.getUserMedia({
@@ -720,7 +766,7 @@ async function renderPrediction() {
     if( buscando && exBool ){
 	fin = Date.now();
 	transcurso = (fin - inicio) / 1000;
-    } 
+    }
 
     if(buscando && creditos){
 	finCreditos = Date.now();
@@ -751,6 +797,8 @@ async function renderPrediction() {
     let arre = [];
     
     vueltas = 0;
+    // vit = new THREE.CanvasTexture(elCanvas); 
+    trimaterial.map.needsUpdate = true;
 
     for(let i = 0; i < triCantidad; i++){
 	triGeometry[i].attributes.position.needsUpdate = true;
@@ -767,25 +815,66 @@ async function renderPrediction() {
 		    TRIANGULATION[i * 3 + 2],
 		].map((index) => keypoints[index]);
 
-		arre.push(points); 	
+		
+		arre.push(points);
 	    }
+
 
 	    arre = arre.flat(2);
 
 	    let triconta = 0;
+
+	    var time2 = Date.now() * 0.0005;
 	    
-	    for(let j = 0; j < triCantidad; j++){
+	    for(let j = 0; j < triCantidad; j++){	
+
+		 
+		let d = perlin.noise(
+		    arre[triconta*3] * 0.004 + time2,
+		    arre[(triconta*3)+1] * 0.004 + time2,
+		    arre[(triconta*3)+2] * 0.004 + time2) *  0.125; 
+
+		
 		for(let i = 0; i < 3; i++){
-		    triGeometry[j].attributes.position.setX( i, arre[triconta*3] * 0.1 -wCor); 
+		    triGeometry[j].attributes.position.setX( i, arre[triconta*3] * 0.1 -wCor ); 
 		    triGeometry[j].attributes.position.setY( i, arre[(triconta*3)+1] * 0.1 - hCor );
 		    triGeometry[j].attributes.position.setZ( i, arre[(triconta*3)+2] * 0.05 );
+
+   
 		    triconta++; 
 		}
+		
 	    }
 
-	   
+
+/*
+	    for(let j = 0; j < triCantidad; j++){
+
+		triGeometry[j].computeVertexNormals();
+		triGeometry[j].normalizeNormals();
+		triGeometry[j].uvsNeedUpdate = true;
+
+	    }
+*/	    
+	    let time = Date.now() * 0.0005;
 
 	    
+	    light1.position.x = Math.sin( time * 0.4 ) * 120 ;
+	    light1.position.y = Math.cos( time * 0.3 ) * 140  ;
+	    light1.position.z = Math.cos( time * 0.2 ) * 120 ;
+    
+	    light2.position.x = Math.cos( time * 0.2 ) * 120 ;
+	    light2.position.y = Math.sin( time * 0.3 ) * 140 ;
+	    light2.position.z = Math.sin( time * 0.4 ) * 120 ;
+    
+    light3.position.x = Math.sin( time * 0.4 ) * 120 ;
+    light3.position.y = Math.cos( time * 0.2 ) * 140 ;
+    light3.position.z = Math.sin( time * 0.3 ) * 120 ;
+    
+    light4.position.x = Math.sin( time * 0.2 ) * 120 ;
+    light4.position.y = Math.cos( time * 0.4 ) * 140 ;
+    light4.position.z = Math.sin( time * 0.3 ) * 120 ;    
+	
 
 
 	    // aquí tendría que haber más animsc hay que probar 
@@ -1048,7 +1137,7 @@ async function renderPrediction() {
     */
     
     const sum = vels.reduce((a, b) => a + b, 0);
-    const avg = (sum / vels.length) || 0;
+    avg = (sum / vels.length) || 0;
 
    
     // arriba 10
@@ -1059,7 +1148,7 @@ async function renderPrediction() {
     // promedio de las velocidades de todos los puntos
     // promedios dependiendo de puntos específicos
     
-    //console.log( avg ); // Promedio general 
+   // console.log( avg / 100 ); // Promedio general 
 
     requestAnimationFrame(renderPrediction);
     // console.log(params.opacidad); 
@@ -1134,7 +1223,7 @@ async function init() {
     
 	matPoints[i] = new THREE.PointsMaterial( {
 	    color: colores[Math.floor(Math.random()*4)],
-	    size: 4,
+	    size: 10,
 	    map: sprite,
 	    blending: THREE.AdditiveBlending,
 	    // rotation: 0.1; 
@@ -1211,11 +1300,31 @@ async function init() {
 	 // maxContinuousChecks: 120
 	});
 
+    
+       
     for(let i = 0; i < triCantidad; i++){
+
 	scene.add(triangulos[i]);
-	triangulos[i].position.z = 1;
+
+	//triangulos[i].material = matArray[i%4]; 
+	triangulos[i].position.z = -4;
 	triangulos[i].rotation.y = Math.PI*2;
+
     }
+
+   
+    light1 = new THREE.PointLight( 0xffffff, 1.5, 150 );
+    scene.add( light1 );
+    
+    light2 = new THREE.PointLight(  0xffffff, 1.5, 150 );
+    scene.add( light2 );
+
+    light3 = new THREE.PointLight(  0xffffff, 1.5, 150 );
+    scene.add( light3 );
+
+    light4 = new THREE.PointLight(  0xffffff, 1.5, 150 );
+    scene.add( light4 );
+
     
     detonar();
     
@@ -1382,10 +1491,10 @@ function initsc1() {
     line.stop();
     outline.stop(); 
 
-    // text.material.blending = THREE.AdditiveBlending; 
-    // text2.material.blending = THREE.AdditiveBlending; 
+     text.material.blending = THREE.AdditiveBlending; 
+    text2.material.blending = THREE.AdditiveBlending; 
 
-    text.material.color = new THREE.Color(0xffffff ); 
+    text.material.color = new THREE.Color(0x000000 ); 
     
     // cuboGBool = true; 
     // respawn.start(); // otro sonido que no sea respawn 
@@ -1403,7 +1512,7 @@ function initsc1() {
     perlinAmp = 4;
     
     //matPoints.map= sprite;
-    //matPoints.size=6; 
+    matPoints.size=10; 
     // planeB[0].material = matPoints; 
 
     scene.add( planeVideo);
@@ -1511,6 +1620,11 @@ function titulo2(){
 
 function initsc2() {
 
+    for(let i = 0; i < triCantidad; i++){
+	triangulos[i].material = smaterialotro;
+	triangulos[i].color = colores[i%4]; 
+    }
+    
     cuboGBool = true; 
     loopRod.start(0); 
     // line.start(0); 
@@ -1994,11 +2108,11 @@ function texto() {
 	const color = 0xffffff;
 	
 	const matLite = new THREE.MeshBasicMaterial( {
-	    color: 0x404040,
+	    color: 0x000000,
 	    // transparent: true,
 	    // opacity: 0.8,
 	    side: THREE.DoubleSide,
-	    // blending: THREE.AdditiveBlending,
+	    blending: THREE.AdditiveBlending,
 	    // transparent: true,
 	} );
 
@@ -2132,7 +2246,8 @@ function cols() {
 
 function materiales() {
     for (let i = 0; i < 4; i++) {
-	matArray[i] = new THREE.MeshPhongMaterial( {color: 0x000000, specular: colores[i%2], emissive: colores[i], shininess: 10} );
+
+	matArray[i] = new THREE.MeshPhongMaterial( {color: 0x000000, specular: colores[i], side: THREE.DoubleSide, emissive: colores[i], shininess: 10} );
     }
 
     materialC = new THREE.MeshStandardMaterial( {

@@ -1,5 +1,8 @@
 # Recursos
 
+
+- http://learningthreejs.com/blog/2011/08/17/tweenjs-for-smooth-animation/
+- https://github.com/rexmalebka/hydra-threejs
 - https://discourse.threejs.org/t/three-js-delaunator/4952
 - https://codepen.io/prisoner849/pen/bQWOjY
 - https://github.com/mapbox/delaunator
