@@ -98,7 +98,7 @@ document.querySelector('button').addEventListener('click', async () => {
 
 // Tone.start().then( (x) => init()) // sin botón ( modo exhibición ) 
 
-//let colores = [], colores2 = [], colores3 = [];
+let colores = [], colores2 = [], colores3 = [];
 
 const stats = new Stats();
 
@@ -585,7 +585,8 @@ var hydra = new Hydra({
 const elCanvas = document.getElementById( 'myCanvas');
 elCanvas.style.display = 'none'; 
     
-osc(10, 0.1, 0.8).rotate(0, 0.01).kaleid(0.01).out()
+// osc(10, 0.1, 0.8).rotate(0, 0.01).kaleid(0.01).out()
+noise(4,0.99).modulate(osc(9),0.92).rotate(0.0019,0.09).color(5,1,90).out()
 
 let arre = []; 
 // Agregar triangulos tal vez esto puede ir en initsc1, 2
