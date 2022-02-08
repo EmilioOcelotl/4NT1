@@ -11,7 +11,6 @@
   "dependencies": {
     "@tensorflow-models/blazeface": "^0.0.7",
     "@tensorflow-models/face-landmarks-detection": "link:../dist",
-    "@tensorflow-models/facemesh": "^0.0.5",
     "@tensorflow/tfjs-backend-webgl": "^3.12.0",
     "@tensorflow/tfjs-converter": "^3.12.0",
     "@tensorflow/tfjs-core": "^3.12.0",
@@ -36,13 +35,12 @@
     "crypto": false
   },
   "devDependencies": {
-    "@babel/core": "7.7.5",
-    "@babel/plugin-transform-runtime": "^7.7.6",
+    "@babel/core": "^7.17.0",
+    "@babel/plugin-transform-runtime": "^7.17.0",
     "@babel/preset-env": "^7.7.6",
     "@rollup/plugin-commonjs": "11.0.2",
     "@rollup/plugin-node-resolve": "^7.1.1",
     "@rollup/plugin-typescript": "^3.0.0",
-    "babel-plugin-external-helpers": "^6.22.0",
     "babel-preset-env": "^1.7.0",
     "clang-format": "~1.2.2",
     "cross-env": "^5.2.0",
