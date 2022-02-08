@@ -157,7 +157,6 @@ if (mobile) {
 
 let texture;
 const vector = new THREE.Vector2();
-// let cuboGrande;
 let afterimagePass, bloomPass; 
 let vueltas;
 
@@ -586,13 +585,37 @@ const elCanvas = document.getElementById( 'myCanvas');
 elCanvas.style.display = 'none'; 
     
 // osc(10, 0.1, 0.8).rotate(0, 0.01).kaleid(0.01).out()
-noise(4,0.99).modulate(osc(9),0.92).rotate(0.0019,0.09).color(5,1,90).out()
+
+// osc(10, 0.1, 0.8).rotate(0, 0.01).kaleid(0.01).out()                                                                                                                       
+// noise(4,0.99).modulate(osc(9),0.92).rotate(0.0019,0.09).color(5,1,90).out()                                                                                                
+// noise(5,0.99).modulate(noise(9),0.92).scrollX(0.19,0.09).modulateScrollY(osc(2).modulate(osc().rotate(),.11)).scale(.72).color(0.9,1.014,1).color(5,1,50).out()            
+// noise(5,0.99).modulate(noise(2),0.92).scrollX(0.19,0.09).modulateScrollY(osc(0.2).modulate(osc(0.1).rotate(),.11)).scale([.72,9,5,4,1].fast(1).smooth(0.9)).color(0.9,1.014,1).color(1,[50,2,20].fast(0.0),5).out()   
+
+
+osc(3,0.01,9)
+.mult(osc(2,-0.1,1).modulate(noise(3,1)).rotate(0.7))
+.posterize([3,10,2].fast(0.5).smooth(1))
+.modulateRotate(o0,() => Math.sin(time)*3)
+.color(5,1,50)
+.scrollX(1,() => (0.1 * Math.sin(time*.00009)))
+.out()
+
+
+/*
+shape(4,0.7)
+.mult(osc(20,-0.009,9).modulate(noise(3,1)).rotate(0.7))
+  .modulateScale(osc(4,-0.09,0).kaleid(50).scale(0.6),15,0.1)
+  .out()
+*/
 
 let arre = []; 
 // Agregar triangulos tal vez esto puede ir en initsc1, 2
 // Agregar algo que elimine los tríangulos en otras escenas 
 
 vit = new THREE.CanvasTexture(elCanvas);
+
+let light1, light2, light3, light4;
+
 
 // /////////// Camara
 
@@ -602,8 +625,7 @@ async function setupCamera() {
 
 	// console.log("es firefox");
 	camWidth = 640;
-	camHeight = 480;
-	
+	camHeight = 480;	
 	wCor = (32);
 	hCor = 28;
 
@@ -662,6 +684,7 @@ async function renderPrediction() {
 	flipHorizontal: false,
 	predictIrises: irises,
     });
+
     
     if( buscando && exBool ){
 	fin = Date.now();
@@ -822,15 +845,13 @@ async function renderPrediction() {
 	renderer.copyFramebufferToTexture( vector, texture );
     }
 
+
     /// texto movimiento
 
     let delta, time; 
-
-    if(!mobile || cuboGBool){
 	delta = clock.getDelta();
 	time = clock.getElapsedTime() * 10;
 	var time2 = Date.now() * 0.0005;
-    }
 
     if(!mobile){
 
@@ -844,7 +865,7 @@ async function renderPrediction() {
 	let d = perlin.noise(
 	    text.geometry.attributes.position.getX(i) * 0.04+ time2,
 	    text.geometry.attributes.position.getY(i) * 0.04 + time2,
-	    text.geometry.attributes.position.getZ(i) * 0.04+ time2) *  0.25; 
+	    text.geometry.attributes.position.getZ(i) * 0.04+ time2) *  0.125; 
 	    
 	    //text.geometry.attributes.position.setX( i, textCopy1.geometry.attributes.position.getX(i) + d );
 	    //text.geometry.attributes.position.setY( i, textCopy1.geometry.attributes.position.getY(i) + d );
@@ -858,7 +879,7 @@ async function renderPrediction() {
 	let d = perlin.noise(
 	    text2.geometry.attributes.position.getX(i) * 0.04+ time2,
 	    text2.geometry.attributes.position.getY(i) * 0.04 + time2,
-	    text2.geometry.attributes.position.getZ(i) * 0.04+ time2) *  0.25; 
+	    text2.geometry.attributes.position.getZ(i) * 0.04+ time2) *  0.125; 
 	    
 	    //text2.geometry.attributes.position.setX( i, textCopy2.geometry.attributes.position.getX(i) + d );
 	    //text2.geometry.attributes.position.setY( i, textCopy2.geometry.attributes.position.getY(i) + d );
@@ -868,26 +889,27 @@ async function renderPrediction() {
     }
     
     if(cuboGBool){
+	var time2 = Date.now() * 0.0005;
+    
 	const algo = cuboGrande.geometry.attributes.position;
-	
+	const algo2 = cuboGrandeOrg.geometry.attributes.position;
+		
 	algo.needsUpdate = true;
+	algo2.needsUpdate = true; 
 	// algoOrg.needsUpdate = true; 
 	    
 	for ( let i = 0; i < algo.count; i ++ ) {
 	    
 	    let d = perlin.noise(
-		algo.getX(i) * 0.01+ time2,
-		algo.getY(i) * 0.01 + time2,
-		algo.getZ(i) * 0.01 + time2) *  0.125; 
+		algo2.getX(i) * 0.001+ time2,
+		algo2.getY(i) * 0.001 + time2,
+		algo2.getZ(i) * 0.001 + time2) *  0.125; 
 	    
 	    // let d = perlin.noise(txtPos1[i] * 0.001 +time  ); 
-	    const z = 0.5 * Math.sin( i / 1 + ( time + i ) / 5 );
-	    const x = 0.5 * Math.sin( i / 1 + ( time + i ) / 5 );
-	    const y = 0.5 * Math.sin( i / 1 + ( time + i ) / 5 );
-	    
-	    algo.setZ( i,  cuboGrandeOrg.geometry.attributes.position.getZ(i) + d );
-	    algo.setX( i,  cuboGrandeOrg.geometry.attributes.position.getX(i) + d );
-	    algo.setY( i,  cuboGrandeOrg.geometry.attributes.position.getY(i) + d ); 
+
+	    algo.setX( i,  cuboGrandeOrg.geometry.attributes.position.getX(i) + (1+d) );
+	    algo.setY( i,  cuboGrandeOrg.geometry.attributes.position.getY(i) + (1+d) );
+	    algo.setZ( i,  cuboGrandeOrg.geometry.attributes.position.getZ(i) + (1+d) );
 	    // txtPos1.setX( i, txtPos1init.attributes.position.x); 
 	}
     }
@@ -980,15 +1002,19 @@ async function init() {
     planeVideo.rotation.x = Math.PI;
     planeVideo.position.z = -10;
     
-    retro();
+    // retro();
     materiales();
-							       
+
+    // sprite = new THREE.TextureLoader().load( 'img/spark1.png' );
+
     for(let i = 0; i < 3; i++){
     
 	matPoints[i] = new THREE.PointsMaterial( {
-	    color: 0x000000,
-	    blending: THREE.AdditiveBlending,
-	    alphaTest: 0.9,
+	    color: 0xffffff,
+	    // blending: THREE.SubtractiveBlending,
+	    //alphaTest: 0.9,
+	    
+	    map: vit 
 	} );
 	
     }
@@ -1003,8 +1029,9 @@ async function init() {
     geometryB.verticesNeedUpdate = true;
    
     let audioSphere = new THREE.BoxGeometry( 400, 400, 400, 32, 32, 32 );
+    let audioSphere2 = new THREE.BoxGeometry( 400, 400, 400, 32, 32, 32 );
     cuboGrande = new THREE.Mesh(audioSphere, materialC2 );
-    cuboGrandeOrg = new THREE.Mesh(audioSphere, materialC2 );
+    cuboGrandeOrg = new THREE.Mesh(audioSphere2, materialC2 );
 
     texto();
 
@@ -1015,10 +1042,10 @@ async function init() {
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
 
-    /*
-    renderer.toneMapping = THREE.ReinhardToneMapping;
-    renderer.toneMappingExposure = Math.pow(2, 4.0 );
-    */
+    
+    //renderer.toneMapping = THREE.ReinhardToneMapping;
+    //renderer.toneMappingExposure = Math.pow(1, 4.0 );
+   
     
     document.body.appendChild( renderer.domElement );
     window.addEventListener( 'resize', onWindowResize );
@@ -1027,11 +1054,12 @@ async function init() {
 
     const renderScene = new RenderPass( scene, camera );
 
-    bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.4, 0.85 );
+    //bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.4, 0.85 );
     
     composer = new EffectComposer( renderer );
     composer.addPass( renderScene );
-    composer.addPass( bloomPass );
+    //composer.addPass( bloomPass );
+
     afterimagePass = new AfterimagePass();
     composer.addPass( afterimagePass );
     afterimagePass.uniforms['damp'].value = 0.85;
@@ -1047,7 +1075,18 @@ async function init() {
     // uno fijo y otro dinámico
     // El dinámico puede ser el selector de sketches de Hydra 
     
-    trimaterial = new THREE.MeshBasicMaterial( { color: 0xffffff,  side: THREE.DoubleSide, map:vit } ); 
+    trimaterial = new THREE.MeshBasicMaterial( {
+	color: 0xffffff,
+	side: THREE.DoubleSide,
+	blending: THREE.AdditiveBlending,
+	//roughness: 0.8,
+	//metalness: 0.9,
+	map:vit,
+	//transparency: true,
+	//opacity: 0.8
+
+	
+    } ); 
 
     for(let i = 0; i < 3; i++){
 	
@@ -1133,11 +1172,17 @@ function initsc0() {
 	intro.restart(); // que se detone hasta que la libería esté cargada 
 	// intro.start();
 
-	bloomPass.threshold = 0.7;
-	bloomPass.strength = 0.5;
-	bloomPass.radius = 0;
+	//bloomPass.threshold = 0.7;
+	//bloomPass.strength = 0.5;
+	//bloomPass.radius = 0;
 
     } else {
+
+	// Resetear el cubo
+	
+	let audioSphere = new THREE.BoxGeometry( 400, 400, 400, 32, 32, 32 );
+	cuboGrande = new THREE.Mesh(audioSphere, materialC2 );
+	cuboGrandeOrg = new THREE.Mesh(audioSphere, materialC2 );
 
 	loopTxt.stop(0); 
 	planeVideo.geometry.dispose();
@@ -1199,8 +1244,9 @@ function titulo1(){
     cuboGrande.rotation.z = 0; 
     
     scene.remove( planeVideo );
-    scene.remove( cuboGrande ); 
-    text.material.color = new THREE.Color(0xffffff); 
+    //scene.remove( cuboGrande ); 
+    // text.material.color = new THREE.Color(0xffffff);
+    // text.material = trimaterial; 
     cuboGBool = false;
    
     if (predictions.length > 0) {
@@ -1228,20 +1274,20 @@ function titulo1(){
 function initsc1() {
 
     
-    cuboGBool = true; 
+    // cuboGBool = true; 
     loopOf.start(0);
     line.stop();
     outline.stop(); 
 
-    text.material.blending = THREE.AdditiveBlending; 
-    text2.material.blending = THREE.AdditiveBlending; 
+    //text.material.blending = THREE.AdditiveBlending; 
+    //text2.material.blending = THREE.AdditiveBlending; 
 
     irises = false;    
-    cuboGBool = true; 
+    // cuboGBool = true; 
     afterimagePass.uniforms['damp'].value = 0.85;
-    bloomPass.threshold = 0.95;
-    bloomPass.strength = 0;
-    bloomPass.radius = 0;
+    //bloomPass.threshold = 0.95;
+    //bloomPass.strength = 0.1;
+    //bloomPass.radius = 0;
     perlinValue = 0.03;
     perlinAmp = 4;
     
@@ -1253,7 +1299,7 @@ function initsc1() {
 
     planeVideo.material.opacity = 0; 
     // scene.remove( planeVideo ); 
-    scene.add(cuboGrande); 
+    //scene.add(cuboGrande); 
     scene.add(planeVideo); 
     
     if(boolText){
@@ -1293,29 +1339,31 @@ function initsc1() {
 
 function animsc1() { 
 
+    var time2 = Date.now() * 0.0005;
+    
     if(exBool){
-	perlinValue = 0.003+(transcurso/60*0.003); 
-	planeVideo.material.opacity = transcurso/60 +0.01;
-	matPoints[0].size = transcurso/60; 
+	perlinValue = 0.003+(transcurso/60*0.003); // suspendido temporalmente  
+	planeVideo.material.opacity = 0.3+transcurso/60 +0.01;
+	matPoints[0].size =  (Math.sin(time * 0.25) *1) ; 
     }
 
     // capa hydra
 
     arre = arre.flat(2);
     let triconta = 0;
-    var time2 = Date.now() * 0.0005;
-    
+
     for(let j = 0; j < triCantidad; j++){	
+
 	
 	let d = perlin.noise(
-	    arre[triconta*3] * 0.008 + time2,
-	    arre[(triconta*3)+1] * 0.008 + time2,
-	    arre[(triconta*3)+2] * 0.008 + time2) *  0.5; 
+	    arre[triconta*3] * 0.01 + time2,
+	    arre[(triconta*3)+1] * 0.01 + time2,
+	    arre[(triconta*3)+2] * 0.01 + time2) *  0.5; 
 	
 	for(let i = 0; i < 3; i++){
-	    triGeometry[j].attributes.position.setX( i, (arre[triconta*3] * 0.095 -wCor)*(1+d) ); 
-	    triGeometry[j].attributes.position.setY( i, (arre[(triconta*3)+1] * 0.1 - hCor) * (1+d) );
-	    triGeometry[j].attributes.position.setZ( i, (arre[(triconta*3)+2] * 0.05) * (1*d) );
+	    triGeometry[j].attributes.position.setX( i, (arre[triconta*3] * 0.095 -wCor)*(1.1+d) ); 
+	    triGeometry[j].attributes.position.setY( i, (arre[(triconta*3)+1] * 0.1 - hCor) * (1.1+d) );
+	    triGeometry[j].attributes.position.setZ( i, (arre[(triconta*3)+2] * 0.05) * (1.1*d) );
    	    triconta++; 
 	}
     }
@@ -1327,14 +1375,14 @@ function animsc1() {
     for ( let i = 0; i < position[vueltas].count; i ++ ) {
 
 	let d = perlin.noise(
-	    keypoints[i][0] * perlinValue + time2,
-	    keypoints[i][1] * perlinValue + time2,
-	    keypoints[i][2] * perlinValue + time2) *  1; 
+	    keypoints[i][0] * 0.01 + time2,
+	    keypoints[i][1] * 0.01 + time2,
+	    keypoints[i][2] * 0.01 + time2) *  1; 
 	
 	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
-	position[vueltas].setX( i, (1+keypoints[i][0] * 0.1 - wCor) * (1+d) ); 
+	position[vueltas].setX( i, (1+keypoints[i][0] * 0.095 - wCor) * (1+d) ); 
 	position[vueltas].setY( i, (1+keypoints[i][1] * 0.1 - hCor) * (1+d) ); // aquí está raro 
-	position[vueltas].setZ( i, keypoints[i][2] * 0.05  );
+	position[vueltas].setZ( i, (keypoints[i][2] * 0.05)   );
     }
 
     planeB[vueltas].geometry.computeVertexNormals();
@@ -1383,7 +1431,7 @@ function initsc2() {
 
     selektor(0); 
     
-    cuboGBool = true; 
+    // cuboGBool = true; 
     loopRod.start(0); 
     // line.start(0); 
     // loop.start(0); 
@@ -1391,23 +1439,22 @@ function initsc2() {
     text.material.color = new THREE.Color(0xffffff); 
 
     scene.add( planeVideo);
-    scene.add( cuboGrande ); 
-      
-    cuboGBool = true; 
+    // scene.add( cuboGrande ); 
+    // cuboGBool = true; 
 
     afterimagePass.uniforms['damp'].value = 0.85;
 
-    bloomPass.threshold = 0.95;
-    bloomPass.strength = 0;
-    bloomPass.radius = 0;
+    //bloomPass.threshold = 0.95;
+    //bloomPass.strength = 0;
+    //bloomPass.radius = 0;
 
     perlinValue = 0.003;
     perlinAmp = 2;
-    text.material.blending = THREE.AdditiveBlending; 
-    text2.material.blending = THREE.AdditiveBlending; 
+    //text.material.blending = THREE.AdditiveBlending; 
+    //text2.material.blending = THREE.AdditiveBlending; 
     
-    cuboGrande.material.opacity = 0; 
-    scene.add(cuboGrande); 
+    // cuboGrande.material.opacity = 0; 
+    // scene.add(cuboGrande); 
     // planeVideo.material.opacity = 0; 
     // scene.add( planeVideo);
 
@@ -1597,7 +1644,7 @@ function selektor( sc ){
 
     switch(sc){
     case 0:
-	voronoi(0.8).kaleid(8).out()
+	shape(4,0.7).mult(osc(20,-0.009,9).modulate(noise(3,1)).rotate(0.7)).modulateScale(osc(4,-0.09,0).kaleid(50).scale(0.6),15,0.1).out()
 	break;
     }
    
@@ -1875,7 +1922,7 @@ function texto() {
 	const color = 0xffffff;
 	
 	const matLite = new THREE.MeshBasicMaterial( {
-	    color: 0x000000,
+	    color: 0xffffff,
 	    // transparent: true,
 	    // opacity: 0.8,
 	    side: THREE.DoubleSide,
@@ -1890,7 +1937,7 @@ function texto() {
 	loader1.load( 'fonts/square.json', function( font ) {
 	    
 	    const message = "";
-	    const shapes = font.generateShapes( message, 1);
+	    const shapes = font.generateShapes( message, 0.75);
 	    const geometry = new THREE.ShapeGeometry( shapes );
 	    geometry.computeBoundingBox();
 	    
@@ -1929,6 +1976,7 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
     const shapes = antifont.generateShapes( message, 0.75 );
     const geometry = new THREE.ShapeGeometry( shapes );
     geometry.computeBoundingBox();
+    geometry.computeVertexNormals(); 
     const xMid = - 0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
     geometry.translate( xMid, 0, 0 );
     text.geometry.dispose(); 
@@ -1943,6 +1991,7 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
     const shapes2 = antifont.generateShapes( message2, 0.75 );
     const geometry2 = new THREE.ShapeGeometry( shapes2 );
     geometry2.computeBoundingBox();
+    geometry2.computeVertexNormals(); 
     const xMid2 = - 0.5 * ( geometry2.boundingBox.max.x - geometry2.boundingBox.min.x );
     geometry2.translate( xMid2, 0, 0 );
     text2.geometry.dispose(); 
@@ -2119,7 +2168,7 @@ function getIsVoluntaryBlink(blinkDetected) {
 function loadFont(){
 
     const loader = new THREE.FontLoader();
-    loader.load( 'fonts/square.json', function ( response ) {
+    loader.load( 'fonts/pixeled.json', function ( response ) {
 	antifont = response;
 	//refreshText();
     } );
