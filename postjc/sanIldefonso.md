@@ -3,15 +3,15 @@
 
 Por orden de importancia 
 
-- [ ] Oscilación en la opacidad del video material 
-- [ ] Quitar puntos
-- [ ] Selector de escenas Hydra 
-- [ ] Delimitar escenas con triangulos y hydra
+- [x] Integrar puntos
+- [x] Selector de escenas Hydra 
+- [x] Delimitar escenas con triangulos y hydra
+- [x] Quitar la GUI
+- [x] Cambiar la fuente
+- [x] Calibrar la máscara con la imagen
+- [ ] Oscilación en la opacidad del video material
 - [ ] Trabajar el audio 
 - [ ] Agregar, ofuscar y sistematizar texto
-- [ ] Quitar la GUI
 - [ ] Resetear el cubo ( y posiblemente otras cosas ) cada cierto tiempo
 - [ ] ¿ Grabar cada cierto tiempo ?
-- [ ] Comprar y probar micrófono
-- [ ] Cambiar la fuente
-- [ ] Calibrar la máscara con la imagen
+- [ ] Comprar y probar micrófono ( equalizador ) 
