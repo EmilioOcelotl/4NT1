@@ -26,26 +26,11 @@ import {AfterimagePass} from './jsm/postprocessing/AfterimagePass.js';
 import {ImprovedNoise} from './jsm/math/ImprovedNoise.js';
 import { GUI } from './jsm/libs/dat.gui.module.js';
 
-import { OBJLoader } from './jsm/loaders/OBJLoader.js';
+// import { OBJLoader } from './jsm/loaders/OBJLoader.js';
 
-var hydra = new Hydra({
-    canvas: document.getElementById("myCanvas"),
-    detectAudio: false
-})
+// voronoi(1).kaleid(1).out()
 
-const elCanvas = document.getElementById( 'myCanvas');
-elCanvas.style.display = 'none'; 
-
-osc(10, 0.1, 0.8).rotate(0, 0.1).kaleid().color(-1, 1).out()
-
-console.log(hydra ); 
-
-// require("./js/hydra-threejs/threejs-embedded/index.js"); 
-
-//import Delaunator from 'delaunator';
-
-//import '@tensorflow-models/facemesh';
-//import '@tensorflow-models/blazeface';
+// console.log(hydra ); 
 
 ///////////////////// Variables importantes
 
@@ -53,7 +38,7 @@ let boolText = true;
 
 /////////////////////
 
-let matofTexture; 
+// let matofTexture; 
 let scene, camera, renderer, material, cube, geometryPoints;
 let geometryC, materialC, materialC2;
 let cubos = [];
@@ -637,62 +622,23 @@ let triCantidad = 880; // probar con 100, luego 880
 let triGeometry = [];
 
 let triangulos = []; 
+
 let vit;
+let trimaterial; 
+
+var hydra = new Hydra({
+    canvas: document.getElementById("myCanvas"),
+    detectAudio: false
+})
+    
+const elCanvas = document.getElementById( 'myCanvas');
+elCanvas.style.display = 'none'; 
+    
+osc(10, 0.1, 0.8).rotate(0, 0.01).kaleid(0.01).out()
+// Agregar triangulos tal vez esto puede ir en initsc1, 2
+// Agregar algo que elimine los tríangulos en otras escenas 
+
 vit = new THREE.CanvasTexture(elCanvas);
-
-
-let trimaterial = new THREE.MeshBasicMaterial( { color: 0xffffff,  side: THREE.DoubleSide, map:vit } ); 
-
-const smaterial = new THREE.MeshStandardMaterial( {
-	color: 0xffffff,
-     side: THREE.DoubleSide,
-     map: vit,
-	//envMap: scene.background,
-	// refractionRatio: 0.2,
-     roughness: 0.55,
-     metalness: 0.8,
-     //blending: THREE.AdditiveBlending
-	//envMap: refractionCube
-    } );
-    
-
-for(let i = 0; i < 3; i++){
-
-    const x = Math.random() * 200 - 100;
-    const y = Math.random() * 200 - 100;
-    const z = Math.random() * 200 - 100;
-
-    triPosiciones.push(x, y, z); 
-    
-}
-
-let light1, light2, light3, light4;
-
-// console.log(triPosiciones); 
-
-var quad_uvs =
-[
-0.0, 0.0,
-1.0, 0.0,
-1.0, 1.0,
-];
-
-for(let i = 0; i < triCantidad; i++){
-
-    triGeometry[i] = new THREE.BufferGeometry();
-    triGeometry[i].setAttribute( 'position', new THREE.Float32BufferAttribute( triPosiciones, 3 ) );
-    triGeometry[i].setAttribute( 'uv', new THREE.Float32BufferAttribute( quad_uvs, 2))
-    triGeometry[i].usage = THREE.DynamicDrawUsage; 
-    triangulos[i] = new THREE.Mesh( triGeometry[i], trimaterial  );
-
-}
-
-const pA = new THREE.Vector3();
-const pB = new THREE.Vector3();
-const pC = new THREE.Vector3();
-
-const cb = new THREE.Vector3();
-const ab = new THREE.Vector3();
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -706,7 +652,7 @@ async function setupCamera() {
 	camWidth = 640;
 	camHeight = 480;
 	
-	wCor = (33);
+	wCor = (32);
 	hCor = 28;
 
 	if(!mobile){
@@ -723,8 +669,8 @@ async function setupCamera() {
 	//wCor = (33-(33/4));
 	//hCor = 28+(28/4);
 
-	wCor = 33;
-	hCor = 28
+	wCor = 30.5;
+	hCor = 25
 	
 	if(!mobile){
 	    camSz = 9;
@@ -830,15 +776,15 @@ async function renderPrediction() {
 
 		 
 		let d = perlin.noise(
-		    arre[triconta*3] * 0.004 + time2,
-		    arre[(triconta*3)+1] * 0.004 + time2,
-		    arre[(triconta*3)+2] * 0.004 + time2) *  0.125; 
+		    arre[triconta*3] * 0.008 + time2,
+		    arre[(triconta*3)+1] * 0.008 + time2,
+		    arre[(triconta*3)+2] * 0.008 + time2) *  0.5; 
 
 		
 		for(let i = 0; i < 3; i++){
-		    triGeometry[j].attributes.position.setX( i, arre[triconta*3] * 0.1 -wCor ); 
-		    triGeometry[j].attributes.position.setY( i, arre[(triconta*3)+1] * 0.1 - hCor );
-		    triGeometry[j].attributes.position.setZ( i, arre[(triconta*3)+2] * 0.05 );
+		    triGeometry[j].attributes.position.setX( i, (arre[triconta*3] * 0.095 -wCor)*(1+d) ); 
+		    triGeometry[j].attributes.position.setY( i, (arre[(triconta*3)+1] * 0.1 - hCor) * (1+d) );
+		    triGeometry[j].attributes.position.setZ( i, (arre[(triconta*3)+2] * 0.05) * (1*d) );
 
    
 		    triconta++; 
@@ -857,25 +803,6 @@ async function renderPrediction() {
 	    }
 */	    
 	    let time = Date.now() * 0.0005;
-
-	    
-	    light1.position.x = Math.sin( time * 0.4 ) * 120 ;
-	    light1.position.y = Math.cos( time * 0.3 ) * 140  ;
-	    light1.position.z = Math.cos( time * 0.2 ) * 120 ;
-    
-	    light2.position.x = Math.cos( time * 0.2 ) * 120 ;
-	    light2.position.y = Math.sin( time * 0.3 ) * 140 ;
-	    light2.position.z = Math.sin( time * 0.4 ) * 120 ;
-    
-    light3.position.x = Math.sin( time * 0.4 ) * 120 ;
-    light3.position.y = Math.cos( time * 0.2 ) * 140 ;
-    light3.position.z = Math.sin( time * 0.3 ) * 120 ;
-    
-    light4.position.x = Math.sin( time * 0.2 ) * 120 ;
-    light4.position.y = Math.cos( time * 0.4 ) * 140 ;
-    light4.position.z = Math.sin( time * 0.3 ) * 120 ;    
-	
-
 
 	    // aquí tendría que haber más animsc hay que probar 
 	    
@@ -998,11 +925,11 @@ async function renderPrediction() {
     // /console.log( Math.abs(mouseX) - 32, );
 
     //camera.position.x += ( Math.abs(mouseX)- 36 - camera.position.x ) * .05;
-    // camera.position.y += ( Math.abs(mouseY)- 24 - camera.position.y ) * .05;
+    //camera.position.y += ( Math.abs(mouseY)- 24 - camera.position.y ) * .05;
 
     camera.lookAt( scene.position );
     camera.rotation.z = Math.PI;
-    // stats.update();
+    stats.update();
     renderer.render( scene, camera );
  
     // console.log(degree); 
@@ -1016,25 +943,6 @@ async function renderPrediction() {
 	
 	renderer.copyFramebufferToTexture( vector, texture );
     }
-
-    /*
-    if(!mobile){
-	gTranscurso = (gFin - gSignal) / 1000;
-	// console.log(gTranscurso.toFixed()); 
-	if(gTranscurso.toFixed() == 1 && gSegundo != 1){
-	    // console.log("Cambio");
-	    gSegundo = gTranscurso.toFixed();
-	    glitchPass.goWild = false;
-	    composer.removePass( glitchPass );
-	    
-	} else {
-	    gSegundo = 0; 
-	}
-	
-	gFin = Date.now(); 
-	
-    }
-    */
 
     /// texto movimiento
 
@@ -1097,7 +1005,7 @@ async function renderPrediction() {
 		let d = perlin.noise(
 		    algo.getX(i) * 0.01+ time2,
 		    algo.getY(i) * 0.01 + time2,
-		    algo.getZ(i) * 0.01 + time2) *  0.25; 
+		    algo.getZ(i) * 0.01 + time2) *  0.125; 
 
 		// let d = perlin.noise(txtPos1[i] * 0.001 +time  ); 
 		const z = 0.5 * Math.sin( i / 1 + ( time + i ) / 5 );
@@ -1139,7 +1047,6 @@ async function renderPrediction() {
     const sum = vels.reduce((a, b) => a + b, 0);
     avg = (sum / vels.length) || 0;
 
-   
     // arriba 10
     // abajo 152
     // izq 234
@@ -1187,10 +1094,7 @@ async function init() {
     camera.rotation.z = Math.PI;
     
     clock = new THREE.Clock();
-    cols(); // quitar ? 
-
-    // let {width, height} = stream.getTracks()[0].getSettings();
-    // console.log('Resolución:'+ `${width}x${height}`); // 640x480
+    cols(); 
 
     const geometryVideo = new THREE.PlaneGeometry( camWidth/7, camHeight /7, 16, 16); // Dos modalidades, abierta y ajustada para cel
     materialVideo = new THREE.MeshBasicMaterial( {
@@ -1204,48 +1108,18 @@ async function init() {
    
     planeVideo.rotation.x = Math.PI;
     planeVideo.position.z = -10;
-    // scene.add( planeVideo );
-    
-    // guiFunc(); 
-    
-    
-    // afterimagePass.uniforms['damp'].value = 0.85;
-
-	// videoFolder.open(); 
     
     retro();
     materiales();
-						       
-    sprite = new THREE.TextureLoader().load( 'img/part.png' );
-    sprite2 = new THREE.TextureLoader().load( 'img/spark1.png' );
-						       
+							       
     for(let i = 0; i < 3; i++){
     
 	matPoints[i] = new THREE.PointsMaterial( {
-	    color: colores[Math.floor(Math.random()*4)],
-	    size: 10,
-	    map: sprite,
+	    color: 0xffffff,
+	    size: 0.1,
 	    blending: THREE.AdditiveBlending,
-	    // rotation: 0.1; 
-	    //transparent: true,
-	    //opacity: 0.75,
-	    // sizeAttenuation: false,
 	    alphaTest: 0.9,
-	    // depthTest: false
 	} );
-
-	matPoints2[i] = new THREE.PointsMaterial( {
-	    color: 0x000000,
-	    size: 2,
-	    // map: sprite,
-	    blending: THREE.AdditiveBlending,
-	    // transparent: true,
-	    //opacity: 0.5,
-	    // sizeAttenuation: false,
-	    alphaTest: 0.9,
-	    // depthTest: false
-	} );
-
 	
     }
 
@@ -1279,7 +1153,7 @@ async function init() {
     document.body.appendChild( renderer.domElement );
     window.addEventListener( 'resize', onWindowResize );
 
-    // container.appendChild( stats.dom );
+    container.appendChild( stats.dom ); // para dibujar stats 
 
     const renderScene = new RenderPass( scene, camera );
 
@@ -1290,8 +1164,6 @@ async function init() {
     afterimagePass = new AfterimagePass();
     composer.addPass( afterimagePass );
     afterimagePass.uniforms['damp'].value = 0.85;
-    // glitchPass = new GlitchPass();
-    // composer.addPass( glitchPass );
 
     model = await faceLandmarksDetection.load(
 	faceLandmarksDetection.SupportedPackages.mediapipeFacemesh,
@@ -1300,10 +1172,45 @@ async function init() {
 	 // maxContinuousChecks: 120
 	});
 
+    // Esta es la parte de Hydra, tal vez puede haber dos momentos
+    // uno fijo y otro dinámico
+    // El dinámico puede ser el selector de sketches de Hydra 
     
-       
-    for(let i = 0; i < triCantidad; i++){
 
+    trimaterial = new THREE.MeshBasicMaterial( { color: 0xffffff,  side: THREE.DoubleSide, map:vit } ); 
+
+    for(let i = 0; i < 3; i++){
+	
+	const x = Math.random() * 200 - 100;
+	const y = Math.random() * 200 - 100;
+	const z = Math.random() * 200 - 100;
+	
+	triPosiciones.push(x, y, z); 
+	
+    }
+    
+    // console.log(triPosiciones); 
+    
+    var quad_uvs =
+	[
+	    0.0, 0.0,
+	    1.0, 0.0,
+	    1.0, 1.0,
+	];
+    
+    for(let i = 0; i < triCantidad; i++){
+	
+	triGeometry[i] = new THREE.BufferGeometry();
+	triGeometry[i].setAttribute( 'position', new THREE.Float32BufferAttribute( triPosiciones, 3 ) );
+	triGeometry[i].setAttribute( 'uv', new THREE.Float32BufferAttribute( quad_uvs, 2))
+	triGeometry[i].usage = THREE.DynamicDrawUsage; 
+	triangulos[i] = new THREE.Mesh( triGeometry[i], trimaterial  );
+	
+    }
+    
+    
+    for(let i = 0; i < triCantidad; i++){
+	
 	scene.add(triangulos[i]);
 
 	//triangulos[i].material = matArray[i%4]; 
@@ -1311,20 +1218,6 @@ async function init() {
 	triangulos[i].rotation.y = Math.PI*2;
 
     }
-
-   
-    light1 = new THREE.PointLight( 0xffffff, 1.5, 150 );
-    scene.add( light1 );
-    
-    light2 = new THREE.PointLight(  0xffffff, 1.5, 150 );
-    scene.add( light2 );
-
-    light3 = new THREE.PointLight(  0xffffff, 1.5, 150 );
-    scene.add( light3 );
-
-    light4 = new THREE.PointLight(  0xffffff, 1.5, 150 );
-    scene.add( light4 );
-
     
     detonar();
     
@@ -1494,7 +1387,7 @@ function initsc1() {
      text.material.blending = THREE.AdditiveBlending; 
     text2.material.blending = THREE.AdditiveBlending; 
 
-    text.material.color = new THREE.Color(0x000000 ); 
+    // text.material.color = new THREE.Color(0x000000 ); 
     
     // cuboGBool = true; 
     // respawn.start(); // otro sonido que no sea respawn 
@@ -1511,7 +1404,7 @@ function initsc1() {
     perlinValue = 0.03;
     perlinAmp = 4;
     
-    //matPoints.map= sprite;
+    // matPoints.map= sprite;
     matPoints.size=10; 
     // planeB[0].material = matPoints; 
 
@@ -1693,7 +1586,7 @@ function initsc2() {
 
     if (predictions.length > 0) {
 	predictions.forEach((prediction) => {
-	    planeB[0].material = matPoints2[Math.floor(Math.random()*3)]; 
+	    planeB[0].material = matPoints[Math.floor(Math.random()*3)]; 
 	    scene.add( planeB[cuentaPlane] );
 	    cuentaPlane++;
 	});
@@ -2021,7 +1914,7 @@ function guiFunc(){
 	afterimagePass.uniforms['damp'].value = params.damp; 
     })
 
-    videoFolder.add(params, 'tamaño',  1, 50).onChange(function(){
+    videoFolder.add(params, 'tamaño',  0.01, 50, 0.01).onChange(function(){
 	for(let i = 0; i < 3; i++){
 	    matPoints[i].size = params.tamaño; 
 	}
@@ -2116,30 +2009,32 @@ function texto() {
 	    // transparent: true,
 	} );
 
+	matLite.map = vit;
+
     const loader1 = new THREE.FontLoader();
 
-    loader1.load( 'fonts/techno.json', function( font ) {
-
-	const message = "";
-	const shapes = font.generateShapes( message, 1);
-	const geometry = new THREE.ShapeGeometry( shapes );
-	geometry.computeBoundingBox();
-
-	const xMid = - 0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
- 	geometry.translate( xMid, 0, 0 );
-	text = new THREE.Mesh( geometry, matLite );
-	text.position.z = 5;
-	// text.rotation.x = Math.PI;
-	// text.rotation.y =q Math.PI;
-	text.rotation.z = Math.PI;
-	scene.add( text );
-
-	text2 = new THREE.Mesh( geometry, matLite );
-	text2.position.z = 5;
-	// text.rotation.x = Math.PI;
-	// text.rotation.y = Math.PI;
-	text2.rotation.z = Math.PI;
-	scene.add( text2 );
+	loader1.load( 'fonts/square.json', function( font ) {
+	    
+	    const message = "";
+	    const shapes = font.generateShapes( message, 1);
+	    const geometry = new THREE.ShapeGeometry( shapes );
+	    geometry.computeBoundingBox();
+	    
+	    const xMid = - 0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
+ 	    geometry.translate( xMid, 0, 0 );
+	    text = new THREE.Mesh( geometry, matLite );
+	    text.position.z = 5;
+	    // text.rotation.x = Math.PI;
+	    // text.rotation.y =q Math.PI;
+	    text.rotation.z = Math.PI;
+	    scene.add( text );
+	    
+	    text2 = new THREE.Mesh( geometry, matLite );
+	    text2.position.z = 5;
+	    // text.rotation.x = Math.PI;
+	    // text.rotation.y = Math.PI;
+	    text2.rotation.z = Math.PI;
+	    scene.add( text2 );
 	
     });
     }
@@ -2148,39 +2043,30 @@ function texto() {
 
 function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 
-    /*
-    if(!mobile){
-	gSignal = Date.now();
-	composer.addPass( glitchPass );
-	glitchPass.goWild = true;
-    }
-   */ 
-
     //const loader1 = new THREE.FontLoader();
- 
     //loader1.load( 'fonts/techno.json', function( font ) {
-	
-	txtPosX = posX;
-	txtPosY = posY;	
-	txtPosX2 = posX2;
-	txtPosY2 = posY2;
-	
-	const message = mensaje; 
-	const shapes = antifont.generateShapes( message, 1 );
-	const geometry = new THREE.ShapeGeometry( shapes );
-	geometry.computeBoundingBox();
-	const xMid = - 0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
-	geometry.translate( xMid, 0, 0 );
-	text.geometry.dispose(); 
-	text.geometry= geometry;
-	text.material.dispose();
+    
+    txtPosX = posX;
+    txtPosY = posY;	
+    txtPosX2 = posX2;
+    txtPosY2 = posY2;
+    
+    const message = mensaje; 
+    const shapes = antifont.generateShapes( message, 1.25 );
+    const geometry = new THREE.ShapeGeometry( shapes );
+    geometry.computeBoundingBox();
+    const xMid = - 0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
+    geometry.translate( xMid, 0, 0 );
+    text.geometry.dispose(); 
+    text.geometry= geometry;
+    text.material.dispose();
 
     text.position.x = txtPosX; 
     text.position.y = txtPosY;
     text.position.z = 10;
     
     const message2 = mensaje2; 
-    const shapes2 = antifont.generateShapes( message2, 1 );
+    const shapes2 = antifont.generateShapes( message2, 1.25);
     const geometry2 = new THREE.ShapeGeometry( shapes2 );
     geometry2.computeBoundingBox();
     const xMid2 = - 0.5 * ( geometry2.boundingBox.max.x - geometry2.boundingBox.min.x );
@@ -2194,22 +2080,22 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
     text2.position.z = 10;
 
     
-	if(!mobile){
+    if(!mobile){
 
-	    //text2Copy = geometry.attributes.position;
-	    text.geometry.usage = THREE.DynamicDrawUsage;
-	    //txtPosCopy1 = txtPos1.clone(); 
-	    textCopy1 = text.clone(); 
+	//text2Copy = geometry.attributes.position;
+	text.geometry.usage = THREE.DynamicDrawUsage;
+	//txtPosCopy1 = txtPos1.clone(); 
+	textCopy1 = text.clone(); 
 
 	    
-	    // txtPos2 = geometry2.attributes.position;
-	    text2.geometry.usage = THREE.DynamicDrawUsage;
-	    textCopy2 = text2.clone(); 
-	    // txtPosCopy2 = txtPos2.clone(); 
-	    
+	// txtPos2 = geometry2.attributes.position;
+	text2.geometry.usage = THREE.DynamicDrawUsage;
+	textCopy2 = text2.clone(); 
+	// txtPosCopy2 = txtPos2.clone(); 
+	
 	// }
-
-	}
+	
+    }
 }
 
 function retro() {
@@ -2366,11 +2252,8 @@ function loadFont(){
 
     const loader = new THREE.FontLoader();
     loader.load( 'fonts/techno.json', function ( response ) {
-	
 	antifont = response;
-	
 	//refreshText();
-	
     } );
 }
 

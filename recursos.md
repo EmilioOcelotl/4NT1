@@ -1,6 +1,6 @@
 # Recursos
 
-
+- http://gero3.github.io/facetype.js/
 - http://learningthreejs.com/blog/2011/08/17/tweenjs-for-smooth-animation/
 - https://github.com/rexmalebka/hydra-threejs
 - https://discourse.threejs.org/t/three-js-delaunator/4952
