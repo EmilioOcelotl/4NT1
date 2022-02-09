@@ -1,4 +1,4 @@
-/////////////////////////////////
+ /////////////////////////////////
 // ///////// 4NT1 /////////////////
 // ////////////////////////////////
 
@@ -17,11 +17,14 @@ import {TTFLoader} from './jsm/loaders/TTFLoader.js';
 import {AfterimagePass} from './jsm/postprocessing/AfterimagePass.js';
 import {ImprovedNoise} from './jsm/math/ImprovedNoise.js';
 import { GUI } from './jsm/libs/dat.gui.module.js';
+const TWEEN = require('@tweenjs/tween.js')
 
 ///////////////////// Variables importantes
 
 let boolText = true; 
 let boolGui = false; 
+let boolStats = false; 
+let boolMic = true; 
 
 /////////////////////
 
@@ -32,11 +35,7 @@ let font;
 let text = new THREE.Mesh(); let text2 = new THREE.Mesh();
 let matArray = [];
 let prueba = 4;
-// let afft = [];
-// const analyser = new Tone.Analyser( 'fft', 64 );
 let postB = true;
-
-// import perlinNoise3d from 'perlin-noise-3d';
 
 const pGeometry = [new THREE.BufferGeometry(), new THREE.BufferGeometry(), new THREE.BufferGeometry];
 
@@ -69,11 +68,8 @@ let geometryB;
 let vertices = [];
 let points = [];
 let normals = [];
-//let keypoints = [];
 let  keypoints = []; 
-
 let laterales = [];
-
 let geometry = new THREE.BufferGeometry();
 let mesh = new THREE.Mesh();
 let meshB = new THREE.Mesh();
@@ -90,16 +86,17 @@ const body = document.getElementById( 'body' );
 
 // con boton
 
+/*
 document.querySelector('button').addEventListener('click', async () => {
     await Tone.start(); 
     // console.log('audio is ready')
     init(); 
 })
+*/
 
-// Tone.start().then( (x) => init()) // sin botón ( modo exhibición ) 
+Tone.start().then( (x) => init()) // sin botón ( modo exhibición ) 
 
 let colores = [], colores2 = [], colores3 = [];
-
 const stats = new Stats();
 
 let predictions = [];
@@ -122,16 +119,9 @@ let numsc = 3;
 
 // //////////////////////////////////////////////////////////////////
 
-let ofTexture;
-
-let cambioC = 0;
-
-// let pitchShift, reverb, dist;
 let player, antiKick;
 let seq1, seq2, seq3;
-
 let flow, curve, curveHandles = [];
-
 let textMesh1;
 
 function isMobile() {
@@ -203,20 +193,22 @@ const panner = new Tone.Panner3D({
     });
 
 */
+
 const distortion = new Tone.Distortion(0.5);
 
+if(boolMic){
+    distortion.toDestination();
+}
+
 const pitchShift = new Tone.PitchShift().connect(distortion);
-pitchShift.pitch = -3; // down one octave
-pitchShift.windowSize = 0.03; // down one octave
+pitchShift.pitch = -3;
+pitchShift.windowSize = 0.03;
 
 const mic = new Tone.UserMedia(2);
-
-//.connect( toneFFT );
-
 let openmic; 
 
 mic.open().then(() => {
-    openmic = true;
+    // openmic = true;
     mic.connect( pitchShift ); 
 });
 
@@ -237,10 +229,7 @@ let txtPosY = 1;
 let txtPosX2 = 1;
 let txtPosY2 = 1; 
 
-// let sprite, sprite2;
-
 let matPoints = []; 
-// let matPoints2 = [];
 
 let clock;
 
@@ -353,8 +342,6 @@ let txtsc3 =[
     "ffmpeg -f x11grab -r 20 -s 1920x1080\n-i :0.0+0,0 -vcodec rawvideo\n-pix_fmt yuv420p -threads 0 -f v4l2 /dev/video0",
     "ffmpeg -f x11grab -r 20 -s 1920x1080\n-i :0.0+0,0 -vcodec rawvideo\n-pix_fmt yuv420p -threads 0 -f v4l2 /dev/video0",
     "Rota\nno hay un centro neutral",
-    
-
 ]
 
 /*
@@ -406,7 +393,7 @@ let txtInstrucciones = [
     
 ]
 
-// formas menos ñoñas de hacer referencia al descanso 
+// Quitar esto 
 
 let txtDescanso = [
     "descansa",
@@ -555,6 +542,7 @@ var params = {opacidad: 0.5,damp: 0.5,tamaño: 10,perlin: 0.01, rojo: 255,verde:
 
 let videoFolder = []; 
 let audioFolder = []; 
+let wireline; 
 
 let keyactualX = [];
 let keyanteriorX = [];
@@ -570,6 +558,7 @@ let trimesh = new THREE.Mesh();
 let triPosiciones = [];
 let triCantidad = 880; // probar con 100, luego 880  
 let triGeometry = [];
+let blackPlane; 
 
 let triangulos = []; 
 
@@ -583,39 +572,8 @@ var hydra = new Hydra({
     
 const elCanvas = document.getElementById( 'myCanvas');
 elCanvas.style.display = 'none'; 
-    
-// osc(10, 0.1, 0.8).rotate(0, 0.01).kaleid(0.01).out()
-
-// osc(10, 0.1, 0.8).rotate(0, 0.01).kaleid(0.01).out()                                                                                                                       
-// noise(4,0.99).modulate(osc(9),0.92).rotate(0.0019,0.09).color(5,1,90).out()                                                                                                
-// noise(5,0.99).modulate(noise(9),0.92).scrollX(0.19,0.09).modulateScrollY(osc(2).modulate(osc().rotate(),.11)).scale(.72).color(0.9,1.014,1).color(5,1,50).out()            
-// noise(5,0.99).modulate(noise(2),0.92).scrollX(0.19,0.09).modulateScrollY(osc(0.2).modulate(osc(0.1).rotate(),.11)).scale([.72,9,5,4,1].fast(1).smooth(0.9)).color(0.9,1.014,1).color(1,[50,2,20].fast(0.0),5).out()   
-
-
-osc(3,0.01,9)
-.mult(osc(2,-0.1,1).modulate(noise(3,1)).rotate(0.7))
-.posterize([3,10,2].fast(0.5).smooth(1))
-.modulateRotate(o0,() => Math.sin(time)*3)
-.color(5,1,50)
-.scrollX(1,() => (0.1 * Math.sin(time*.00009)))
-.out()
-
-
-/*
-shape(4,0.7)
-.mult(osc(20,-0.009,9).modulate(noise(3,1)).rotate(0.7))
-  .modulateScale(osc(4,-0.09,0).kaleid(50).scale(0.6),15,0.1)
-  .out()
-*/
-
 let arre = []; 
-// Agregar triangulos tal vez esto puede ir en initsc1, 2
-// Agregar algo que elimine los tríangulos en otras escenas 
-
 vit = new THREE.CanvasTexture(elCanvas);
-
-let light1, light2, light3, light4;
-
 
 // /////////// Camara
 
@@ -623,11 +581,10 @@ async function setupCamera() {
 
     if(navigator.userAgent.match(/firefox|fxios/i)){
 
-	// console.log("es firefox");
 	camWidth = 640;
 	camHeight = 480;	
-	wCor = (32);
-	hCor = 28;
+	wCor = 30.5;
+	hCor = 25;
 
 	if(!mobile){
 	    camSz = 7;
@@ -643,11 +600,11 @@ async function setupCamera() {
 	//wCor = (33-(33/4));
 	//hCor = 28+(28/4);
 
-	wCor = 30.5;
-	hCor = 25
+	wCor = 38.5;
+	hCor = 28
 	
 	if(!mobile){
-	    camSz = 9;
+	    camSz = 7;
 	} else {
 	    camSz = 10; 
 		
@@ -655,7 +612,7 @@ async function setupCamera() {
     
     video = document.getElementById('video');
     stream = await navigator.mediaDevices.getUserMedia({
-	// 'audio': false,
+	'audio': false,
 	'video': {
 	    facingMode: 'user',
 	    width: mobile ? undefined : camWidth,
@@ -684,7 +641,6 @@ async function renderPrediction() {
 	flipHorizontal: false,
 	predictIrises: irises,
     });
-
     
     if( buscando && exBool ){
 	fin = Date.now();
@@ -696,8 +652,6 @@ async function renderPrediction() {
 	transCreditos = ( finCreditos - inicioCreditos) / 1000; 
     }
     
-    // score(transcurso, 10);
-
     score();
         
     if (prueba != predictions.length ) {
@@ -732,25 +686,25 @@ async function renderPrediction() {
 	    
 	    if (buscando) {
 		switch ( escena ) {
-		case 0: // 0 - titulo 1
+		case 0: // 0 - titulo 1 Podría suspenderse ? 
 		    animsc1();
 		    break;
 		case 1: // 1 - escena 1
 		    animsc1();
 		    break;
-		case 2: // 2 - titulo 2
+		case 2: // 2 - titulo 2 Podría suspenderse? 
 		    animsc1();
 		    break;
 		case 3: // 3 - escena 2
 		    animsc2();
 		    break;
 		case 4: // 4 - titulo 3
-		    //animIrises();
+		    // animsc3(); 
 		    break;
 		case 5: // 5 - escena 5
-		    animIrises();
+		    // animIrises(); // antes
+		    animsc3() 
 		    break; 
-		    // animCreditos(); 
 		case 6: // 6 - Creditos 
 		    animCreditos();
 		    break; 
@@ -784,19 +738,15 @@ async function renderPrediction() {
 		    //blinkSignal = Date.now(); 
 		    // aquí hay que agregar un contador. Si pasa cierto número de tiempo entonces miau
 		    blinkConta++;
-
 		    console.log(blinkConta); 
-
 		    //if(blinkConta == 50){
 			//console.log("ojos cerrados o muchos parpadeos"); 
 		    //} 
 		    
 		} else {
 		    blinkConta = 0; 
-
-		// blinkConta = 0; 
-		
-	    // console.log(getIsVoluntaryBlink(blinked)); 
+		    // blinkConta = 0; 
+		    // console.log(getIsVoluntaryBlink(blinked)); 
 		}
 	    }
 	});
@@ -824,13 +774,16 @@ async function renderPrediction() {
     
     // panner.positionX.value = degree *2; // degree reducido
     //console.log(degree * 4);
-    
-    cuboGrande.rotation.x += 0.001;
-    cuboGrande.rotation.y += (degree/4) * 0.005;
+    // cuboGrande.rotation.x += 0.001;
+    // cuboGrande.rotation.y += (degree/4) * 0.005;
 
     camera.lookAt( scene.position );
     camera.rotation.z = Math.PI;
-    stats.update();
+
+    if(boolStats){
+	stats.update();
+    }
+    
     renderer.render( scene, camera );
  
     // console.log(degree); 
@@ -838,13 +791,10 @@ async function renderPrediction() {
     composer.render();
   
     if(cuboGBool || suspendido ){
-	
 	vector.x = ( window.innerWidth * dpr / 2 ) - ( textureSize / 2 );
 	vector.y = ( window.innerHeight * dpr / 2 ) - ( textureSize / 2 );
-	
 	renderer.copyFramebufferToTexture( vector, texture );
     }
-
 
     /// texto movimiento
 
@@ -862,13 +812,10 @@ async function renderPrediction() {
 	for ( let i = 0; i < text.geometry.attributes.position.count; i ++ ) {
 	    // let d = perlin.noise(txtPos1[i] * 0.001 +time  );
 	    
-	let d = perlin.noise(
-	    text.geometry.attributes.position.getX(i) * 0.04+ time2,
-	    text.geometry.attributes.position.getY(i) * 0.04 + time2,
-	    text.geometry.attributes.position.getZ(i) * 0.04+ time2) *  0.125; 
-	    
-	    //text.geometry.attributes.position.setX( i, textCopy1.geometry.attributes.position.getX(i) + d );
-	    //text.geometry.attributes.position.setY( i, textCopy1.geometry.attributes.position.getY(i) + d );
+	    let d = perlin.noise(
+		text.geometry.attributes.position.getX(i) * 0.04+ time2,
+		text.geometry.attributes.position.getY(i) * 0.04 + time2,
+		text.geometry.attributes.position.getZ(i) * 0.04+ time2) *  0.125; 
 	    text.geometry.attributes.position.setZ( i, textCopy1.geometry.attributes.position.getZ(i) + d ); 
 	}
 
@@ -876,13 +823,10 @@ async function renderPrediction() {
 	
 	for ( let i = 0; i < text2.geometry.attributes.position.count; i ++ ) {
 
-	let d = perlin.noise(
-	    text2.geometry.attributes.position.getX(i) * 0.04+ time2,
-	    text2.geometry.attributes.position.getY(i) * 0.04 + time2,
-	    text2.geometry.attributes.position.getZ(i) * 0.04+ time2) *  0.125; 
-	    
-	    //text2.geometry.attributes.position.setX( i, textCopy2.geometry.attributes.position.getX(i) + d );
-	    //text2.geometry.attributes.position.setY( i, textCopy2.geometry.attributes.position.getY(i) + d );
+	    let d = perlin.noise(
+		text2.geometry.attributes.position.getX(i) * 0.04+ time2,
+		text2.geometry.attributes.position.getY(i) * 0.04 + time2,
+		text2.geometry.attributes.position.getZ(i) * 0.04+ time2) *  0.125; 
 	    text2.geometry.attributes.position.setZ( i, textCopy2.geometry.attributes.position.getZ(i) + d );
 	    
 	}
@@ -914,6 +858,8 @@ async function renderPrediction() {
 	}
     }
 
+    let oldAvg;
+    
     for(let i = 0; i < keypoints.length; i++){
 
 	keyanteriorX[i] = keyactualX[i];
@@ -938,8 +884,11 @@ async function renderPrediction() {
     */
     
     const sum = vels.reduce((a, b) => a + b, 0);
+    oldAvg = avg; 
     avg = (sum / vels.length) || 0;
-
+    
+    //sphereNuevo.scale.x.lerp(avg/4, 0.1) ; // Ñep 
+    
     // arriba 10
     // abajo 152
     // izq 234
@@ -983,40 +932,36 @@ async function init() {
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
+    scene.background = vit;
+    
     camera.position.z = 40;
     camera.rotation.z = Math.PI;
     
     clock = new THREE.Clock();
-    cols(); 
+    // cols(); 
 
     const geometryVideo = new THREE.PlaneGeometry( camWidth/7, camHeight /7, 16, 16);
     materialVideo = new THREE.MeshBasicMaterial( {
 	color: 0xffffff,
 	side: THREE.DoubleSide,
 	transparent: true,
-	opacity: 0.9,
+	opacity: 1,
     } );
     
     planeVideo = new THREE.Mesh( geometryVideo, materialVideo );
-   
     planeVideo.rotation.x = Math.PI;
     planeVideo.position.z = -10;
     
     // retro();
     materiales();
 
-    // sprite = new THREE.TextureLoader().load( 'img/spark1.png' );
-
     for(let i = 0; i < 3; i++){
-    
 	matPoints[i] = new THREE.PointsMaterial( {
-	    color: 0xffffff,
-	    // blending: THREE.SubtractiveBlending,
-	    //alphaTest: 0.9,
-	    
-	    map: vit 
+	    color: 0x000000,
+	    blending: THREE.SubtractiveBlending,
+	    //alphaTest: 0.9, 
+	    //map: vit 
 	} );
-	
     }
 
     planeB = [new THREE.Points( pGeometry[0], matPoints[0] ), new THREE.Points( pGeometry[1], matPoints[1] ), new THREE.Points( pGeometry[2], matPoints[2] )];
@@ -1027,31 +972,28 @@ async function init() {
 
     geometryB = new THREE.BufferGeometry();
     geometryB.verticesNeedUpdate = true;
-   
+
+    /*
     let audioSphere = new THREE.BoxGeometry( 400, 400, 400, 32, 32, 32 );
     let audioSphere2 = new THREE.BoxGeometry( 400, 400, 400, 32, 32, 32 );
     cuboGrande = new THREE.Mesh(audioSphere, materialC2 );
     cuboGrandeOrg = new THREE.Mesh(audioSphere2, materialC2 );
-
+    */
+    
     texto();
-
     loadFont(); 
     
     renderer = new THREE.WebGLRenderer({antialias: true});
-
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
 
-    
-    //renderer.toneMapping = THREE.ReinhardToneMapping;
-    //renderer.toneMappingExposure = Math.pow(1, 4.0 );
-   
-    
     document.body.appendChild( renderer.domElement );
     window.addEventListener( 'resize', onWindowResize );
 
-    container.appendChild( stats.dom ); // para dibujar stats 
-
+    if( boolStats ){
+	container.appendChild( stats.dom ); // para dibujar stats 
+    }
+    
     const renderScene = new RenderPass( scene, camera );
 
     //bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.4, 0.85 );
@@ -1071,29 +1013,17 @@ async function init() {
 	 // maxContinuousChecks: 120
 	});
 
-    // Esta es la parte de Hydra, tal vez puede haber dos momentos
-    // uno fijo y otro dinámico
-    // El dinámico puede ser el selector de sketches de Hydra 
-    
     trimaterial = new THREE.MeshBasicMaterial( {
 	color: 0xffffff,
 	side: THREE.DoubleSide,
-	blending: THREE.AdditiveBlending,
-	//roughness: 0.8,
-	//metalness: 0.9,
-	map:vit,
-	//transparency: true,
-	//opacity: 0.8
-
-	
+	blending: THREE.SubtractiveBlending,
+	map:vit,	
     } ); 
 
     for(let i = 0; i < 3; i++){
-	
 	const x = Math.random() * 200 - 100;
 	const y = Math.random() * 200 - 100;
 	const z = Math.random() * 200 - 100;
-	
 	triPosiciones.push(x, y, z); 	
     }
     
@@ -1110,13 +1040,15 @@ async function init() {
     }
     
     for(let i = 0; i < triCantidad; i++){
-	
 	scene.add(triangulos[i]);
 	triangulos[i].position.z = -4;
 	triangulos[i].rotation.y = Math.PI*2;
-
     }
-    
+
+    const geometryPlane = new THREE.PlaneGeometry( 1000, 1000 );
+    const materialPlane = new THREE.MeshBasicMaterial( {color: 0x000000, side: THREE.DoubleSide} );
+    blackPlane = new THREE.Mesh( geometryPlane, materialPlane );
+    blackPlane.position.z = -10; 
     detonar();
     
 }
@@ -1141,7 +1073,6 @@ function initsc0() {
 	materialVideo.map = new THREE.TextureLoader().load( 'img/siluetaNeg.png' );
 	materialVideo.map.wrapS = THREE.RepeatWrapping;
 	materialVideo.map.repeat.x = - 1;
-
 	text.material.color = new THREE.Color(0xffffff); 
 	planeVideo.geometry.dispose();
 	const geometryVideoNew = new THREE.PlaneGeometry( 480/15, 640/15 ); // Dos modalidades, abierta y ajustada para cel
@@ -1151,9 +1082,16 @@ function initsc0() {
 	
 	rmsc1();
 	rmsc2();
-	rmIrises(); 
+	rmsc3(); 
+	// rmIrises(); 
+	hush();
+	scene.background = new THREE.Color(0x000000);
 	
 	modoOscuro = true;
+
+	for(let i = 0; i < triCantidad; i++){
+	    scene.remove(triangulos[i]); 
+	}
 
 	if(boolText){
     	    chtexto(
@@ -1172,18 +1110,16 @@ function initsc0() {
 	intro.restart(); // que se detone hasta que la libería esté cargada 
 	// intro.start();
 
-	//bloomPass.threshold = 0.7;
-	//bloomPass.strength = 0.5;
-	//bloomPass.radius = 0;
-
     } else {
 
 	// Resetear el cubo
-	
+
+	/*
 	let audioSphere = new THREE.BoxGeometry( 400, 400, 400, 32, 32, 32 );
 	cuboGrande = new THREE.Mesh(audioSphere, materialC2 );
 	cuboGrandeOrg = new THREE.Mesh(audioSphere, materialC2 );
-
+	*/
+	
 	loopTxt.stop(0); 
 	planeVideo.geometry.dispose();
 	const geometryVideoNew = new THREE.PlaneGeometry( camWidth/camSz, camHeight/camSz ); // Dos modalidades para el cel
@@ -1194,6 +1130,9 @@ function initsc0() {
 
 	escena = 0;
 
+	// Tal vez esto es redundante, se va comentado para pruebas
+
+	/*
 	if(exBool){
 	    titulo1();
 	} else {
@@ -1203,14 +1142,18 @@ function initsc0() {
 	    if(escena == 3){
 		initsc2(); 
 	    }
+	    if(escena == 5){
+		initsc3(); 
+	    }
 	}
+	*/
+
+	titulo1(); 
 
 	transcurso = 0; 
 	inicio = Date.now();
 	segundo = 0;
- 
 	modoOscuro = false;
-	
 	buscando = true;
 	// scene.add( cuboGrande );
 	scene.add( text );
@@ -1222,6 +1165,10 @@ function initsc0() {
 }
 
 function titulo1(){
+
+    matPoints[0].size = 0; 
+    scene.background = vit; 
+    selektor(Math.floor(Math.random() * 5)); 
 
     outline.stop(0);
     line.stop(0); 
@@ -1273,31 +1220,17 @@ function titulo1(){
 
 function initsc1() {
 
-    
+    scene.add( blackPlane ); 
     // cuboGBool = true; 
     loopOf.start(0);
     line.stop();
     outline.stop(); 
-
-    //text.material.blending = THREE.AdditiveBlending; 
-    //text2.material.blending = THREE.AdditiveBlending; 
-
     irises = false;    
-    // cuboGBool = true; 
     afterimagePass.uniforms['damp'].value = 0.85;
-    //bloomPass.threshold = 0.95;
-    //bloomPass.strength = 0.1;
-    //bloomPass.radius = 0;
     perlinValue = 0.03;
     perlinAmp = 4;
-    
-    // matPoints.map= sprite;
-    // matPoints.size=10; 
-    // planeB[0].material = matPoints; 
-
     scene.add( planeVideo);
-
-    planeVideo.material.opacity = 0; 
+    planeVideo.material.opacity = 1; 
     // scene.remove( planeVideo ); 
     //scene.add(cuboGrande); 
     scene.add(planeVideo); 
@@ -1331,11 +1264,10 @@ function initsc1() {
     for(let i = 0; i < triCantidad; i++){	    
 	scene.add(triangulos[i]);
     }
-
+    
+    pitchShift.pitch = -12 ; // cambios dinámicos para el futuro 
    
 }
-
-// dos correcciones de acuerdo a la resolución. Pienso que esto tiene que ver con el modo horizontal o vertical. Cada navegador hace lo que quiere y firefox nunca me deja jalar la cámara en módo vertical 
 
 function animsc1() { 
 
@@ -1343,27 +1275,25 @@ function animsc1() {
     
     if(exBool){
 	perlinValue = 0.003+(transcurso/60*0.003); // suspendido temporalmente  
-	planeVideo.material.opacity = 0.3+transcurso/60 +0.01;
-	matPoints[0].size =  (Math.sin(time * 0.25) *1) ; 
+	// planeVideo.material.opacity = 0.75+transcurso/60;
+	matPoints[0].size =  (Math.sin(time * 0.5) *1) ; 
     }
-
+    
+    // pitchShift.windowSize = Math.sin(time2 * 0.125) * 0.01; // esperar mejores tiempos
+    
     // capa hydra
 
     arre = arre.flat(2);
     let triconta = 0;
-
     for(let j = 0; j < triCantidad; j++){	
-
-	
 	let d = perlin.noise(
-	    arre[triconta*3] * 0.01 + time2,
-	    arre[(triconta*3)+1] * 0.01 + time2,
-	    arre[(triconta*3)+2] * 0.01 + time2) *  0.5; 
-	
+	    arre[triconta*3] * 0.002 + time2,
+	    arre[(triconta*3)+1] * 0.002 + time2,
+	    arre[(triconta*3)+2] * 0.002 + time2) *  0.125; 
 	for(let i = 0; i < 3; i++){
-	    triGeometry[j].attributes.position.setX( i, (arre[triconta*3] * 0.095 -wCor)*(1.1+d) ); 
-	    triGeometry[j].attributes.position.setY( i, (arre[(triconta*3)+1] * 0.1 - hCor) * (1.1+d) );
-	    triGeometry[j].attributes.position.setZ( i, (arre[(triconta*3)+2] * 0.05) * (1.1*d) );
+	    triGeometry[j].attributes.position.setX( i, (arre[triconta*3] * 0.12 -wCor)*(1.1+d) ); 
+	    triGeometry[j].attributes.position.setY( i, (arre[(triconta*3)+1] * 0.12 - hCor) * (1.1+d) );
+	    triGeometry[j].attributes.position.setZ( i, (arre[(triconta*3)+2] * 0.05) * (1+d) );
    	    triconta++; 
 	}
     }
@@ -1371,17 +1301,14 @@ function animsc1() {
     // capa blend
     
     var time2 = Date.now() * 0.0005;
-
     for ( let i = 0; i < position[vueltas].count; i ++ ) {
-
 	let d = perlin.noise(
 	    keypoints[i][0] * 0.01 + time2,
 	    keypoints[i][1] * 0.01 + time2,
 	    keypoints[i][2] * 0.01 + time2) *  1; 
-	
 	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
-	position[vueltas].setX( i, (1+keypoints[i][0] * 0.095 - wCor) * (1+d) ); 
-	position[vueltas].setY( i, (1+keypoints[i][1] * 0.1 - hCor) * (1+d) ); // aquí está raro 
+	position[vueltas].setX( i, (1+keypoints[i][0] * 0.12 - wCor) * (1+d) ); 
+	position[vueltas].setY( i, (1+keypoints[i][1] * 0.12 - hCor) * (1+d) ); // aquí está raro 
 	position[vueltas].setZ( i, (keypoints[i][2] * 0.05)   );
     }
 
@@ -1399,6 +1326,10 @@ function rmsc1() {
 
 function titulo2(){
 
+    scene.remove(blackPlane); 
+    scene.background = vit; 
+    selektor(Math.floor(Math.random() * 5)); 
+    
     loopOf.stop(0);
     loopTxt.stop(0); 
     line.start(0); 
@@ -1421,7 +1352,8 @@ function titulo2(){
     for(let i = 0; i < triCantidad; i++){	    
 	scene.remove(triangulos[i]);
     }
-    
+ 
+    pitchShift.pitch = -12 ; // cambios dinámicos para el futuro tal vez con una secuencia    
     
 }
 
@@ -1429,7 +1361,8 @@ function titulo2(){
 
 function initsc2() {
 
-    selektor(0); 
+    scene.add( blackPlane); 
+    // selektor(0); 
     
     // cuboGBool = true; 
     loopRod.start(0); 
@@ -1437,21 +1370,11 @@ function initsc2() {
     // loop.start(0); 
     
     text.material.color = new THREE.Color(0xffffff); 
-
     scene.add( planeVideo);
-    // scene.add( cuboGrande ); 
-    // cuboGBool = true; 
-
     afterimagePass.uniforms['damp'].value = 0.85;
-
-    //bloomPass.threshold = 0.95;
-    //bloomPass.strength = 0;
-    //bloomPass.radius = 0;
 
     perlinValue = 0.003;
     perlinAmp = 2;
-    //text.material.blending = THREE.AdditiveBlending; 
-    //text2.material.blending = THREE.AdditiveBlending; 
     
     // cuboGrande.material.opacity = 0; 
     // scene.add(cuboGrande); 
@@ -1495,10 +1418,11 @@ function animsc2() {
 
     if(exBool){
 	perlinValue = 0.03-((transcurso-60)/60*0.03); 
-	planeVideo.material.opacity = 1 - (transcurso-60)/60;
+	// planeVideo.material.opacity = 1;
 	matPoints[0].size = 1 - (transcurso-60)/60; 
     }
-    
+
+    // pitchShift.windowSize = Math.sin(time2 * 0.125) * 0.01;
     // capa hydra
 
     arre = arre.flat(2);
@@ -1513,16 +1437,13 @@ function animsc2() {
 	    arre[(triconta*3)+2] * 0.008 + time2) *  0.5; 
 	
 	for(let i = 0; i < 3; i++){
-	    triGeometry[j].attributes.position.setX( i, (arre[triconta*3] * 0.095 -wCor)*(1+d) ); 
-	    triGeometry[j].attributes.position.setY( i, (arre[(triconta*3)+1] * 0.1 - hCor) * (1+d) );
-	    triGeometry[j].attributes.position.setZ( i, (arre[(triconta*3)+2] * 0.05) * (1*d) );
+	    triGeometry[j].attributes.position.setX( i, (arre[triconta*3] * 0.12 -wCor)*(1.2+d) ); 
+	    triGeometry[j].attributes.position.setY( i, (arre[(triconta*3)+1] * 0.12 - hCor) * (1.2+d) );
+	    triGeometry[j].attributes.position.setZ( i, (arre[(triconta*3)+2] * 0.05) * (1.2*d) );
    	    triconta++; 
 	}
     }
-    
-    // console.log((transcurso-40)/40); 
-    // cuboGrande.material.opacity = (transcurso-40)/40; 
-    
+        
     var time2 = Date.now() * 0.0005;
 
     for ( let i = 0; i < position[vueltas].count; i ++ ) {
@@ -1531,8 +1452,8 @@ function animsc2() {
 			     keypoints[i][1] * perlinValue + time2,
 			     keypoints[i][2] * perlinValue + time2) *  0.5; 
 
-	position[vueltas].setX( i, (1+keypoints[i][0] * 0.1 - wCor) * (1+d) ); 
-	position[vueltas].setY( i, (1+keypoints[i][1] * 0.1 - hCor) * (1+d) );
+	position[vueltas].setX( i, (1+keypoints[i][0] * 0.12 - wCor) * (1+d) ); 
+	position[vueltas].setY( i, (1+keypoints[i][1] * 0.12 - hCor) * (1+d) );
 	position[vueltas].setZ( i, keypoints[i][2] * 0.05  );
     }
 
@@ -1548,8 +1469,14 @@ function rmsc2() {
     }
 }
 
+// Titulo 3
+
 function titulo3(){
 
+    scene.remove(blackPlane); 
+    scene.background = vit; 
+    selektor(Math.floor(Math.random() * 5)); 
+    
     loopOf.stop(0);
     loopRod.stop(0); 
     loopTxt.stop(0);     
@@ -1557,7 +1484,7 @@ function titulo3(){
 
     if(boolText){
 	chtexto(
-	    "III\nCompromiso y escritura",
+	    "III\nCompromiso y escritura", // otro título, este está mucy chafa
 	    "",
 	    0,
 	    0,
@@ -1570,8 +1497,122 @@ function titulo3(){
     scene.remove( planeVideo ); 
     text.material.color = new THREE.Color(0xffffff); 
     cuboGBool = false; 
+
+    for(let i = 0; i < triCantidad; i++){	    
+	scene.remove(triangulos[i]);
+    }
+    
+    pitchShift.pitch = -12 ; // cambios dinámicos para el futuro 
+   
     
 }
+
+// Escena 2
+
+function initsc3() {
+
+    scene.add( blackPlane); 
+    // cuboGBool = true; 
+    loopRod.start(0); 
+    // line.start(0); 
+    // loop.start(0); 
+    
+    text.material.color = new THREE.Color(0xffffff); 
+    scene.add( planeVideo);
+    afterimagePass.uniforms['damp'].value = 0.85;
+
+    perlinValue = 0.003;
+    perlinAmp = 2;
+    
+    if(boolText){
+	chtexto(
+	    txtsc1[Math.floor(Math.random()*txtsc1.length)],
+	    txtsc1[Math.floor(Math.random()*txtsc1.length)],
+	    Math.random()*40 - 20,
+	    Math.random()*40 - 20,
+	    Math.random()*40 - 20,
+	    Math.random()*40 - 20
+	);
+    }
+	
+    if (predictions.length > 0) {
+	for (let i = 0; i < planeB.length; i++) {
+	    scene.remove( planeB[i] );
+	}
+    }
+
+    let cuentaPlane = 0;
+
+    if (predictions.length > 0) {
+	predictions.forEach((prediction) => {
+	    planeB[0].material = matPoints[Math.floor(Math.random()*3)]; 
+	    scene.add( planeB[cuentaPlane] );
+	    cuentaPlane++;
+	});
+    }
+
+    for(let i = 0; i < triCantidad; i++){	    
+	scene.add(triangulos[i]);
+    }
+
+}
+
+function animsc3() {
+
+    if(exBool){
+	perlinValue = 0.03-((transcurso-60)/60*0.03); 
+	// planeVideo.material.opacity = 1;
+	matPoints[0].size = 1 - (transcurso-60)/60; 
+    }
+
+    // pitchShift.windowSize = Math.sin(time2 * 0.125) * 0.01;
+    
+    // capa hydra
+
+    arre = arre.flat(2);
+    let triconta = 0;
+    var time2 = Date.now() * 0.0005;
+    
+    for(let j = 0; j < triCantidad; j++){	
+	
+	let d = perlin.noise(
+	    arre[triconta*3] * 0.008 + time2,
+	    arre[(triconta*3)+1] * 0.008 + time2,
+	    arre[(triconta*3)+2] * 0.008 + time2) *  0.5; 
+	
+	for(let i = 0; i < 3; i++){
+	    triGeometry[j].attributes.position.setX( i, (arre[triconta*3] * 0.12 -wCor)*(1.2+d) ); 
+	    triGeometry[j].attributes.position.setY( i, (arre[(triconta*3)+1] * 0.12 - hCor) * (1.2+d) );
+	    triGeometry[j].attributes.position.setZ( i, (arre[(triconta*3)+2] * 0.05) * (1.2*d) );
+   	    triconta++; 
+	}
+    }
+        
+    var time2 = Date.now() * 0.0005;
+
+    for ( let i = 0; i < position[vueltas].count; i ++ ) {
+
+	let d = perlin.noise(keypoints[i][0] * perlinValue + time2,
+			     keypoints[i][1] * perlinValue + time2,
+			     keypoints[i][2] * perlinValue + time2) *  0.5; 
+
+	position[vueltas].setX( i, (1+keypoints[i][0] * 0.12 - wCor) * (1+d) ); 
+	position[vueltas].setY( i, (1+keypoints[i][1] * 0.12 - hCor) * (1+d) );
+	position[vueltas].setZ( i, keypoints[i][2] * 0.05  );
+    }
+
+    planeB[vueltas].geometry.computeVertexNormals();
+    planeB[vueltas].geometry.attributes.position.needsUpdate = true;
+    position[vueltas].needsUpdate = true;
+    vueltas++;
+}
+
+function rmsc3() {
+   for (let i = 0; i < planeB.length; i++) {
+	scene.remove( planeB[i] );
+    }
+}
+
 
 // Podría ser que hasta aquí haya más texto que en las escenas anteriores 
 
@@ -1608,6 +1649,7 @@ function initIrises(){
     
 }
 
+/*
 function animIrises(){
     
     // console.log("hay alguien ahí?");
@@ -1620,34 +1662,46 @@ function animIrises(){
     } 
 
 }
+*/ 
 
+/*
 function rmIrises(){
     irises = false; 
 }
-
-function initCreditos(){
-}
-
-function animCreditos(){
-}
-
-function rmCreditos(){
-} 
-
-function initEpilogo(){
-}
+*/ 
 
 function reinicio(){
 }
 
 function selektor( sc ){
-
+    
     switch(sc){
     case 0:
 	shape(4,0.7).mult(osc(20,-0.009,9).modulate(noise(3,1)).rotate(0.7)).modulateScale(osc(4,-0.09,0).kaleid(50).scale(0.6),15,0.1).out()
 	break;
-    }
-   
+    case 1:
+	shape(4,0.7)
+	    .mult(osc(20,-0.009,9).modulate(noise(3,1)).rotate(0.7))
+	    .modulateScale(osc(4,-0.09,0).kaleid(50).scale(0.6),15,0.1)
+	    .out()
+	break;
+    case 2:
+	noise(5,0.99).modulate(noise(2),0.92).scrollX(0.19,0.09).modulateScrollY(osc(2).modulate(osc().rotate(),.11)).scale(2.9).color(0.9,1.014,1).color(5,1,50).out()
+	break;
+    case 3:
+	osc(3,0.01,9)
+	    .mult(osc(2,-0.1,1).modulate(noise(3,1)).rotate(0.7))
+	    .posterize([3,10,2].fast(0.5).smooth(1))
+	    .modulateRotate(o0,() => Math.sin(time)*3)
+	    .color(5,1,50)
+	    .scrollX(1,() => (0.1 * Math.sin(time*.00009)))
+	    .out()
+	break;
+    case 4:
+	noise(1,0.99).modulate(noise(10),0.12).scrollX(0.19,0.09).modulateScrollY(osc(0.2).modulate(osc(0.1).rotate(),.11)).scale([.72,9,5,4,1].fast(1).smooth(0.9)).color(0.9,1.014,1).color(1,[50,2,20].fast(0.0),5).out()
+	break; 
+
+    }   
 }
 
 // Ajustar duraciones
@@ -1666,27 +1720,28 @@ function score() {
       3. titulo2   065 - 070 s
       4. initsc2   070 - 130 s
       5. titulo3   130 - 135 s
-      6. irises    135 - x s
-      7. epilogo  x   - x + 30 s 
+      6. initsc3    135 - x s
+      7. reinicio  x   - x + 30 s 
  
      */
     
     if(buscando){
+
+	//  Primera escena 
 	
 	if ( transcurso.toFixed() == 5 && segundo != 5 ) {
 	    console.log("Primera Escena"); 
-	    segundo = transcurso.toFixed();
-	    // aquí puede ir algo asociado a las predicciones 
+	    segundo = transcurso.toFixed(); 
 	    modoOscuro = false; 
 	    escena = 1;
 	    rmsc1();
 	    rmsc2();
-	    rmIrises(); 
+	    rmsc3(); 
+	    // rmIrises(); 
 	    initsc1();
-	    
 	}
 
-	// titulo 2
+	// titulo 2 Estos números podrían variar ligeramente ? 
 
 	if ( transcurso.toFixed() == 65 && segundo != 65 ) {
 	    console.log("Título 2");
@@ -1694,24 +1749,27 @@ function score() {
 	    escena = 2; 
 	    rmsc1();
 	    rmsc2();
-	    rmIrises();
+	    rmsc3(); 
+	    // rmIrises();
 	    titulo2(); 
 	    
 	}
 	
-    // Por defecto inicia en la primer escena 
+    // Segunda escena 
     
 	if ( transcurso.toFixed() == 70 && segundo != 70 ) {
 	    console.log("Segunda Escena"); 
 	    segundo = transcurso.toFixed();
-	    // aquí puede ir algo asociado a las predicciones 
 	    modoOscuro = false; 
 	    escena = 3;
 	    rmsc1();
 	    rmsc2();
+	    rmsc3(); 
 	    initsc2();
 	    
 	}
+
+	// Tercer Título 
 
 	if ( transcurso.toFixed() == 125 && segundo != 125 ) {
 	    console.log("Título 3");
@@ -1719,19 +1777,25 @@ function score() {
 	    escena = 4; 
 	    rmsc1();
 	    rmsc2();
-	    rmIrises();
+	    rmsc3(); 
+	    // rmIrises();
 	    titulo3(); 
 	}
+
+	// Tercera escena 
 	
 	if ( transcurso.toFixed() == 130 && segundo != 130 ) {
 	    console.log("Tercera Escena"); 
 	    segundo = transcurso.toFixed();
 	    modoOscuro = true;
-	    irises = true; 
+	    // irises = true; 
 	    escena = 5;
 	    rmsc1();
 	    rmsc2();
-	    initIrises();	    
+	    rmsc3(); 
+	    // initIrises(); // Antes
+	    initsc3(); 
+	    
 	}
 
 	if ( transcurso.toFixed() == 160 && segundo != 160 ) {
@@ -1741,7 +1805,8 @@ function score() {
 	    escena = 7;
 	    rmsc1();
 	    rmsc2();
-	    rmIrises();	    
+	    rmsc3(); 
+	    // rmIrises();	    
 	}
 
 	// Si paso ese tiempo y no parpadearon entonces reinicia
@@ -1753,7 +1818,7 @@ function score() {
 	    escena = 8;
 	    rmsc1();
 	    rmsc2();
-	    rmIrises();
+	    // rmIrises();
 	    // initsc1();
 	    transcurso = 0;
 	    inicio = Date.now();
@@ -1897,7 +1962,7 @@ function guiFunc(){
 	    fondos.mute = true; 
 	}
     })
-    
+
     audioFolder.add(params, 'voz',  true).onChange(function(){
 	if(params.voz){
 	    distortion.toDestination(); 
@@ -1923,14 +1988,9 @@ function texto() {
 	
 	const matLite = new THREE.MeshBasicMaterial( {
 	    color: 0xffffff,
-	    // transparent: true,
-	    // opacity: 0.8,
 	    side: THREE.DoubleSide,
 	    blending: THREE.AdditiveBlending,
-	    // transparent: true,
 	} );
-
-	matLite.map = vit;
 
     const loader1 = new THREE.FontLoader();
 
@@ -1957,23 +2017,20 @@ function texto() {
 	    text2.rotation.z = Math.PI;
 	    scene.add( text2 );
 	
-    });
+	});
     }
-	
+    
 }
 
 function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
 
-    //const loader1 = new THREE.FontLoader();
-    //loader1.load( 'fonts/techno.json', function( font ) {
-    
     txtPosX = posX;
     txtPosY = posY;	
     txtPosX2 = posX2;
     txtPosY2 = posY2;
     
     const message = mensaje; 
-    const shapes = antifont.generateShapes( message, 0.75 );
+    const shapes = antifont.generateShapes( message, 1.25 );
     const geometry = new THREE.ShapeGeometry( shapes );
     geometry.computeBoundingBox();
     geometry.computeVertexNormals(); 
@@ -1988,7 +2045,7 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
     text.position.z = 10;
     
     const message2 = mensaje2; 
-    const shapes2 = antifont.generateShapes( message2, 0.75 );
+    const shapes2 = antifont.generateShapes( message2, 1.25 );
     const geometry2 = new THREE.ShapeGeometry( shapes2 );
     geometry2.computeBoundingBox();
     geometry2.computeVertexNormals(); 
@@ -2019,12 +2076,14 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
     }
 }
 
+/*
 function retro() {
     const data = new Uint8Array( textureSize * textureSize * 3 );
     texture = new THREE.DataTexture( data, textureSize, textureSize, THREE.RGBFormat );
     texture.minFilter = THREE.NearestFilter;
     texture.magFilter = THREE.NearestFilter;
 }
+*/
 
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -2048,6 +2107,7 @@ async function detonar() {
     respawn.start(); 
 }
 
+/*
 function cols() {
     colores = [new THREE.Color( 0x59181E ),
 	       new THREE.Color( 0x5C1452 ),
@@ -2055,6 +2115,7 @@ function cols() {
 	       new THREE.Color( 0x25145C ),
 	       new THREE.Color( 0x000000 )];
 }
+*/
 
 function materiales() {
 
@@ -2166,11 +2227,9 @@ function getIsVoluntaryBlink(blinkDetected) {
 }
 
 function loadFont(){
-
     const loader = new THREE.FontLoader();
-    loader.load( 'fonts/pixeled.json', function ( response ) {
+    loader.load( 'fonts/techno.json', function ( response ) {
 	antifont = response;
-	//refreshText();
     } );
 }
 
