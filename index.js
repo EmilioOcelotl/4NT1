@@ -17,7 +17,7 @@ import {TTFLoader} from './jsm/loaders/TTFLoader.js';
 import {AfterimagePass} from './jsm/postprocessing/AfterimagePass.js';
 import {ImprovedNoise} from './jsm/math/ImprovedNoise.js';
 import { GUI } from './jsm/libs/dat.gui.module.js';
-const TWEEN = require('@tweenjs/tween.js')
+// const TWEEN = require('@tweenjs/tween.js')
 
 ///////////////////// Variables importantes
 
