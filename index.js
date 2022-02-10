@@ -184,8 +184,14 @@ intro = new Tone.Player('audio/fondos/espera.mp3').toDestination();
 intro.loop = true; 
 
 intro.volume.value = -6;
+respawn.volume.value = -6;
+out.volume.value = -6;
+line.volume.value = -6;
 
 const outline = new Tone.Player('audio/fondos/outline.mp3').toDestination(); 
+
+outline.volume.value = -6;
+
 
 /*
 const panner = new Tone.Panner3D({
@@ -207,9 +213,11 @@ pitchShift.windowSize = 0.03;
 const mic = new Tone.UserMedia(2);
 let openmic; 
 
+const panner = new Tone.Panner(0).connect(pitchShift) ;
+
 mic.open().then(() => {
     // openmic = true;
-    mic.connect( pitchShift ); 
+    mic.connect( panner ); 
 });
 
 let glitchPass; 
@@ -574,6 +582,8 @@ const elCanvas = document.getElementById( 'myCanvas');
 elCanvas.style.display = 'none'; 
 let arre = []; 
 vit = new THREE.CanvasTexture(elCanvas);
+
+let silueta; 
 
 // /////////// Camara
 
@@ -1048,7 +1058,10 @@ async function init() {
     const geometryPlane = new THREE.PlaneGeometry( 1000, 1000 );
     const materialPlane = new THREE.MeshBasicMaterial( {color: 0x000000, side: THREE.DoubleSide} );
     blackPlane = new THREE.Mesh( geometryPlane, materialPlane );
-    blackPlane.position.z = -10; 
+    blackPlane.position.z = -10;
+
+    silueta = new THREE.TextureLoader().load( 'img/siluetaNeg.png' )
+    
     detonar();
     
 }
@@ -1070,7 +1083,7 @@ function initsc0() {
 	out.start(); // out.loop? 
 	scene.add(planeVideo); 
 	planeVideo.material.opacity = 1; 
-	materialVideo.map = new THREE.TextureLoader().load( 'img/siluetaNeg.png' );
+	materialVideo.map = silueta;
 	materialVideo.map.wrapS = THREE.RepeatWrapping;
 	materialVideo.map.repeat.x = - 1;
 	text.material.color = new THREE.Color(0xffffff); 
@@ -1119,7 +1132,8 @@ function initsc0() {
 	cuboGrande = new THREE.Mesh(audioSphere, materialC2 );
 	cuboGrandeOrg = new THREE.Mesh(audioSphere, materialC2 );
 	*/
-	
+
+	loopRod.stop(0); 
 	loopTxt.stop(0); 
 	planeVideo.geometry.dispose();
 	const geometryVideoNew = new THREE.PlaneGeometry( camWidth/camSz, camHeight/camSz ); // Dos modalidades para el cel
@@ -1165,6 +1179,8 @@ function initsc0() {
 }
 
 function titulo1(){
+
+    loopRod.stop(0); 
 
     matPoints[0].size = 0; 
     scene.background = vit; 
@@ -1220,7 +1236,8 @@ function titulo1(){
 
 function initsc1() {
 
-    scene.add( blackPlane ); 
+    //scene.add( blackPlane );// tal vez que sea aleatorio  
+
     // cuboGBool = true; 
     loopOf.start(0);
     line.stop();
@@ -1326,7 +1343,7 @@ function rmsc1() {
 
 function titulo2(){
 
-    scene.remove(blackPlane); 
+    //scene.remove(blackPlane); 
     scene.background = vit; 
     selektor(Math.floor(Math.random() * 5)); 
     
@@ -1361,7 +1378,7 @@ function titulo2(){
 
 function initsc2() {
 
-    scene.add( blackPlane); 
+    // scene.add( blackPlane); 
     // selektor(0); 
     
     // cuboGBool = true; 
@@ -1473,7 +1490,7 @@ function rmsc2() {
 
 function titulo3(){
 
-    scene.remove(blackPlane); 
+    // scene.remove(blackPlane); 
     scene.background = vit; 
     selektor(Math.floor(Math.random() * 5)); 
     
@@ -1511,7 +1528,7 @@ function titulo3(){
 
 function initsc3() {
 
-    scene.add( blackPlane); 
+    // scene.add( blackPlane); 
     // cuboGBool = true; 
     loopRod.start(0); 
     // line.start(0); 
@@ -1671,7 +1688,14 @@ function rmIrises(){
 */ 
 
 function reinicio(){
+
+    transcurso = 0;
+    escena = 0; 
+    // titulo1(); 
+    initsc0(); 
 }
+
+// Sin retroalimentación ordenar mejor esto 
 
 function selektor( sc ){
     
@@ -1798,6 +1822,22 @@ function score() {
 	    
 	}
 
+	// Mientras
+
+	if ( transcurso.toFixed() == 160 && segundo != 160 ) {
+	    console.log("Reinicio"); 
+	    segundo = transcurso.toFixed();
+	    // modoOscuro = true; 
+	    escena = 6;
+	    rmsc1();
+	    rmsc2();
+	    rmsc3();
+	    reinicio(); 
+	    // rmIrises();	    
+	}
+	
+	/*
+
 	if ( transcurso.toFixed() == 160 && segundo != 160 ) {
 	    console.log("Epilogo"); 
 	    segundo = transcurso.toFixed();
@@ -1848,6 +1888,8 @@ function score() {
 	    transcurso = 0;
 	    transCreditos = 0; 
 	}
+
+	*/
 	
     }
 }
