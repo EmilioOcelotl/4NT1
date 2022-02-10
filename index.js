@@ -37,6 +37,7 @@ let text = new THREE.Mesh(); let text2 = new THREE.Mesh();
 let matArray = [];
 let prueba = 4;
 let postB = true;
+let matLite; 
 
 const pGeometry = [new THREE.BufferGeometry(), new THREE.BufferGeometry(), new THREE.BufferGeometry];
 
@@ -349,6 +350,7 @@ let txtsc3 =[
     "ffmpeg -f x11grab -r 20 -s 1920x1080\n-i :0.0+0,0 -vcodec rawvideo\n-pix_fmt yuv420p -threads 0 -f v4l2 /dev/video0",
     "ffmpeg -f x11grab -r 20 -s 1920x1080\n-i :0.0+0,0 -vcodec rawvideo\n-pix_fmt yuv420p -threads 0 -f v4l2 /dev/video0",
     "Rota\nno hay un centro",
+    "Bucle de investigación y producción",
 ]
 
 /*
@@ -390,7 +392,7 @@ let txtInstrucciones = [
     "En espera",
     "Ausencia y predicciones", 
     "La pantalla de bloqueo\nse activa cuando la cámara\n detecta uno o más rostros",
-    "Por favor,\nacércate para activar la interacción.\nPueden participar hasta tres personas", 
+    "Por favor,\nacércate para activar la interacción", 
     "Es necesario un rostro\n dentro del rango de la cámara", 
     "Será necesario que te quites el cubrebocas\n y mantengas 1.5 m de distancia", 
     "Es posible acceder\na la versión web de esta aplicación",
@@ -1074,7 +1076,10 @@ function initsc0() {
 	loopOf.stop(0);
 	loopTres.stop(0); 
 	
-	out.start(); // out.loop? 
+	//out.start(); // out.loop? comentado, esto antes hacia un ruido
+	matLite.map.dispose(); 	
+	matLite.blending = THREE.NoBlending; 
+	
 	scene.add(planeVideo); 
 	planeVideo.material.opacity = 1; 
 	materialVideo.map = silueta;
@@ -1126,7 +1131,9 @@ function initsc0() {
 
 	planeVideo.geometry = geometryVideoNew; 
 	materialVideo.map = new THREE.VideoTexture( video );
-	respawn.start(); 
+	matLite.map = vit; 
+	matLite.blending = THREE.AdditiveBlending; 
+	// respawn.start(); // esto antes hacia ruido  
 
 	escena = 0;
 	titulo1(); 
@@ -1155,7 +1162,7 @@ function titulo1(){
     
     outline.stop(0);
     line.stop(0); 
-    console.log("titulo 1 "); 
+    // console.log("titulo 1 "); 
     loopTxt.stop(0); 
     
     if(boolText){
@@ -1212,6 +1219,8 @@ function initsc1() {
 	matPoints[0].material = THREE.AdditiveBlending; 
 	break; 
     }
+
+    perlinValue = THREE.MathUtils.mapLinear(Math.random(), 0.0, 1.0, 0.001, 0.2); 
     
     //scene.add( blackPlane );// tal vez que sea aleatorio  
     // cuboGBool = true;
@@ -1259,7 +1268,7 @@ function initsc1() {
 	scene.add(triangulos[i]);
     }
     
-    pitchShift.pitch = -12 ; // cambios dinámicos para el futuro 
+    pitchShift.pitch = -4 ; // cambios dinámicos para el futuro 
    
 }
 
@@ -1270,7 +1279,7 @@ function animsc1() {
     if(exBool){
 	// perlinValue = 0.003+(transcurso/60*0.003); // suspendido temporalmente  
 	// planeVideo.material.opacity = 0.75+transcurso/60;
-	matPoints[0].size =  (Math.sin(time * 0.25) *1) +1; 
+	matPoints[0].size =  (Math.sin(time * 0.25) *0.5) +0.5; 
     }
     
     // pitchShift.windowSize = Math.sin(time2 * 0.125) * 0.01; // esperar mejores tiempos
@@ -1350,7 +1359,7 @@ function titulo2(){
 	scene.remove(triangulos[i]);
     }
  
-    pitchShift.pitch = -12 ; // cambios dinámicos para el futuro tal vez con una secuencia    
+    pitchShift.pitch = -4 ; // cambios dinámicos para el futuro tal vez con una secuencia    
     
 }
 
@@ -1358,7 +1367,8 @@ function titulo2(){
 
 function initsc2() {
 
-
+    perlinValue = THREE.MathUtils.mapLinear(Math.random(), 0.0, 1.0, 0.001, 0.2); 
+    
     switch( Math.floor(Math.random() * 2) ) {
     case 0:
 	trimaterial.blending = THREE.NoBlending;
@@ -1429,7 +1439,8 @@ function animsc2() {
     if(exBool){
 	perlinValue = 0.03-((transcurso-60)/60*0.03); 
 	// planeVideo.material.opacity = 1;
-	matPoints[0].size = 1 - (transcurso-60)/60; 
+	// matPoints[0].size = 1 - (transcurso-60)/60;
+	matPoints[0].size =  (Math.sin(time * 0.25) *0.5) +0.5;
     }
 
     // pitchShift.windowSize = Math.sin(time2 * 0.125) * 0.01;
@@ -1442,9 +1453,9 @@ function animsc2() {
     for(let j = 0; j < triCantidad; j++){	
 	
 	let d = perlin.noise(
-	    arre[triconta*3] * 0.008 + time2,
-	    arre[(triconta*3)+1] * 0.008 + time2,
-	    arre[(triconta*3)+2] * 0.008 + time2) *  0.5; 
+	    arre[triconta*3] * perlinValue + time2,
+	    arre[(triconta*3)+1] * perlinValue + time2,
+	    arre[(triconta*3)+2] * perlinValue + time2) *  0.5; 
 	
 	for(let i = 0; i < 3; i++){
 	    triGeometry[j].attributes.position.setX( i, (arre[triconta*3] * 0.12 -wCor)*(1.2+d) ); 
@@ -1495,7 +1506,7 @@ function titulo3(){
 
     if(boolText){
 	chtexto(
-	    "III\Multihilos", // otro título, este está mucy chafa
+	    "III\Observaciones multihilo", // otro título, este está mucy chafa
 	    "",
 	    0,
 	    0,
@@ -1513,7 +1524,7 @@ function titulo3(){
 	scene.remove(triangulos[i]);
     }
     
-    pitchShift.pitch = -12 ; // cambios dinámicos para el futuro 
+    pitchShift.pitch = -4 ; // cambios dinámicos para el futuro 
    
     
 }
@@ -1522,6 +1533,8 @@ function titulo3(){
 
 function initsc3() {
 
+    perlinValue = THREE.MathUtils.mapLinear(Math.random(), 0.0, 1.0, 0.001, 0.2); 
+    
     switch( Math.floor(Math.random() * 2) ) {
     case 0:
 	trimaterial.blending = THREE.NoBlending;
@@ -1585,7 +1598,8 @@ function animsc3() {
     if(exBool){
 	perlinValue = 0.03-((transcurso-60)/60*0.03); 
 	// planeVideo.material.opacity = 1;
-	matPoints[0].size = 1 - (transcurso-60)/60; 
+	// matPoints[0].size = 1 - (transcurso-60)/60;
+	matPoints[0].size =  (Math.sin(time * 0.25) *0.5) +0.5;
     }
 
     // pitchShift.windowSize = Math.sin(time2 * 0.125) * 0.01;
@@ -1599,9 +1613,9 @@ function animsc3() {
     for(let j = 0; j < triCantidad; j++){	
 	
 	let d = perlin.noise(
-	    arre[triconta*3] * 0.008 + time2,
-	    arre[(triconta*3)+1] * 0.008 + time2,
-	    arre[(triconta*3)+2] * 0.008 + time2) *  0.5; 
+	    arre[triconta*3] * perlinValue + time2,
+	    arre[(triconta*3)+1] * perlinValue + time2,
+	    arre[(triconta*3)+2] * perlinValue + time2) *  0.5; 
 	
 	for(let i = 0; i < 3; i++){
 	    triGeometry[j].attributes.position.setX( i, (arre[triconta*3] * 0.12 -wCor)*(1.2+d) ); 
@@ -2114,7 +2128,7 @@ function texto() {
     if(boolText){
 	const color = 0xffffff;
 	
-	const matLite = new THREE.MeshBasicMaterial( {
+	matLite = new THREE.MeshBasicMaterial( {
 	    color: 0xffffff,
 	    side: THREE.DoubleSide,
 	    blending: THREE.AdditiveBlending,
@@ -2234,7 +2248,7 @@ async function detonar() {
 
     console.log('██╗  ██╗███╗   ██╗████████╗ ██╗\n██║  ██║████╗  ██║╚══██╔══╝███║\n███████║██╔██╗ ██║   ██║   ╚██║\n╚════██║██║╚██╗██║   ██║    ██║\n     ██║██║ ╚████║   ██║    ██║\n     ╚═╝╚═╝  ╚═══╝   ╚═╝    ╚═╝'); // fps();
     inicio = Date.now();
-    respawn.start(); 
+    // respawn.start(); 
 }
 
 /*
