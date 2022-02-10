@@ -25,6 +25,7 @@ let boolText = true;
 let boolGui = false; 
 let boolStats = false; 
 let boolMic = true; 
+let numCasos = 7; 
 
 /////////////////////
 
@@ -249,18 +250,18 @@ let antifont;
 let txtsc1 = [
     "Predicciones y presencias",
     "Una oportunidad\npara el desplazamiento",
-    "Como una inmersión\ninformada",
     "La sugestión\nde los anzuelos\nen la superficie",
     "la búsqueda por un espacio alejado\na la geopolítica del servidor", 
     "Pasos [pequeños, inestables]\nhacia la ofuscación\n[analógica, digital]",
     "La reinterpretación\nde la [predicción, tecnología]",
     "Predicciones y presencias",
-    "Pixeles desorganizados\nque enmascaran la presencia",
+    "Predicciones y presencias",
+    "Pixeles organizados\nque enmascaran la presencia",
     "Interrupción de flujos\nno autorizados",
     "El software\ncomo una caja negra\nde cajas negras",
-    "La ofuscación integrada\ny conducida por la [auto]gestión\ndel dato",
+    "La ofuscación integrada\ny conducida por el dato",
     "Sin descuidar\nla importancia del gesto",
-    "Continúa\nel tríptico es breve",
+    "Continúa\nel tríptico es breve\npero se repite",
     "Predicciones y presencias",
     "La ofuscación\nes un motivo de apertura",
     "El efecto\nes distracción y evidencia",
@@ -305,7 +306,7 @@ let txtsc2 = [
     "La [escritura, ejecución]\nde código como improvisación",
     "Ña agencia del error\nen la práctica performática\nde escribir",
     "[Audio, Imagen]\ncomo instancias de conocimiento",
-    "La subjetividad de los ciclos por segundo",
+    "Los ciclos por segundo\nson subjetivos", 
     "¿Qué tanto es un 1mb de texto plano?",
     "Código y reflexión\nen relación\na una escritura automática",
     "La persecución de premisas históricas",
@@ -340,7 +341,7 @@ let txtsc3 =[
     "Los ajustes de la interfaz de usuarix",
     "¿Cómo visibilizar el modo exhibición en el manual?",
     "OBS Studio\nes la forma más fácil\nde transmitir video\ncomo una cámara web virtual.",
-    "Opciones ligeras que solamente pueden ejecutarse en linux",
+    "Opciones ligeras multiplataforma",
     "El rodeo y la necedad\ncomo un aporte\npara el futuro", 
     "v4l2loopback y Ffmpeg",
     "modprobe v4l2loopback",
@@ -349,7 +350,7 @@ let txtsc3 =[
     "ffmpeg -f x11grab -r 20 -s 1920x1080\n-i :0.0+0,0 -vcodec rawvideo\n-pix_fmt yuv420p -threads 0 -f v4l2 /dev/video0",
     "ffmpeg -f x11grab -r 20 -s 1920x1080\n-i :0.0+0,0 -vcodec rawvideo\n-pix_fmt yuv420p -threads 0 -f v4l2 /dev/video0",
     "ffmpeg -f x11grab -r 20 -s 1920x1080\n-i :0.0+0,0 -vcodec rawvideo\n-pix_fmt yuv420p -threads 0 -f v4l2 /dev/video0",
-    "Rota\nno hay un centro neutral",
+    "Rota\nno hay un centro",
 ]
 
 /*
@@ -396,7 +397,8 @@ let txtInstrucciones = [
     "Será necesario que te quites el cubrebocas\n y mantengas 1.5 m de distancia", 
     "Es posible acceder\na la versión web de esta aplicación",
     "También hay un repositorio\nque conduce a los módulos\nque conforman esta aplicación",
-    "Ausencia y predicciones"
+    "Ausencia y predicciones",
+    "La cámara reconoce rostros\nno hay datos almacenados"
     // qr del repo 
     
 ]
@@ -442,7 +444,7 @@ fondos.volume.value = -6;
 let perlinValue;
 let perlinAmp;
 let cuboGBool = false;
-let loopOf, loopRod, loopTxt, loopDescanso; 
+let loopOf, loopRod, loopTxt, loopTres; 
 
 // Textos generales 
 
@@ -462,7 +464,7 @@ loopOf = new Tone.Loop((time) => {
     let fondosAl = Math.floor(Math.random()*14);
     fondos.player(fondosAl.toString()).start(time);
         
-}, "5");
+}, "4");
 
 loopRod = new Tone.Loop((time) => {
    
@@ -480,7 +482,7 @@ loopRod = new Tone.Loop((time) => {
     let fondosAl = Math.floor(Math.random()*14);
     fondos.player(fondosAl.toString()).start(time);
         
-}, "5");
+}, "4");
 
 // Instrucciones 
 
@@ -501,12 +503,12 @@ loopTxt = new Tone.Loop((time) => {
 
 // Descanso 
 
-loopDescanso = new Tone.Loop((time) => {
+loopTres = new Tone.Loop((time) => {
     
     if(boolText){
 	chtexto(
-	    txtDescanso[Math.floor(Math.random()*txtDescanso.length)],
-	    txtDescanso[Math.floor(Math.random()*txtDescanso.length)],
+	    txtsc3[Math.floor(Math.random()*txtsc3.length)],
+	    txtsc3[Math.floor(Math.random()*txtsc3.length)],
 	    Math.random()*20 - 0,
 	    Math.random()*40 - 30,
 	    Math.random()*20 - 0,
@@ -514,7 +516,7 @@ loopDescanso = new Tone.Loop((time) => {
 	); 
     }
     
-}, "5");
+}, "4");
 
 Tone.Transport.start();
 
@@ -606,10 +608,6 @@ async function setupCamera() {
 
 	camWidth = 640;
 	camHeight = 480;
-
-	//wCor = (33-(33/4));
-	//hCor = 28+(28/4);
-
 	wCor = 38.5;
 	hCor = 28
 	
@@ -773,13 +771,11 @@ async function renderPrediction() {
 	const bottomY = (rightY + leftY) / 2;
 	degree = Math.atan((topY - bottomY) / (topX - bottomX));
 	
-    } else {
-	
+    } else {	
 	text.position.x = txtPosX;
 	text.position.y = txtPosY;	
 	text2.position.x = txtPosX2;
 	text2.position.y = txtPosY2;
-	
     }
     
     // panner.positionX.value = degree *2; // degree reducido
@@ -841,7 +837,8 @@ async function renderPrediction() {
 	    
 	}
     }
-    
+
+    /*
     if(cuboGBool){
 	var time2 = Date.now() * 0.0005;
     
@@ -868,6 +865,8 @@ async function renderPrediction() {
 	}
     }
 
+    */
+    /*
     let oldAvg;
     
     for(let i = 0; i < keypoints.length; i++){
@@ -885,17 +884,18 @@ async function renderPrediction() {
 	
     }
 
-    /*
     const sumX = velsX.reduce((a, b) => a + b, 0);
     const avgX = (sumX / velsX.length) || 0;
 
     const sumY = velsY.reduce((a, b) => a + b, 0);
     const avgY = (sumY / velsY.length) || 0;
-    */
+   
     
     const sum = vels.reduce((a, b) => a + b, 0);
     oldAvg = avg; 
     avg = (sum / vels.length) || 0;
+
+    */
     
     //sphereNuevo.scale.x.lerp(avg/4, 0.1) ; // Ñep 
     
@@ -967,10 +967,10 @@ async function init() {
 
     for(let i = 0; i < 3; i++){
 	matPoints[i] = new THREE.PointsMaterial( {
-	    color: 0x000000,
-	    blending: THREE.SubtractiveBlending,
+	    color: 0xffffff,
+	    // blending: THREE.SubtractiveBlending,
 	    //alphaTest: 0.9, 
-	    //map: vit 
+	    map: vit 
 	} );
     }
 
@@ -982,13 +982,6 @@ async function init() {
 
     geometryB = new THREE.BufferGeometry();
     geometryB.verticesNeedUpdate = true;
-
-    /*
-    let audioSphere = new THREE.BoxGeometry( 400, 400, 400, 32, 32, 32 );
-    let audioSphere2 = new THREE.BoxGeometry( 400, 400, 400, 32, 32, 32 );
-    cuboGrande = new THREE.Mesh(audioSphere, materialC2 );
-    cuboGrandeOrg = new THREE.Mesh(audioSphere2, materialC2 );
-    */
     
     texto();
     loadFont(); 
@@ -1026,7 +1019,7 @@ async function init() {
     trimaterial = new THREE.MeshBasicMaterial( {
 	color: 0xffffff,
 	side: THREE.DoubleSide,
-	blending: THREE.SubtractiveBlending,
+	// blending: THREE.AdditiveBlending,
 	map:vit,	
     } ); 
 
@@ -1055,7 +1048,7 @@ async function init() {
 	triangulos[i].rotation.y = Math.PI*2;
     }
 
-    const geometryPlane = new THREE.PlaneGeometry( 1000, 1000 );
+    const geometryPlane = new THREE.PlaneGeometry( camWidth/camSz, camHeight/camSz );
     const materialPlane = new THREE.MeshBasicMaterial( {color: 0x000000, side: THREE.DoubleSide} );
     blackPlane = new THREE.Mesh( geometryPlane, materialPlane );
     blackPlane.position.z = -10;
@@ -1068,7 +1061,7 @@ async function init() {
 
 function initsc0() {
 
-    loopDescanso.stop(); 
+    // loopDescanso.stop(); 
     
     cuboGrande.rotation.x = 0;
     cuboGrande.rotation.y = 0;
@@ -1077,9 +1070,12 @@ function initsc0() {
     
 	outline.stop(0);
 	line.stop(0); 
+
 	loopTxt.start(0); 
 	loopRod.stop(0);
-	loopOf.stop(0); 
+	loopOf.stop(0);
+	loopTres.stop(0); 
+	
 	out.start(); // out.loop? 
 	scene.add(planeVideo); 
 	planeVideo.material.opacity = 1; 
@@ -1125,14 +1121,6 @@ function initsc0() {
 
     } else {
 
-	// Resetear el cubo
-
-	/*
-	let audioSphere = new THREE.BoxGeometry( 400, 400, 400, 32, 32, 32 );
-	cuboGrande = new THREE.Mesh(audioSphere, materialC2 );
-	cuboGrandeOrg = new THREE.Mesh(audioSphere, materialC2 );
-	*/
-
 	loopRod.stop(0); 
 	loopTxt.stop(0); 
 	planeVideo.geometry.dispose();
@@ -1143,25 +1131,6 @@ function initsc0() {
 	respawn.start(); 
 
 	escena = 0;
-
-	// Tal vez esto es redundante, se va comentado para pruebas
-
-	/*
-	if(exBool){
-	    titulo1();
-	} else {
-	    if(escena == 1){
-		initsc1(); 
-	    }
-	    if(escena == 3){
-		initsc2(); 
-	    }
-	    if(escena == 5){
-		initsc3(); 
-	    }
-	}
-	*/
-
 	titulo1(); 
 
 	transcurso = 0; 
@@ -1172,7 +1141,6 @@ function initsc0() {
 	// scene.add( cuboGrande );
 	scene.add( text );
 	scene.add( text2 );
-	// Tone.Destination.mute = false; 
 	intro.stop();
 
     }
@@ -1184,8 +1152,9 @@ function titulo1(){
 
     matPoints[0].size = 0; 
     scene.background = vit; 
-    selektor(Math.floor(Math.random() * 5)); 
-
+    selektor(Math.floor(Math.random() * numCasos)); 
+    scene.add(blackPlane); 
+    
     outline.stop(0);
     line.stop(0); 
     console.log("titulo 1 "); 
@@ -1202,10 +1171,9 @@ function titulo1(){
 	);
     }
 
-    cuboGrande.rotation.x = 0;
-    cuboGrande.rotation.y = 0;
-    cuboGrande.rotation.z = 0; 
     
+    // planeVideo.material.map.dispose();
+    //planeVideo.color = new THREE.Color( 0xffffff ); 
     scene.remove( planeVideo );
     //scene.remove( cuboGrande ); 
     // text.material.color = new THREE.Color(0xffffff);
@@ -1236,9 +1204,20 @@ function titulo1(){
 
 function initsc1() {
 
+    switch( Math.floor(Math.random() * 2 ) ) {
+    case 0:
+	trimaterial.blending = THREE.NoBlending;
+	matPoints[0].material = THREE.NoBlending; 
+	break;
+    case 1:
+	trimaterial.blending = THREE.AdditiveBlending;
+	matPoints[0].material = THREE.AdditiveBlending; 
+	break; 
+    }
+    
     //scene.add( blackPlane );// tal vez que sea aleatorio  
-
-    // cuboGBool = true; 
+    // cuboGBool = true;
+    
     loopOf.start(0);
     line.stop();
     outline.stop(); 
@@ -1291,9 +1270,9 @@ function animsc1() {
     var time2 = Date.now() * 0.0005;
     
     if(exBool){
-	perlinValue = 0.003+(transcurso/60*0.003); // suspendido temporalmente  
+	// perlinValue = 0.003+(transcurso/60*0.003); // suspendido temporalmente  
 	// planeVideo.material.opacity = 0.75+transcurso/60;
-	matPoints[0].size =  (Math.sin(time * 0.5) *1) ; 
+	matPoints[0].size =  (Math.sin(time * 0.25) *1) +1; 
     }
     
     // pitchShift.windowSize = Math.sin(time2 * 0.125) * 0.01; // esperar mejores tiempos
@@ -1304,9 +1283,9 @@ function animsc1() {
     let triconta = 0;
     for(let j = 0; j < triCantidad; j++){	
 	let d = perlin.noise(
-	    arre[triconta*3] * 0.002 + time2,
-	    arre[(triconta*3)+1] * 0.002 + time2,
-	    arre[(triconta*3)+2] * 0.002 + time2) *  0.125; 
+	    arre[triconta*3] * perlinValue + time2,
+	    arre[(triconta*3)+1] * perlinValue + time2,
+	    arre[(triconta*3)+2] * perlinValue + time2) *  0.125; 
 	for(let i = 0; i < 3; i++){
 	    triGeometry[j].attributes.position.setX( i, (arre[triconta*3] * 0.12 -wCor)*(1.1+d) ); 
 	    triGeometry[j].attributes.position.setY( i, (arre[(triconta*3)+1] * 0.12 - hCor) * (1.1+d) );
@@ -1320,9 +1299,9 @@ function animsc1() {
     var time2 = Date.now() * 0.0005;
     for ( let i = 0; i < position[vueltas].count; i ++ ) {
 	let d = perlin.noise(
-	    keypoints[i][0] * 0.01 + time2,
-	    keypoints[i][1] * 0.01 + time2,
-	    keypoints[i][2] * 0.01 + time2) *  1; 
+	    keypoints[i][0] * perlinValue + time2,
+	    keypoints[i][1] * perlinValue + time2,
+	    keypoints[i][2] * perlinValue + time2) *  0.5; 
 	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
 	position[vueltas].setX( i, (1+keypoints[i][0] * 0.12 - wCor) * (1+d) ); 
 	position[vueltas].setY( i, (1+keypoints[i][1] * 0.12 - hCor) * (1+d) ); // aquí está raro 
@@ -1345,10 +1324,13 @@ function titulo2(){
 
     //scene.remove(blackPlane); 
     scene.background = vit; 
-    selektor(Math.floor(Math.random() * 5)); 
+    selektor(Math.floor(Math.random() * numCasos)); 
     
     loopOf.stop(0);
-    loopTxt.stop(0); 
+    loopTxt.stop(0);
+    loopRod.stop(0);
+    loopTres.stop(0); 
+
     line.start(0); 
     if(boolText){
 	chtexto(
@@ -1378,6 +1360,19 @@ function titulo2(){
 
 function initsc2() {
 
+
+    switch( Math.floor(Math.random() * 2) ) {
+    case 0:
+	trimaterial.blending = THREE.NoBlending;
+	matPoints[0].material = THREE.NoBlending; 
+	break;
+    case 1:
+	trimaterial.blending = THREE.AdditiveBlending;
+	matPoints[0].material = THREE.AdditiveBlending; 
+	break; 
+    }
+    
+    
     // scene.add( blackPlane); 
     // selektor(0); 
     
@@ -1492,11 +1487,12 @@ function titulo3(){
 
     // scene.remove(blackPlane); 
     scene.background = vit; 
-    selektor(Math.floor(Math.random() * 5)); 
+    selektor(Math.floor(Math.random() * numCasos)); 
     
     loopOf.stop(0);
     loopRod.stop(0); 
-    loopTxt.stop(0);     
+    loopTxt.stop(0);
+    loopTres.stop(0); 
     outline.start();
 
     if(boolText){
@@ -1528,9 +1524,21 @@ function titulo3(){
 
 function initsc3() {
 
+    switch( Math.floor(Math.random() * 2) ) {
+    case 0:
+	trimaterial.blending = THREE.NoBlending;
+	matPoints[0].material = THREE.NoBlending; 
+	break;
+    case 1:
+	trimaterial.blending = THREE.AdditiveBlending;
+	matPoints[0].material = THREE.AdditiveBlending; 
+	break; 
+    }
+    
+    
     // scene.add( blackPlane); 
     // cuboGBool = true; 
-    loopRod.start(0); 
+    loopTres.start(0); 
     // line.start(0); 
     // loop.start(0); 
     
@@ -1633,6 +1641,7 @@ function rmsc3() {
 
 // Podría ser que hasta aquí haya más texto que en las escenas anteriores 
 
+/*
 function initIrises(){
 
     cuboGBool = false; 
@@ -1665,6 +1674,7 @@ function initIrises(){
     loopDescanso.start(0); 
     
 }
+*
 
 /*
 function animIrises(){
@@ -1704,27 +1714,105 @@ function selektor( sc ){
 	shape(4,0.7).mult(osc(20,-0.009,9).modulate(noise(3,1)).rotate(0.7)).modulateScale(osc(4,-0.09,0).kaleid(50).scale(0.6),15,0.1).out()
 	break;
     case 1:
-	shape(4,0.7)
-	    .mult(osc(20,-0.009,9).modulate(noise(3,1)).rotate(0.7))
-	    .modulateScale(osc(4,-0.09,0).kaleid(50).scale(0.6),15,0.1)
-	    .out()
+	shape(4,0.7).mult(osc(20,-0.009,9).modulate(noise(3,1)).rotate(0.7)).modulateScale(osc(4,-0.09,0).kaleid(50).scale(0.6),15,0.1).out()
 	break;
     case 2:
 	noise(5,0.99).modulate(noise(2),0.92).scrollX(0.19,0.09).modulateScrollY(osc(2).modulate(osc().rotate(),.11)).scale(2.9).color(0.9,1.014,1).color(5,1,50).out()
 	break;
     case 3:
-	osc(3,0.01,9)
-	    .mult(osc(2,-0.1,1).modulate(noise(3,1)).rotate(0.7))
-	    .posterize([3,10,2].fast(0.5).smooth(1))
-	    .modulateRotate(o0,() => Math.sin(time)*3)
-	    .color(5,1,50)
-	    .scrollX(1,() => (0.1 * Math.sin(time*.00009)))
-	    .out()
+	osc(3,0.01,9).mult(osc(2,-0.1,1).modulate(noise(3,1)).rotate(0.7)).posterize([3,10,2].fast(0.5).smooth(1)).modulateRotate(o0,() => Math.sin(time)*3).color(5,1,50).scrollX(1,() => (0.1 * Math.sin(time*.00009))).out()
 	break;
     case 4:
 	noise(1,0.99).modulate(noise(10),0.12).scrollX(0.19,0.09).modulateScrollY(osc(0.2).modulate(osc(0.1).rotate(),.11)).scale([.72,9,5,4,1].fast(1).smooth(0.9)).color(0.9,1.014,1).color(1,[50,2,20].fast(0.0),5).out()
+	break;
+    case 5:
+	voronoi(8,1)
+	    .mult(osc(10,0.1,()=>Math.sin(time)*3).saturate(3).kaleid(200))
+	    .modulate(o0,0.05)
+	    .add(o0,0.8)
+	    .scrollY(-0.01)
+	    .scale(0.99)
+	    .modulate(voronoi(8,1),0.008)
+	    .luma(0.3)
+	    .out()
+	break;
+    case 6:
+	voronoi(8,1)
+	    .mult(osc(10,0.9,()=>Math.sin(time)*90).saturate(3).repeat(3,4))
+	    .modulate(o0,0.05)
+	    .add(o0,0.8)
+	    .scrollX(-0.01)
+	    .scale(0.9)
+	    .modulate(voronoi(90,100),0.005)
+	    .luma(0.3)
+	    .out()
+	break;
+    case 7:
+	voronoi(8,1)
+	    .mult(osc(10,0.9,()=>Math.cos(time)*9).saturate(9).repeat(3,4))
+	    .modulate(o0,0.05)
+	    .add(o0,0.8)
+	    .scrollX(-0.01)
+	    .scale(()=>Math.cos(time)*0.9)
+	    .modulate(voronoi(90,100),0.005)
+	    .luma(0.4)
+	    .hue(3)
+	    .out()
+	break;
+    case 8:
+	voronoi(8,1)
+	    .diff(osc(10,0.9,0.8).saturate(9))
+	    .modulate(noise(),0.05)
+	    .add(noise(3,4),0.8)
+	    .scrollX(-0.01)
+	    .scale(0.9)
+	    .modulate(voronoi(90,100),0.005)
+	    .luma(1)
+	    .shift(3,3)
+	    .out()
+	break;
+    case 9:
+	voronoi(8,1)
+	    .diff(noise(2,0.08))
+	    .modulate(noise(3,6),0.2)
+	    .add(noise(1,4),9)
+	    .modulate(noise(1,10),0.0005)
+	    .luma(0.5)
+	    .shift(3,3)
+	    .out()
+	break;
+    case 10:
+	voronoi(8,1)
+	    .diff(noise(2,0.08))
+	    .modulate(noise(3,6),0.2)
+	    .add(noise(1,4),0.009)
+	    .scale(1.2)
+	    .modulate(noise(1,10),0.0005)
+	    .luma(0.5)
+	    .shift(3,3)
+	    .out()
+	break;
+    case 11:
+	voronoi(8,1)
+	    .diff(noise(2,0.08))
+	    .modulate(noise(30,8),0.2)
+	    .add(noise(1,4),9)
+	    .modulate(osc(1,10,1),0.5)
+	    .luma(0.05)
+	    .shift(3,3)
+	    .color(0.1,2,7)
+	    .out()
+	break;
+    case 12:
+	shape(20,0.2,0.3)
+	    .color(0.5,0.8,50)
+	    .scale(() => Math.sin(time)+1*2)
+	    .repeat(() => Math.sin(time)*100)
+	    .scale(() => Math.sin(time)+1 *1.5)
+	    .modulate(noise(2,2))
+	    .rotate(1, .2)
+	    .out()
 	break; 
-
     }   
 }
 
@@ -1740,12 +1828,12 @@ function score() {
     /*
 
       1. titulo1   000 - 005 s
-      2. initsc1   005 - 065 s
-      3. titulo2   065 - 070 s
-      4. initsc2   070 - 130 s
-      5. titulo3   130 - 135 s
-      6. initsc3    135 - x s
-      7. reinicio  x   - x + 30 s 
+      2. initsc1   005 - 035 s
+      3. titulo2   035 - 040 s
+      4. initsc2   040 - 070 s
+      5. titulo3   070 - 075 s
+      6. initsc3   075 - 105 s
+      7. reinicio   s 
  
      */
     
@@ -1766,8 +1854,8 @@ function score() {
 	}
 
 	// titulo 2 Estos números podrían variar ligeramente ? 
-
-	if ( transcurso.toFixed() == 65 && segundo != 65 ) {
+	
+	if ( transcurso.toFixed() == 35 && segundo != 35 ) {
 	    console.log("Título 2");
 	    segundo = transcurso.toFixed();
 	    escena = 2; 
@@ -1779,9 +1867,9 @@ function score() {
 	    
 	}
 	
-    // Segunda escena 
+	// Segunda escena 
     
-	if ( transcurso.toFixed() == 70 && segundo != 70 ) {
+	if ( transcurso.toFixed() == 40 && segundo != 40 ) {
 	    console.log("Segunda Escena"); 
 	    segundo = transcurso.toFixed();
 	    modoOscuro = false; 
@@ -1795,7 +1883,7 @@ function score() {
 
 	// Tercer Título 
 
-	if ( transcurso.toFixed() == 125 && segundo != 125 ) {
+	if ( transcurso.toFixed() == 70 && segundo != 70 ) {
 	    console.log("Título 3");
 	    segundo = transcurso.toFixed();
 	    escena = 4; 
@@ -1808,7 +1896,7 @@ function score() {
 
 	// Tercera escena 
 	
-	if ( transcurso.toFixed() == 130 && segundo != 130 ) {
+	if ( transcurso.toFixed() == 75 && segundo != 75 ) {
 	    console.log("Tercera Escena"); 
 	    segundo = transcurso.toFixed();
 	    modoOscuro = true;
@@ -1824,7 +1912,7 @@ function score() {
 
 	// Mientras
 
-	if ( transcurso.toFixed() == 160 && segundo != 160 ) {
+	if ( transcurso.toFixed() == 105 && segundo != 105 ) {
 	    console.log("Reinicio"); 
 	    segundo = transcurso.toFixed();
 	    // modoOscuro = true; 
@@ -2033,6 +2121,8 @@ function texto() {
 	    side: THREE.DoubleSide,
 	    blending: THREE.AdditiveBlending,
 	} );
+
+	matLite.map = vit; 
 
     const loader1 = new THREE.FontLoader();
 
