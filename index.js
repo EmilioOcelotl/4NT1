@@ -1840,7 +1840,7 @@ function score() {
 	//  Primera escena 
 	
 	if ( transcurso.toFixed() == 5 && segundo != 5 ) {
-	    console.log("Primera Escena"); 
+	    //console.log("Primera Escena"); 
 	    segundo = transcurso.toFixed(); 
 	    modoOscuro = false; 
 	    escena = 1;
@@ -1854,7 +1854,7 @@ function score() {
 	// titulo 2 Estos números podrían variar ligeramente ? 
 	
 	if ( transcurso.toFixed() == 35 && segundo != 35 ) {
-	    console.log("Título 2");
+	    //console.log("Título 2");
 	    segundo = transcurso.toFixed();
 	    escena = 2; 
 	    rmsc1();
@@ -1868,7 +1868,7 @@ function score() {
 	// Segunda escena 
     
 	if ( transcurso.toFixed() == 40 && segundo != 40 ) {
-	    console.log("Segunda Escena"); 
+	    //console.log("Segunda Escena"); 
 	    segundo = transcurso.toFixed();
 	    modoOscuro = false; 
 	    escena = 3;
@@ -1882,7 +1882,7 @@ function score() {
 	// Tercer Título 
 
 	if ( transcurso.toFixed() == 70 && segundo != 70 ) {
-	    console.log("Título 3");
+	    //console.log("Título 3");
 	    segundo = transcurso.toFixed();
 	    escena = 4; 
 	    rmsc1();
@@ -1895,7 +1895,7 @@ function score() {
 	// Tercera escena 
 	
 	if ( transcurso.toFixed() == 75 && segundo != 75 ) {
-	    console.log("Tercera Escena"); 
+	    //console.log("Tercera Escena"); 
 	    segundo = transcurso.toFixed();
 	    modoOscuro = true;
 	    // irises = true; 
@@ -1911,7 +1911,7 @@ function score() {
 	// Mientras
 
 	if ( transcurso.toFixed() == 105 && segundo != 105 ) {
-	    console.log("Reinicio"); 
+	    //console.log("Reinicio"); 
 	    segundo = transcurso.toFixed();
 	    // modoOscuro = true; 
 	    escena = 6;
