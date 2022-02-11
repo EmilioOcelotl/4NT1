@@ -1,6 +1,4 @@
- /////////////////////////////////
-// ///////// 4NT1 /////////////////
-// ////////////////////////////////
+/////////// 4NT1 /////////////////
 
 import * as faceLandmarksDetection from '@tensorflow-models/face-landmarks-detection';
 import * as tf from '@tensorflow/tfjs-core';
@@ -25,7 +23,7 @@ let boolText = true;
 let boolGui = false; 
 let boolStats = false; 
 let boolMic = true; 
-let numCasos = 7; 
+let numCasos = 13; 
 
 /////////////////////
 
@@ -63,9 +61,6 @@ for (var i = 0; i < 3; i++) {
     position[i].usage = THREE.DynamicDrawUsage;
 }
 
-// let position = [];
-// const pGeometry = new THREE.BufferGeometry();
-
 let geometryB;
 let vertices = [];
 let points = [];
@@ -96,31 +91,22 @@ document.querySelector('button').addEventListener('click', async () => {
 })
 */
 
-Tone.start().then( (x) => init()) // sin botón ( modo exhibición ) 
+// sin botón ( modo exhibición ) 
+
+Tone.start().then( (x) => init()) 
 
 let colores = [], colores2 = [], colores3 = [];
 const stats = new Stats();
-
 let predictions = [];
 let container;
 let planeB = [];
-
 let composer;
 let planeVideo;
 let planeBuscando;
 let materialVideo;
-
 let escena = 0;
-
 let rendereo;
 let buscando = false;
-
-// //////////////////////////////////////////////////////////////////
-
-let numsc = 3;
-
-// //////////////////////////////////////////////////////////////////
-
 let player, antiKick;
 let seq1, seq2, seq3;
 let flow, curve, curveHandles = [];
@@ -191,7 +177,6 @@ out.volume.value = -6;
 line.volume.value = -6;
 
 const outline = new Tone.Player('audio/fondos/outline.mp3').toDestination(); 
-
 outline.volume.value = -6;
 
 
@@ -223,26 +208,18 @@ mic.open().then(() => {
 });
 
 let glitchPass; 
-
 let stream
 let gSignal, gFin, gTranscurso; 
-
 let stopRendering = false;
 let irises = false; 
-// let contriangulos = 0; 
-
 let suspendido = false; 
 let modoOscuro = true; 
-
 let txtPosX = 1;
 let txtPosY = 1; 
 let txtPosX2 = 1;
 let txtPosY2 = 1; 
-
 let matPoints = []; 
-
 let clock;
-
 let creditos = false; 
 let antifont; 
 
@@ -353,42 +330,7 @@ let txtsc3 =[
     "Bucle de investigación y producción",
 ]
 
-/*
-let txtPrueba = [
-
-    "Presencia de predicciones", 
-    "Los comentarios pueden repartirse\ncomo indicaciones y\n como programacion",
-    "Una buena parte del trabajo invertido\nse concentra en la\ndelimitacion escenica",
-    "Otra parte del trabajo invertido\n esta en la infraestructura",
-    "El análisis de datos\n como una posibilidad\n de interacción",
-    "Es necesario algún otro dispositivo\nde interaccion para acceder\na enlaces externos",
-    "¿Es redundante\nvincular un espacio fisico\ncon el entramado digital?",
-// # qr con la referencia a la reflexión de documenta 
-    "El cubrebocas funciona\ncomo un dispositivo de ofuscacion facial\npor sí mismo",
-    "Dos tipos de ofuscacion:\nsonora y visual",
-    "¿La distancia temporal\nestá asociada al contexto?",
-    "Implicaciones de predecir\n[presencia, ausencia]",
-    "La importancia del gesto",
-    "si te quedas,\nlas escenas continuan",
-    "Falta 1 MB de texto plano\npara el siguiente proyecto",
-    "Continúa",
-    "Ningún dato\n queda almacenado",
-    "La ofuscación\n es un motivo\n de apertura",
-    "Si estás en un espacio cerrado\nsal",
-    "Si estás en un espacio cerrado\nlas escenas continúan",
-    "¿Necesitas más tiempo?",
-    "En cada vuelta\n hay una variación\ndistinta",
-    "Una oportunidad\n para cuidar la presencia",
-    "Vertices geométricos\n que difuminan la presencia\n pero no la eliminan",
-    "¿Qué hay\n detrás de la máscara?",
-    "Triangulaciones",
-    "El efecto es distracción y evidencia"
-];
-
-*/
-
 let txtInstrucciones = [
-
     "En espera",
     "Ausencia y predicciones", 
     "La pantalla de bloqueo\nse activa cuando la cámara\n detecta uno o más rostros",
@@ -398,21 +340,9 @@ let txtInstrucciones = [
     "Es posible acceder\na la versión web de esta aplicación",
     "También hay un repositorio\nque conduce a los módulos\nque conforman esta aplicación",
     "Ausencia y predicciones",
-    "La cámara reconoce rostros\nno hay datos almacenados"
-    // qr del repo 
-    
+    "La cámara reconoce rostros\nno hay datos almacenados"    
 ]
 
-// Quitar esto 
-
-let txtDescanso = [
-    "descansa",
-    "cierra los ojos",
-    "difuminate",
-    "un par de segundos",
-    "cierra los ojos",
-    "no hay limite de tiempo",
-]
 // y hacer coincidir el índice con los audios
 
 var voz = new Tone.Players({
@@ -449,7 +379,6 @@ let loopOf, loopRod, loopTxt, loopTres;
 // Textos generales 
 
 loopOf = new Tone.Loop((time) => {
-   
     if(boolText){
 	chtexto(
 	    txtsc1[Math.floor(Math.random()*txtsc1.length)],
@@ -460,14 +389,11 @@ loopOf = new Tone.Loop((time) => {
 	    Math.random()*40 - 20
 	);
     }
-
     let fondosAl = Math.floor(Math.random()*14);
-    fondos.player(fondosAl.toString()).start(time);
-        
+    fondos.player(fondosAl.toString()).start(time);   
 }, "4");
 
 loopRod = new Tone.Loop((time) => {
-   
     if(boolText){
 	chtexto(
 	    txtsc2[Math.floor(Math.random()*txtsc2.length)],
@@ -478,16 +404,13 @@ loopRod = new Tone.Loop((time) => {
 	    Math.random()*40 - 10
 	);
     }
-
     let fondosAl = Math.floor(Math.random()*14);
-    fondos.player(fondosAl.toString()).start(time);
-        
+    fondos.player(fondosAl.toString()).start(time);   
 }, "4");
 
 // Instrucciones 
 
 loopTxt = new Tone.Loop((time) => {
-
     if(boolText){
 	chtexto(
 	    txtInstrucciones[Math.floor(Math.random()*txtInstrucciones.length)],
@@ -497,14 +420,12 @@ loopTxt = new Tone.Loop((time) => {
 	    Math.random()*40 - 20,
 	    Math.random()*40 - 20
 	);
-    }
-	
+    }	
 }, "10");
 
 // Descanso 
 
 loopTres = new Tone.Loop((time) => {
-    
     if(boolText){
 	chtexto(
 	    txtsc3[Math.floor(Math.random()*txtsc3.length)],
@@ -515,7 +436,6 @@ loopTres = new Tone.Loop((time) => {
 	    Math.random()*40 - 30
 	); 
     }
-    
 }, "4");
 
 Tone.Transport.start();
@@ -566,7 +486,7 @@ let velarriba, velabajo, velizquierda, velderecha;
 let trigeom = new THREE.BufferGeometry();
 let trimesh = new THREE.Mesh(); 
 let triPosiciones = [];
-let triCantidad = 880; // probar con 100, luego 880  
+let triCantidad = 880; // un parámetro que podríamoso cambiar 
 let triGeometry = [];
 let blackPlane; 
 
@@ -597,7 +517,6 @@ async function setupCamera() {
 	camHeight = 480;	
 	wCor = 30.5;
 	hCor = 25;
-
 	if(!mobile){
 	    camSz = 7;
 	} else {
@@ -610,7 +529,6 @@ async function setupCamera() {
 	camHeight = 480;
 	wCor = 38.5;
 	hCor = 28
-	
 	if(!mobile){
 	    camSz = 7;
 	} else {
@@ -635,8 +553,7 @@ async function setupCamera() {
     return new Promise((resolve) => {
 	video.onloadedmetadata = () => {
 	    resolve(video);
-	    initBlinkRateCalculator();
-	   		
+	    initBlinkRateCalculator();	
 	};
     });
 }
@@ -760,8 +677,6 @@ async function renderPrediction() {
 	});
     }
 
-    // ///////////////// rotación en z de la cara
-
    if (predictions.length > 0) {
 	const {annotations} = predictions[0]; // solo agarra una prediccion
 	const [topX, topY] = annotations['midwayBetweenEyes'][0];
@@ -779,9 +694,6 @@ async function renderPrediction() {
     }
     
     // panner.positionX.value = degree *2; // degree reducido
-    //console.log(degree * 4);
-    // cuboGrande.rotation.x += 0.001;
-    // cuboGrande.rotation.y += (degree/4) * 0.005;
 
     camera.lookAt( scene.position );
     camera.rotation.z = Math.PI;
@@ -792,7 +704,6 @@ async function renderPrediction() {
     
     renderer.render( scene, camera );
  
-    // console.log(degree); 
     vertices = [];
     composer.render();
   
@@ -810,25 +721,18 @@ async function renderPrediction() {
 	var time2 = Date.now() * 0.0005;
 
     if(!mobile){
-
 	// const position = geometry.attributes.position;
-
 	text.geometry.attributes.position.needsUpdate = true;
-	
 	for ( let i = 0; i < text.geometry.attributes.position.count; i ++ ) {
 	    // let d = perlin.noise(txtPos1[i] * 0.001 +time  );
-	    
 	    let d = perlin.noise(
 		text.geometry.attributes.position.getX(i) * 0.04+ time2,
 		text.geometry.attributes.position.getY(i) * 0.04 + time2,
 		text.geometry.attributes.position.getZ(i) * 0.04+ time2) *  0.125; 
 	    text.geometry.attributes.position.setZ( i, textCopy1.geometry.attributes.position.getZ(i) + d ); 
 	}
-
 	text2.geometry.attributes.position.needsUpdate = true;
-	
 	for ( let i = 0; i < text2.geometry.attributes.position.count; i ++ ) {
-
 	    let d = perlin.noise(
 		text2.geometry.attributes.position.getX(i) * 0.04+ time2,
 		text2.geometry.attributes.position.getY(i) * 0.04 + time2,
@@ -839,36 +743,8 @@ async function renderPrediction() {
     }
 
     /*
-    if(cuboGBool){
-	var time2 = Date.now() * 0.0005;
-    
-	const algo = cuboGrande.geometry.attributes.position;
-	const algo2 = cuboGrandeOrg.geometry.attributes.position;
-		
-	algo.needsUpdate = true;
-	algo2.needsUpdate = true; 
-	// algoOrg.needsUpdate = true; 
-	    
-	for ( let i = 0; i < algo.count; i ++ ) {
-	    
-	    let d = perlin.noise(
-		algo2.getX(i) * 0.001+ time2,
-		algo2.getY(i) * 0.001 + time2,
-		algo2.getZ(i) * 0.001 + time2) *  0.125; 
-	    
-	    // let d = perlin.noise(txtPos1[i] * 0.001 +time  ); 
-
-	    algo.setX( i,  cuboGrandeOrg.geometry.attributes.position.getX(i) + (1+d) );
-	    algo.setY( i,  cuboGrandeOrg.geometry.attributes.position.getY(i) + (1+d) );
-	    algo.setZ( i,  cuboGrandeOrg.geometry.attributes.position.getZ(i) + (1+d) );
-	    // txtPos1.setX( i, txtPos1init.attributes.position.x); 
-	}
-    }
-
-    */
-    /*
-    let oldAvg;
-    
+      let oldAvg;
+      
     for(let i = 0; i < keypoints.length; i++){
 
 	keyanteriorX[i] = keyactualX[i];
@@ -910,10 +786,9 @@ async function renderPrediction() {
    // console.log( avg / 100 ); // Promedio general 
 
     requestAnimationFrame(renderPrediction);
-    // console.log(params.opacidad); 
 };
 
-// /////////////////////// Inicialización
+///////////////////////// Inicialización
 
 async function init() {
 
@@ -948,7 +823,6 @@ async function init() {
     camera.rotation.z = Math.PI;
     
     clock = new THREE.Clock();
-    // cols(); 
 
     const geometryVideo = new THREE.PlaneGeometry( camWidth/7, camHeight /7, 16, 16);
     materialVideo = new THREE.MeshBasicMaterial( {
@@ -1010,7 +884,7 @@ async function init() {
     afterimagePass.uniforms['damp'].value = 0.85;
 
     model = await faceLandmarksDetection.load(
-	faceLandmarksDetection.SupportedPackages.mediapipeFacemesh,
+	faceLandmarksDetection.SupportedPackages.mediapipeFacemesh, // cambiar 
 	{maxFaces: 1,
 	 shouldLoadIrisModel: true, // Hay que cargar un poco más de archivos 
 	 // maxContinuousChecks: 120
@@ -1061,8 +935,6 @@ async function init() {
 
 function initsc0() {
 
-    // loopDescanso.stop(); 
-    
     cuboGrande.rotation.x = 0;
     cuboGrande.rotation.y = 0;
 
@@ -1070,16 +942,13 @@ function initsc0() {
     
 	outline.stop(0);
 	line.stop(0); 
-
 	loopTxt.start(0); 
 	loopRod.stop(0);
 	loopOf.stop(0);
 	loopTres.stop(0); 
-	
 	//out.start(); // out.loop? comentado, esto antes hacia un ruido
 	matLite.map.dispose(); 	
 	matLite.blending = THREE.NoBlending; 
-	
 	scene.add(planeVideo); 
 	planeVideo.material.opacity = 1; 
 	materialVideo.map = silueta;
@@ -1087,18 +956,13 @@ function initsc0() {
 	materialVideo.map.repeat.x = - 1;
 	text.material.color = new THREE.Color(0xffffff); 
 	planeVideo.geometry.dispose();
-	const geometryVideoNew = new THREE.PlaneGeometry( 480/15, 640/15 ); // Dos modalidades, abierta y ajustada para cel
-
-	planeVideo.geometry = geometryVideoNew; 
-	// materialVideo.map.rotation.y = Math.PI / 2; // por alguna razon hay que comentar esto 
-	
+	const geometryVideoNew = new THREE.PlaneGeometry( 480/15, 640/15 );
+	planeVideo.geometry = geometryVideoNew; 	
 	rmsc1();
 	rmsc2();
 	rmsc3(); 
-	// rmIrises(); 
 	hush();
 	scene.background = new THREE.Color(0x000000);
-	
 	modoOscuro = true;
 
 	for(let i = 0; i < triCantidad; i++){
@@ -1118,7 +982,6 @@ function initsc0() {
 	
 	buscando = false;
 	scene.remove( cuboGrande );
-
 	intro.restart(); // que se detone hasta que la libería esté cargada 
 	// intro.start();
 
@@ -1127,17 +990,14 @@ function initsc0() {
 	loopRod.stop(0); 
 	loopTxt.stop(0); 
 	planeVideo.geometry.dispose();
-	const geometryVideoNew = new THREE.PlaneGeometry( camWidth/camSz, camHeight/camSz ); // Dos modalidades para el cel
-
+	const geometryVideoNew = new THREE.PlaneGeometry( camWidth/camSz, camHeight/camSz ); 
 	planeVideo.geometry = geometryVideoNew; 
 	materialVideo.map = new THREE.VideoTexture( video );
 	matLite.map = vit; 
 	matLite.blending = THREE.AdditiveBlending; 
 	// respawn.start(); // esto antes hacia ruido  
-
 	escena = 0;
 	titulo1(); 
-
 	transcurso = 0; 
 	inicio = Date.now();
 	segundo = 0;
@@ -1154,12 +1014,10 @@ function initsc0() {
 function titulo1(){
 
     loopRod.stop(0); 
-
     matPoints[0].size = 0; 
     scene.background = vit; 
     selektor(Math.floor(Math.random() * numCasos)); 
     scene.add(blackPlane); 
-    
     outline.stop(0);
     line.stop(0); 
     // console.log("titulo 1 "); 
@@ -1176,11 +1034,10 @@ function titulo1(){
 	);
     }
 
-    
     // planeVideo.material.map.dispose();
     //planeVideo.color = new THREE.Color( 0xffffff ); 
     scene.remove( planeVideo );
-    //scene.remove( cuboGrande ); 
+    // scene.remove( cuboGrande ); 
     // text.material.color = new THREE.Color(0xffffff);
     // text.material = trimaterial; 
     cuboGBool = false;
@@ -1235,7 +1092,7 @@ function initsc1() {
     scene.add( planeVideo);
     planeVideo.material.opacity = 1; 
     // scene.remove( planeVideo ); 
-    //scene.add(cuboGrande); 
+    //scene.add( cuboGrande ); 
     scene.add(planeVideo); 
     
     if(boolText){
@@ -1282,8 +1139,6 @@ function animsc1() {
 	matPoints[0].size =  (Math.sin(time * 0.25) *0.5) +0.5; 
     }
     
-    // pitchShift.windowSize = Math.sin(time2 * 0.125) * 0.01; // esperar mejores tiempos
-    
     // capa hydra
 
     arre = arre.flat(2);
@@ -1311,7 +1166,7 @@ function animsc1() {
 	    keypoints[i][2] * perlinValue + time2) *  0.5; 
 	// const analisis = Tone.dbToGain ( analyser.getValue()[i%64] ) * 20;
 	position[vueltas].setX( i, (1+keypoints[i][0] * 0.12 - wCor) * (1+d) ); 
-	position[vueltas].setY( i, (1+keypoints[i][1] * 0.12 - hCor) * (1+d) ); // aquí está raro 
+	position[vueltas].setY( i, (1+keypoints[i][1] * 0.12 - hCor) * (1+d) ); 
 	position[vueltas].setZ( i, (keypoints[i][2] * 0.05)   );
     }
 
@@ -1442,8 +1297,6 @@ function animsc2() {
 	// matPoints[0].size = 1 - (transcurso-60)/60;
 	matPoints[0].size =  (Math.sin(time * 0.25) *0.5) +0.5;
     }
-
-    // pitchShift.windowSize = Math.sin(time2 * 0.125) * 0.01;
     // capa hydra
 
     arre = arre.flat(2);
@@ -1506,7 +1359,7 @@ function titulo3(){
 
     if(boolText){
 	chtexto(
-	    "III\Observaciones multihilo", // otro título, este está mucy chafa
+	    "III\nObservaciones multihilo",
 	    "",
 	    0,
 	    0,
@@ -1601,10 +1454,8 @@ function animsc3() {
 	// matPoints[0].size = 1 - (transcurso-60)/60;
 	matPoints[0].size =  (Math.sin(time * 0.25) *0.5) +0.5;
     }
-
-    // pitchShift.windowSize = Math.sin(time2 * 0.125) * 0.01;
     
-    // capa hydra
+    // capa hydra aquí podrían ir las iteraciones por predicciones 
 
     arre = arre.flat(2);
     let triconta = 0;
@@ -1650,65 +1501,6 @@ function rmsc3() {
     }
 }
 
-
-// Podría ser que hasta aquí haya más texto que en las escenas anteriores 
-
-/*
-function initIrises(){
-
-    cuboGBool = false; 
-
-    // outline.start();
-    
-    text2.material.blending = THREE.AdditiveBlending; 
-    text.material.color = new THREE.Color(0xE4E6EB); 
-    text.material.blending = THREE.NoBlending;
-    text2.material.blending = THREE.NoBlending; 
-
-    if(boolText){
-	chtexto(
-	    txtDescanso[Math.floor(Math.random()*txtDescanso.length)],
-	    txtDescanso[Math.floor(Math.random()*txtDescanso.length)],
-	    Math.random()*40 - 20,
-	    Math.random()*40 - 20,
-	    Math.random()*40 - 20,
-	    Math.random()*40 - 20
-	);
-    }
-    
-    irises = true;
-    scene.remove(planeVideo);
-    scene.remove(cuboGrande);
-    loopTxt.stop(0);
-    loopRod.stop(0);
-    loopOf.stop(0); 
-
-    loopDescanso.start(0); 
-    
-}
-*
-
-/*
-function animIrises(){
-    
-    // console.log("hay alguien ahí?");
-    if(blinkConta == 50){
-	console.log("creditos");
-	creditos = true;
-	escena = 6;
-	inicioCreditos = Date.now();
-	// nuevo contador 
-    } 
-
-}
-*/ 
-
-/*
-function rmIrises(){
-    irises = false; 
-}
-*/ 
-
 function reinicio(){
 
     transcurso = 0;
@@ -1723,7 +1515,8 @@ function selektor( sc ){
     
     switch(sc){
     case 0:
-	shape(4,0.7).mult(osc(20,-0.009,9).modulate(noise(3,1)).rotate(0.7)).modulateScale(osc(4,-0.09,0).kaleid(50).scale(0.6),15,0.1).out()
+	shape(4,0.7)
+	    .mult(osc(20,-0.009,9).modulate(noise(3,1)).rotate(0.7)).modulateScale(osc(4,-0.09,0).kaleid(50).scale(0.6),15,0.1).out()
 	break;
     case 1:
 	shape(4,0.7).mult(osc(20,-0.009,9).modulate(noise(3,1)).rotate(0.7)).modulateScale(osc(4,-0.09,0).kaleid(50).scale(0.6),15,0.1).out()
@@ -1828,8 +1621,6 @@ function selektor( sc ){
     }   
 }
 
-// Ajustar duraciones
-
 ///////////////////////////////////////////////7
 //// IMPORTANTE: ¿Con esto es necesario activar/desactivar con initsc0? Sip
 //// iMPORTANTE2: ¿Podría hacerse con los secuenciadores de tone.js ? No se sabe
@@ -1838,7 +1629,6 @@ function selektor( sc ){
 function score() {
 
     /*
-
       1. titulo1   000 - 005 s
       2. initsc1   005 - 035 s
       3. titulo2   035 - 040 s
@@ -1846,7 +1636,6 @@ function score() {
       5. titulo3   070 - 075 s
       6. initsc3   075 - 105 s
       7. reinicio   s 
- 
      */
     
     if(buscando){
@@ -1935,68 +1724,11 @@ function score() {
 	    reinicio(); 
 	    // rmIrises();	    
 	}
-	
-	/*
-
-	if ( transcurso.toFixed() == 160 && segundo != 160 ) {
-	    console.log("Epilogo"); 
-	    segundo = transcurso.toFixed();
-	    // modoOscuro = true; 
-	    escena = 7;
-	    rmsc1();
-	    rmsc2();
-	    rmsc3(); 
-	    // rmIrises();	    
-	}
-
-	// Si paso ese tiempo y no parpadearon entonces reinicia
-	
-	if ( transcurso.toFixed() == 165 && segundo != 165 && !creditos ) {
-	    console.log("Reinicio"); 
-	    segundo = transcurso.toFixed();
-	    // modoOscuro = true; 
-	    escena = 8;
-	    rmsc1();
-	    rmsc2();
-	    // rmIrises();
-	    // initsc1();
-	    transcurso = 0;
-	    inicio = Date.now();
-	    // fin = 0; 
-	}
-
-	// Creditos 
-
-	if( transCreditos.toFixed() == 5 && segundoCreditos != 5 ){
-	    segundoCreditos = transCreditos.toFixed(); 
-	    initCreditos();
-	    escena = 6; 
-	}
-
-	if( transCreditos.toFixed() == 30 && segundoCreditos != 30 ){
-	    segundoCreditos = transCreditos.toFixed(); 
-	    console.log("Epilogo Creditos "); 
-	    escena = 7;
-	    rmCreditos();
-	    creditos = false; 
-	}
-
-	if( transCreditos.toFixed() == 35 && segundoCreditos != 35 ){
-	    segundoCreditos = transCreditos.toFixed();
-	    console.log("Reinicio créditos");
-	    escena = 8;
-	    transcurso = 0;
-	    transCreditos = 0; 
-	}
-
-	*/
-	
+		
     }
 }
 
 function guiFunc(){
-
-        //  nuevo gui 
 
     const gui = new GUI();
 
@@ -2060,7 +1792,6 @@ function guiFunc(){
 	    scene.remove(cuboGrande); 
 	}
     })
-
     
     videoFolder.add(params, 'rojo',  0, 1, 0.01).onChange(function(){
 	const nuevoColor = new THREE.Color(params.rojo, params.verde, params.azul);
@@ -2149,15 +1880,11 @@ function texto() {
  	    geometry.translate( xMid, 0, 0 );
 	    text = new THREE.Mesh( geometry, matLite );
 	    text.position.z = 5;
-	    // text.rotation.x = Math.PI;
-	    // text.rotation.y =q Math.PI;
 	    text.rotation.z = Math.PI;
 	    scene.add( text );
 	    
 	    text2 = new THREE.Mesh( geometry, matLite );
 	    text2.position.z = 5;
-	    // text.rotation.x = Math.PI;
-	    // text.rotation.y = Math.PI;
 	    text2.rotation.z = Math.PI;
 	    scene.add( text2 );
 	
@@ -2204,19 +1931,10 @@ function chtexto( mensaje, mensaje2, posX,  posY, posX2, posY2 ) {
     text2.position.z = 10;
     
     if(!mobile){
-
-	//text2Copy = geometry.attributes.position;
 	text.geometry.usage = THREE.DynamicDrawUsage;
-	//txtPosCopy1 = txtPos1.clone(); 
 	textCopy1 = text.clone(); 
-
-	// txtPos2 = geometry2.attributes.position;
 	text2.geometry.usage = THREE.DynamicDrawUsage;
 	textCopy2 = text2.clone(); 
-	// txtPosCopy2 = txtPos2.clone(); 
-	
-	// }
-	
     }
 }
 
@@ -2321,10 +2039,7 @@ function cotEscena2(){
     //transcurso = 0; 
 }
 
-//////////////////////////////////////
 //////////////////// PARPADEO
-//////////////////////////////////////
-
 
 function initBlinkRateCalculator() {
   rateInterval = setInterval(() => {
@@ -2356,8 +2071,6 @@ function getEAR(upper, lower) {
 }
 
 function getIsVoluntaryBlink(blinkDetected) {
-  // NOTE: checking if blink is detected twice in a row, anything more than that takes more deleberate effort by user.
-  // NOTE: adding this to separate intentional blinks
   if (blinkDetected) {
     if (blinked) {
       return true;
@@ -2366,7 +2079,6 @@ function getIsVoluntaryBlink(blinkDetected) {
   } else {
     blinked = false;
   }
-
   return false;
 }
 
@@ -2455,54 +2167,4 @@ async function oscSend(){
     })
 }
 
-*/
-
-/*
-
-function htmlBar(){
-    var i = 0;
-	if (i == 0) {
-	    i = 1;
-	    //var elem = document.getElementById("myBar");
-	    var width = 1;
-	    var id = setInterval(frame, 10);
-	    function frame() {
-		if (width >= 100) {
-		    clearInterval(id);
-		    i = 0;
-		    // cambiar de escena
-		    htmlBar();
-		    escena++;
-		    rmsc1();
-		    rmsc2();
-
-		    switch( escena % numsc ){
-		    case 0:
-			initsc1();
-			break;
-		    case 1:
-			initsc2();
-			break;
-		    }
-
-		} else {
-		    width+= 0.2;
-		    porcentaje = width.toFixed(2);
-
-		    // esto estaba comentado
-		    if(width.toFixed(2) == 97.0){
-			// composer.addPass( glitchPass );
-			glitchPass.goWild = true;
-		    }
-
-		    if(width.toFixed(2) == 2.0){
-			glitchPass.goWild = false;
-			//composer.removePass( glitchPass );
-		    }
-
-
-		}
-	    }
-	}
-}
 */
