@@ -21,9 +21,114 @@ import { GUI } from './jsm/libs/dat.gui.module.js';
 
 let boolText = true; 
 let boolGui = false; 
-let boolStats = false; 
+let boolStats = true; 
 let boolMic = true; 
 let numCasos = 13; 
+let boton = false;
+let irises = false; // costoso. Evaluar 
+
+// con boton
+
+document.querySelector('button').addEventListener('click', async () => {
+    // console.log('audio is ready')   
+    await Tone.start();   
+    init();
+})
+
+// sin botón ( modo exhibición ) 
+
+var txtsc1=[];  
+
+const loader = new THREE.FileLoader();
+
+loader.load(
+	'txt/txtsc1.txt',
+	function ( data ) {
+	    var arrLines = data.split("\n");
+	    for (var i = 0; i < arrLines.length; i++) {
+		txtsc1.push(arrLines[i]);
+	    }
+	}
+);
+
+var txtsc2=[];  
+
+loader.load(
+	'txt/txtsc2.txt',
+	function ( data ) {
+	    var arrLines = data.split("\n");
+	    for (var i = 0; i < arrLines.length; i++) {
+		txtsc2.push(arrLines[i]);
+	    }
+	}
+);
+
+var txtsc3=[];  
+
+loader.load(
+	'txt/txtsc3.txt',
+	function ( data ) {
+	    var arrLines = data.split("\n");
+	    for (var i = 0; i < arrLines.length; i++) {
+		txtsc3.push(arrLines[i]);
+	    }
+	}
+);
+
+var txtInstrucciones=[];  
+
+loader.load(
+	'txt/txtInstrucciones.txt',
+	function ( data ) {
+	    var arrLines = data.split("\n");
+	    for (var i = 0; i < arrLines.length; i++) {
+		txtInstrucciones.push(arrLines[i]);
+	    }
+	}
+);
+
+const line = new Tone.Player('audio/fondos/line.mp3').toDestination(); 
+antiKick = new Tone.Player('audio/perc/antiKick.mp3').toDestination();
+const respawn = new Tone.Player('audio/perc/respawn.mp3').toDestination(); 
+const out = new Tone.Player('audio/perc/out.mp3').toDestination(); 
+intro = new Tone.Player('audio/fondos/espera.mp3').toDestination();
+intro.loop = true; 
+
+intro.volume.value = -6;
+respawn.volume.value = -6;
+out.volume.value = -6;
+line.volume.value = -6;
+
+const outline = new Tone.Player('audio/fondos/outline.mp3').toDestination(); 
+outline.volume.value = -6;
+
+
+/*
+const panner = new Tone.Panner3D({
+	panningModel: 'HRTF',
+    });
+
+*/
+
+const distortion = new Tone.Distortion(0.5);
+
+if(boolMic){
+    distortion.toDestination();
+}
+
+const pitchShift = new Tone.PitchShift().connect(distortion);
+pitchShift.pitch = -3;
+pitchShift.windowSize = 0.03;
+
+const mic = new Tone.UserMedia(2);
+let openmic; 
+
+const panner = new Tone.Panner(0).connect(pitchShift) ;
+
+mic.open().then(() => {
+    openmic = true;
+    mic.connect( panner ); 
+});
 
 /////////////////////
 
@@ -80,20 +185,6 @@ const startButton = document.getElementById( 'startButton' );
 const myProgress = document.getElementById( 'myProgress' );
 const myBar = document.getElementById( 'myBar' );
 const body = document.getElementById( 'body' );
-
-// con boton
-
-/*
-document.querySelector('button').addEventListener('click', async () => {
-    await Tone.start(); 
-    // console.log('audio is ready')
-    init(); 
-})
-*/
-
-// sin botón ( modo exhibición ) 
-
-Tone.start().then( (x) => init()) 
 
 let colores = [], colores2 = [], colores3 = [];
 const stats = new Stats();
@@ -156,62 +247,14 @@ let inicio;
 let fin, transcurso;
 let segundo;
 
-let inicioCreditos; 
-let finCreditos, transCreditos = 0;
-let segundoCreditos; 
-
 const perlin = new ImprovedNoise();
 let intro; 
 let gSegundo; 
 
-const line = new Tone.Player('audio/fondos/line.mp3').toDestination(); 
-antiKick = new Tone.Player('audio/perc/antiKick.mp3').toDestination();
-const respawn = new Tone.Player('audio/perc/respawn.mp3').toDestination(); 
-const out = new Tone.Player('audio/perc/out.mp3').toDestination(); 
-intro = new Tone.Player('audio/fondos/espera.mp3').toDestination();
-intro.loop = true; 
-
-intro.volume.value = -6;
-respawn.volume.value = -6;
-out.volume.value = -6;
-line.volume.value = -6;
-
-const outline = new Tone.Player('audio/fondos/outline.mp3').toDestination(); 
-outline.volume.value = -6;
-
-
-/*
-const panner = new Tone.Panner3D({
-	panningModel: 'HRTF',
-    });
-
-*/
-
-const distortion = new Tone.Distortion(0.5);
-
-if(boolMic){
-    distortion.toDestination();
-}
-
-const pitchShift = new Tone.PitchShift().connect(distortion);
-pitchShift.pitch = -3;
-pitchShift.windowSize = 0.03;
-
-const mic = new Tone.UserMedia(2);
-let openmic; 
-
-const panner = new Tone.Panner(0).connect(pitchShift) ;
-
-mic.open().then(() => {
-    // openmic = true;
-    mic.connect( panner ); 
-});
-
 let glitchPass; 
 let stream
 let gSignal, gFin, gTranscurso; 
-let stopRendering = false;
-let irises = false; 
+let stopRendering = false; 
 let suspendido = false; 
 let modoOscuro = true; 
 let txtPosX = 1;
@@ -223,113 +266,7 @@ let clock;
 let creditos = false; 
 let antifont; 
 
-// 1. La ofuscación como motivo 
-
-let txtsc1 = [
-    "Predicciones y presencias",
-    "Una oportunidad\npara el desplazamiento",
-    "La sugestión\nde los anzuelos\nen la superficie",
-    "la búsqueda por un espacio alejado\na la geopolítica del servidor", 
-    "Pasos [pequeños, inestables]\nhacia la ofuscación\n[analógica, digital]",
-    "La reinterpretación\nde la [predicción, tecnología]",
-    "Predicciones y presencias",
-    "Predicciones y presencias",
-    "Pixeles organizados\nque enmascaran la presencia",
-    "Interrupción de flujos\nno autorizados",
-    "El software\ncomo una caja negra\nde cajas negras",
-    "La ofuscación integrada\ny conducida por el dato",
-    "Sin descuidar\nla importancia del gesto",
-    "Continúa\nel tríptico es breve\ny se repite",
-    "Predicciones y presencias",
-    "La ofuscación\nes un motivo de apertura",
-    "El efecto\nes distracción y evidencia",
-    "La inexactitud de las máquinas\nla retroalimentación humana",
-    "El flujo\nes un ciclo con variaciones",
-    "Una oportunidad\npara cuidar la presencia",
-    "El disenso fluído\nde la identidad",
-    "Triangulaciones\nde la resistencia",
-    "Vertices geométricos\n que difuminan la presencia\n pero no la eliminan",
-    "Los QR son referencias\npara desbordar\nel momento",
-    "Si hace falta tiempo\nes posible dar otra vuelta", 
-    "Interlocuciones modulares",
-    "El reflejo\nde los espejos electrónicos",
-    "Consecuencias\nde las transfiguraciones corporales",
-    "La percepción analítica\nde las imágenes que no es\nsolamente técnica",
-    "Autobservación, percepción y encarnación\nde modos y espectativas",
-    "Predicciones y presencias",
-    "[Inclusión, Exclusión]\nen la escalada de recursos tecnológicos",
-    "Restar agencia a las plataformas",
-    "Manuales para la ofuscación",
-    "Servidores de audio\ncomo Jack\npara transformar la voz",
-    "La descentralización\nde la persona\nen la vida cotidiana"
-];
-
-// 2. Las consecuencias no buscadas del rodeo
-
-let txtsc2 = [    
-    "Predicciones y presencias",
-    "El texto como un dipositivo multihilo",
-    "La infraestructura como una instancia\ndel trabajo invertido",
-    "Las posibilidades del tríptico",
-    "[Ejecución, variación]\nde la reflexión fijada",
-    "Instancias no escritas del conocimiento",
-    "La emergencia del comentario",
-    "La repetición y la reflexión\nen el bucle",
-    "¿Es redundante\nvincular un espacio fisico\ncon el entramado digital?",
-    "Vertices getométricos\n que difuminan la presencia\n pero no la eliminan",
-    "Los QR son referencias\npara desbordar\nel momento",
-    "Prediccionxes y presencias",
-    "Si hace falta tiempo\nes posible dar otra vuelta",
-    "La [escritura, ejecución]\nde código como improvisación",
-    "La agencia del error\nen la práctica performática\nde escribir",
-    "[Audio, Imagen]\ncomo instancias de conocimiento",
-    "Los ciclos por segundo\nson subjetivos",
-    "¿Cuánto texto plano cabe en un 1mb?",
-    "Código y reflexión\ny escritura automática",
-    "La persecución de premisas históricas",
-    "Espejos o interlocutores",
-    "La revelación\ndel resultado inesperado\ndel procesamiento",
-    "Tiempo insuficiente\npara extender la reflexión",
-    "Una federación\n de iniciativas\npara decentralizar lo sensible",
-    "La escala de tiempo\npara escapar a la\nreflexión instantánea",
-    "1mb de texto plano\npara iniciar\nel díalogo dislocado del tiempo",
-    "Tiempo",
-    "Predicciones y presencias",
-    "Temporalidades que se disocian\npero que a veces coinciden",
-    "anti es  un manual",
-    "una aplicación que se inserta\nen un conjunto de módulos",
-    "Un motivo para la reflexión",
-    "Intervalos que varían\nen función\nde la sintaxis"
-]; 
-
-// Instrucciones compartidas para todas las escenas - manual 
-// Visibilizar el manual en modo exhibición 
-
-let txtsc3 =[
-    "Anti es un manual de ofuscación",
-    "Anti es un manual de ofuscación",
-    "Anti es un manual de ofuscación",
-    "Anti corre en modo exhibición",
-    "Anti se ejecuta en modo cotidiano",
-    "El modo exhibición se activa en el navegador",
-    "Es necesario\ncomplementar con la localidad",
-    "El desplazamiento\nde los dispositivos\npara aprovechar\nposibilidades",
-    "Los ajustes de la interfaz de usuarix",
-    "¿Cómo visibilizar el modo exhibición en el manual?",
-    "OBS Studio\nes la forma más fácil\nde transmitir video\ncomo una cámara web virtual.",
-    "Opciones ligeras multiplataforma",
-    "El rodeo y la necedad\ncomo un aporte\npara el futuro", 
-    "v4l2loopback y Ffmpeg",
-    "modprobe v4l2loopback",
-    "modprobe v4l2loopback",
-    "modprobe v4l2loopback",
-    "ffmpeg -f x11grab -r 20 -s 1920x1080\n-i :0.0+0,0 -vcodec rawvideo\n-pix_fmt yuv420p -threads 0 -f v4l2 /dev/video0",
-    "ffmpeg -f x11grab -r 20 -s 1920x1080\n-i :0.0+0,0 -vcodec rawvideo\n-pix_fmt yuv420p -threads 0 -f v4l2 /dev/video0",
-    "ffmpeg -f x11grab -r 20 -s 1920x1080\n-i :0.0+0,0 -vcodec rawvideo\n-pix_fmt yuv420p -threads 0 -f v4l2 /dev/video0",
-    "Rota\nno hay un centro",
-    "Bucle de investigación y producción",
-]
-
+/*
 let txtInstrucciones = [
     "En espera",
     "Ausencia y predicciones", 
@@ -342,7 +279,7 @@ let txtInstrucciones = [
     "Ausencia y predicciones",
     "La cámara reconoce rostros\nno hay datos almacenados"    
 ]
-
+*/
 // y hacer coincidir el índice con los audios
 
 var voz = new Tone.Players({
@@ -507,6 +444,8 @@ vit = new THREE.CanvasTexture(elCanvas);
 
 let silueta; 
 
+// Tone.start().then( (x) => init());
+
 // /////////// Camara
 
 async function setupCamera() {
@@ -663,10 +602,13 @@ async function renderPrediction() {
 		    //blinkSignal = Date.now(); 
 		    // aquí hay que agregar un contador. Si pasa cierto número de tiempo entonces miau
 		    blinkConta++;
-		    console.log(blinkConta); 
-		    //if(blinkConta == 50){
+		    selektor(Math.floor(Math.random() * numCasos)); 
+		    console.log("parpadeo"); 
+		    if(blinkConta == 10){
+			
+		    selektor(Math.floor(Math.random() * numCasos));
 			//console.log("ojos cerrados o muchos parpadeos"); 
-		    //} 
+		    } 
 		    
 		} else {
 		    blinkConta = 0; 
@@ -885,7 +827,7 @@ async function init() {
 
     model = await faceLandmarksDetection.load(
 	faceLandmarksDetection.SupportedPackages.mediapipeFacemesh, // cambiar 
-	{maxFaces: 1,
+	{maxFaces: 3,
 	 shouldLoadIrisModel: true, // Hay que cargar un poco más de archivos 
 	 // maxContinuousChecks: 120
 	});
@@ -1114,12 +1056,14 @@ function initsc1() {
 
     let cuentaPlane = 0;
 
+    /*
     if (predictions.length > 0) {
 	predictions.forEach((prediction) => {
 	    scene.add( planeB[cuentaPlane] );
 	    cuentaPlane++;
 	});
     }
+    */
     
     for(let i = 0; i < triCantidad; i++){	    
 	scene.add(triangulos[i]);
@@ -1132,32 +1076,40 @@ function initsc1() {
 function animsc1() { 
 
     var time2 = Date.now() * 0.0005;
-    
+
+    /*
     if(exBool){
 	// perlinValue = 0.003+(transcurso/60*0.003); // suspendido temporalmente  
 	// planeVideo.material.opacity = 0.75+transcurso/60;
 	matPoints[0].size =  (Math.sin(time * 0.25) *0.5) +0.5; 
     }
+    */
     
     // capa hydra
 
-    arre = arre.flat(2);
-    let triconta = 0;
-    for(let j = 0; j < triCantidad; j++){	
-	let d = perlin.noise(
-	    arre[triconta*3] * perlinValue + time2,
-	    arre[(triconta*3)+1] * perlinValue + time2,
-	    arre[(triconta*3)+2] * perlinValue + time2) *  0.125; 
-	for(let i = 0; i < 3; i++){
-	    triGeometry[j].attributes.position.setX( i, (arre[triconta*3] * 0.12 -wCor)*(1.1+d) ); 
-	    triGeometry[j].attributes.position.setY( i, (arre[(triconta*3)+1] * 0.12 - hCor) * (1.1+d) );
-	    triGeometry[j].attributes.position.setZ( i, (arre[(triconta*3)+2] * 0.05) * (1+d) );
-   	    triconta++; 
-	}
-    }
+    // Necesitamos agregar algo para que sea el número de posiciones * la cantidad de rostros 
 
+    predictions.forEach(prediction => {
+
+	arre = arre.flat(2);
+	let triconta = 0;
+	for(let j = 0; j < triCantidad; j++){	
+	    let d = perlin.noise(
+		arre[triconta*3] * perlinValue + time2,
+		arre[(triconta*3)+1] * perlinValue + time2,
+		arre[(triconta*3)+2] * perlinValue + time2) *  0.125; 
+	    for(let i = 0; i < 3; i++){
+		triGeometry[j].attributes.position.setX( i, (arre[triconta*3] * 0.12 -wCor)*(1.1+d) ); 
+		triGeometry[j].attributes.position.setY( i, (arre[(triconta*3)+1] * 0.12 - hCor) * (1.1+d) );
+		triGeometry[j].attributes.position.setZ( i, (arre[(triconta*3)+2] * 0.05) * (1+d) );
+   		triconta++; 
+	    }
+	}
+    })
+			
     // capa blend
-    
+
+    /*
     var time2 = Date.now() * 0.0005;
     for ( let i = 0; i < position[vueltas].count; i ++ ) {
 	let d = perlin.noise(
@@ -1174,6 +1126,8 @@ function animsc1() {
     planeB[vueltas].geometry.attributes.position.needsUpdate = true;
     position[vueltas].needsUpdate = true;
     vueltas++;
+    */
+    
 }
 
 function rmsc1() {
@@ -1275,6 +1229,7 @@ function initsc2() {
 
     let cuentaPlane = 0;
 
+    /*
     if (predictions.length > 0) {
 	predictions.forEach((prediction) => {
 	    planeB[0].material = matPoints[Math.floor(Math.random()*3)]; 
@@ -1282,6 +1237,7 @@ function initsc2() {
 	    cuentaPlane++;
 	});
     }
+    */
 
     for(let i = 0; i < triCantidad; i++){	    
 	scene.add(triangulos[i]);
@@ -1291,12 +1247,12 @@ function initsc2() {
 
 function animsc2() {
 
-    if(exBool){
-	perlinValue = 0.03-((transcurso-60)/60*0.03); 
+    //if(exBool){
+	// perlinValue = 0.03-((transcurso-60)/60*0.03); 
 	// planeVideo.material.opacity = 1;
 	// matPoints[0].size = 1 - (transcurso-60)/60;
-	matPoints[0].size =  (Math.sin(time * 0.25) *0.5) +0.5;
-    }
+	//matPoints[0].size =  (Math.sin(time * 0.25) *0.5) +0.5;
+    // }
     // capa hydra
 
     arre = arre.flat(2);
@@ -1320,6 +1276,7 @@ function animsc2() {
         
     var time2 = Date.now() * 0.0005;
 
+    /*
     for ( let i = 0; i < position[vueltas].count; i ++ ) {
 
 	let d = perlin.noise(keypoints[i][0] * perlinValue + time2,
@@ -1335,6 +1292,8 @@ function animsc2() {
     planeB[vueltas].geometry.attributes.position.needsUpdate = true;
     position[vueltas].needsUpdate = true;
     vueltas++;
+    */
+
 }
 
 function rmsc2() {
@@ -1342,6 +1301,7 @@ function rmsc2() {
 	scene.remove( planeB[i] );
     }
 }
+
 
 // Titulo 3
 
@@ -1448,12 +1408,14 @@ function initsc3() {
 
 function animsc3() {
 
+    /*
     if(exBool){
 	perlinValue = 0.03-((transcurso-60)/60*0.03); 
 	// planeVideo.material.opacity = 1;
 	// matPoints[0].size = 1 - (transcurso-60)/60;
 	matPoints[0].size =  (Math.sin(time * 0.25) *0.5) +0.5;
     }
+    */
     
     // capa hydra aquí podrían ir las iteraciones por predicciones 
 
@@ -1478,6 +1440,7 @@ function animsc3() {
         
     var time2 = Date.now() * 0.0005;
 
+    /*
     for ( let i = 0; i < position[vueltas].count; i ++ ) {
 
 	let d = perlin.noise(keypoints[i][0] * perlinValue + time2,
@@ -1493,6 +1456,7 @@ function animsc3() {
     planeB[vueltas].geometry.attributes.position.needsUpdate = true;
     position[vueltas].needsUpdate = true;
     vueltas++;
+    */
 }
 
 function rmsc3() {
@@ -1954,6 +1918,7 @@ function onWindowResize() {
 }
 
 async function detonar() {
+
     await renderPrediction();
 
     // sonido();

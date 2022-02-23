@@ -1,0 +1,23 @@
+Anti es un manual de ofuscación
+Anti es un manual de ofuscación
+Anti es un manual de ofuscación
+Anti corre en modo exhibición
+Anti se ejecuta en modo cotidiano
+El modo exhibición se activa en el navegador
+Es necesario complementar con la localidad
+El desplazamiento de los dispositivos
+Los ajustes de la interfaz de usuarix
+¿Cómo visibilizar el modo exhibición en el manual?
+¿Cómo visibilizar el manual en la exhibición?
+    "OBS Studio\nes la forma más fácil\nde transmitir video\ncomo una cámara web virtual.",
+    "Opciones ligeras multiplataforma",
+    "El rodeo y la necedad\ncomo un aporte\npara el futuro", 
+    "v4l2loopback y Ffmpeg",
+    "modprobe v4l2loopback",
+    "modprobe v4l2loopback",
+    "modprobe v4l2loopback",
+    "ffmpeg -f x11grab -r 20 -s 1920x1080\n-i :0.0+0,0 -vcodec rawvideo\n-pix_fmt yuv420p -threads 0 -f v4l2 /dev/video0",
+    "ffmpeg -f x11grab -r 20 -s 1920x1080\n-i :0.0+0,0 -vcodec rawvideo\n-pix_fmt yuv420p -threads 0 -f v4l2 /dev/video0",
+    "ffmpeg -f x11grab -r 20 -s 1920x1080\n-i :0.0+0,0 -vcodec rawvideo\n-pix_fmt yuv420p -threads 0 -f v4l2 /dev/video0",
+    "Rota\nno hay un centro",
+    "Bucle de investigación y producción",
