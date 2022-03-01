@@ -1,11 +1,11 @@
 En espera
 Ausencia y predicciones
-La pantalla de bloqueo se activa cuando la cámara detecta uno o más rostros
+La pantalla de bloqueo se activa cuando la cámara detecta un rostro
 Por favor, acércate para activar la interacción
 Es necesario un rostro dentro del rango de la cámara
 No es necesario que te quites el cubrebocas
 Es posible acceder a la versión web de esta aplicación
 Hay un repositorio que conduce a los módulos que conforman esta aplicación
 Ausencia y predicciones
-La cámara reconoce rostros\nno hay datos almacenados
+La cámara reconoce rostros no hay datos almacenados
 Una experiencia y una oportunidad 

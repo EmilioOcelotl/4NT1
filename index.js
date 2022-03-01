@@ -267,8 +267,6 @@ let loopOf, loopRod, loopTxt, loopTres;
 
 // Textos generales 
 
-
-
 loopOf = new Tone.Loop((time) => {
     if(boolText){
 	chtexto(
@@ -328,8 +326,6 @@ loopTres = new Tone.Loop((time) => {
 	); 
     }
 }, "4");
-
-
 
 Tone.Transport.start();
 
