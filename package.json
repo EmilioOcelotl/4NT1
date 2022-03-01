@@ -30,7 +30,7 @@
     "build-model": "cd .. && yarn && yarn build-npm",
     "lint": "eslint .",
     "link-local": "yalc link @tensorflow-models/face-landmarks-detection",
-    "deployar": "yarn && yarn build-model && yarn build && cp -r audio dist && cp -r img dist && cp -r fonts dist",
+    "deployar": "yarn && yarn build-model && yarn build && cp -r audio dist && cp -r img dist && cp -r fonts dist && cp -r txt dist",
     "limpiar": "sudo rm -r dist node_modules"
   },
   "browser": {

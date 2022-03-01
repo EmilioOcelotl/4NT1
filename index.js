@@ -1,3 +1,4 @@
+
 /////////// 4NT1 /////////////////
 
 import * as faceLandmarksDetection from '@tensorflow-models/face-landmarks-detection';
@@ -239,95 +240,10 @@ var voz = new Tone.Players({
 }).toDestination();
 */ 
 
-var fondos = new Tone.Players({
-    "0": "audio/fondos/0.mp3",
-    "1": "audio/fondos/1.mp3",
-    "2": "audio/fondos/2.mp3",
-    "3": "audio/fondos/3.mp3",
-    "4": "audio/fondos/4.mp3",
-    "5": "audio/fondos/5.mp3",
-    "6": "audio/fondos/6.mp3",
-    "7": "audio/fondos/7.mp3",
-    "8": "audio/fondos/8.mp3",
-    "9": "audio/fondos/9.mp3",
-    "10": "audio/fondos/10.mp3",
-    "11": "audio/fondos/11.mp3",
-    "12": "audio/fondos/12.mp3",
-    "13": "audio/fondos/13.mp3",
-    "14": "audio/fondos/14.mp3",
-    "15": "audio/fondos/15.mp3"
-}).toDestination();
-
-fondos.volume.value = -6;
-
 let perlinValue;
 let perlinAmp;
 let cuboGBool = false;
 let loopOf, loopRod, loopTxt, loopTres; 
-
-// Textos generales 
-
-loopOf = new Tone.Loop((time) => {
-    if(boolText){
-	chtexto(
-	    txtsc1[Math.floor(Math.random()*txtsc1.length)],
-	    txtsc1[Math.floor(Math.random()*txtsc1.length)],
-	    Math.random()*20 - 10,
-	    Math.random()*40 - 20,
-	    Math.random()*20 - 10,
-	    Math.random()*40 - 20
-	);
-    }
-    let fondosAl = Math.floor(Math.random()*14);
-    fondos.player(fondosAl.toString()).start(time);   
-}, "4");
-
-loopRod = new Tone.Loop((time) => {
-    if(boolText){
-	chtexto(
-	    txtsc2[Math.floor(Math.random()*txtsc2.length)],
-	    txtsc2[Math.floor(Math.random()*txtsc2.length)],
-	    Math.random()*20 - 10,
-	    Math.random()*40 - 20,
-	    Math.random()*20 - 10,
-	    Math.random()*40 - 10
-	);
-    }
-    let fondosAl = Math.floor(Math.random()*14);
-    fondos.player(fondosAl.toString()).start(time);   
-}, "4");
-
-// Instrucciones 
-
-loopTxt = new Tone.Loop((time) => {
-    if(boolText){
-	chtexto(
-	    txtInstrucciones[Math.floor(Math.random()*txtInstrucciones.length)],
-	    txtInstrucciones[Math.floor(Math.random()*txtInstrucciones.length)],
-	    Math.random()*40 - 20,
-	    Math.random()*40  -20,
-	    Math.random()*40 - 20,
-	    Math.random()*40 - 20
-	);
-    }	
-}, "10");
-
-// Descanso 
-
-loopTres = new Tone.Loop((time) => {
-    if(boolText){
-	chtexto(
-	    txtsc3[Math.floor(Math.random()*txtsc3.length)],
-	    txtsc3[Math.floor(Math.random()*txtsc3.length)],
-	    Math.random()*20 - 0,
-	    Math.random()*40 - 30,
-	    Math.random()*20 - 0,
-	    Math.random()*40 - 30
-	); 
-    }
-}, "4");
-
-Tone.Transport.start();
 
 let blinkRate;
 let blinked = false;
@@ -824,7 +740,7 @@ async function init() {
     blackPlane.position.z = -10;
 
     silueta = new THREE.TextureLoader().load( 'img/siluetaNeg.png' )
-
+    
     sonido(); 
     detonar();
     
@@ -2038,6 +1954,92 @@ function loadFont(){
 }
 
 function sonido(){
+
+    
+    var fondos = new Tone.Players({
+	"0": "audio/fondos/0.mp3",
+	"1": "audio/fondos/1.mp3",
+	"2": "audio/fondos/2.mp3",
+	"3": "audio/fondos/3.mp3",
+	"4": "audio/fondos/4.mp3",
+	"5": "audio/fondos/5.mp3",
+	"6": "audio/fondos/6.mp3",
+	"7": "audio/fondos/7.mp3",
+	"8": "audio/fondos/8.mp3",
+	"9": "audio/fondos/9.mp3",
+	"10": "audio/fondos/10.mp3",
+	"11": "audio/fondos/11.mp3",
+	"12": "audio/fondos/12.mp3",
+	"13": "audio/fondos/13.mp3",
+	"14": "audio/fondos/14.mp3",
+	"15": "audio/fondos/15.mp3"
+    }).toDestination();
+
+    fondos.volume.value = -6;
+
+// Textos generales 
+
+loopOf = new Tone.Loop((time) => {
+    if(boolText){
+	chtexto(
+	    txtsc1[Math.floor(Math.random()*txtsc1.length)],
+	    txtsc1[Math.floor(Math.random()*txtsc1.length)],
+	    Math.random()*20 - 10,
+	    Math.random()*40 - 20,
+	    Math.random()*20 - 10,
+	    Math.random()*40 - 20
+	);
+    }
+    let fondosAl = Math.floor(Math.random()*14);
+    fondos.player(fondosAl.toString()).start(time);   
+}, "4");
+
+loopRod = new Tone.Loop((time) => {
+    if(boolText){
+	chtexto(
+	    txtsc2[Math.floor(Math.random()*txtsc2.length)],
+	    txtsc2[Math.floor(Math.random()*txtsc2.length)],
+	    Math.random()*20 - 10,
+	    Math.random()*40 - 20,
+	    Math.random()*20 - 10,
+	    Math.random()*40 - 10
+	);
+    }
+    let fondosAl = Math.floor(Math.random()*14);
+    fondos.player(fondosAl.toString()).start(time);   
+}, "4");
+
+// Instrucciones 
+
+loopTxt = new Tone.Loop((time) => {
+    if(boolText){
+	chtexto(
+	    txtInstrucciones[Math.floor(Math.random()*txtInstrucciones.length)],
+	    txtInstrucciones[Math.floor(Math.random()*txtInstrucciones.length)],
+	    Math.random()*40 - 20,
+	    Math.random()*40  -20,
+	    Math.random()*40 - 20,
+	    Math.random()*40 - 20
+	);
+    }	
+}, "10");
+
+// Descanso 
+
+loopTres = new Tone.Loop((time) => {
+    if(boolText){
+	chtexto(
+	    txtsc3[Math.floor(Math.random()*txtsc3.length)],
+	    txtsc3[Math.floor(Math.random()*txtsc3.length)],
+	    Math.random()*20 - 0,
+	    Math.random()*40 - 30,
+	    Math.random()*20 - 0,
+	    Math.random()*40 - 30
+	); 
+    }
+}, "4");
+
+Tone.Transport.start();
 
     
     line = new Tone.Player('audio/fondos/line.mp3').toDestination(); 
