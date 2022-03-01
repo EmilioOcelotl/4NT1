@@ -22,18 +22,24 @@ import { GUI } from './jsm/libs/dat.gui.module.js';
 let boolText = true; 
 let boolGui = false; 
 let boolStats = true; 
-let boolMic = true; 
+let boolMic = false; 
 let numCasos = 13; 
 let boton = false;
 let irises = false; // costoso. Evaluar 
+let boolSynth = false; 
 
 // con boton
 
+/*
 document.querySelector('button').addEventListener('click', async () => {
     // console.log('audio is ready')   
     await Tone.start();   
     init();
 })
+*/ 
+
+Tone.start().then( (x) => init());
+
 
 // sin botón ( modo exhibición ) 
 
@@ -87,48 +93,8 @@ loader.load(
 	}
 );
 
-const line = new Tone.Player('audio/fondos/line.mp3').toDestination(); 
-antiKick = new Tone.Player('audio/perc/antiKick.mp3').toDestination();
-const respawn = new Tone.Player('audio/perc/respawn.mp3').toDestination(); 
-const out = new Tone.Player('audio/perc/out.mp3').toDestination(); 
-intro = new Tone.Player('audio/fondos/espera.mp3').toDestination();
-intro.loop = true; 
-
-intro.volume.value = -6;
-respawn.volume.value = -6;
-out.volume.value = -6;
-line.volume.value = -6;
-
-const outline = new Tone.Player('audio/fondos/outline.mp3').toDestination(); 
-outline.volume.value = -6;
-
-
-/*
-const panner = new Tone.Panner3D({
-	panningModel: 'HRTF',
-    });
-
-*/
-
-const distortion = new Tone.Distortion(0.5);
-
-if(boolMic){
-    distortion.toDestination();
-}
-
-const pitchShift = new Tone.PitchShift().connect(distortion);
-pitchShift.pitch = -3;
-pitchShift.windowSize = 0.03;
-
-const mic = new Tone.UserMedia(2);
-let openmic; 
-
-const panner = new Tone.Panner(0).connect(pitchShift) ;
-
-mic.open().then(() => {
-    openmic = true;
-    mic.connect( panner ); 
-});
+let outline, out, respawn, line; 
+let freeverb, distortion, pitchShift, mic, openmic, panner; 
 
 /////////////////////
 
@@ -267,25 +233,11 @@ let creditos = false;
 let antifont; 
 
 /*
-let txtInstrucciones = [
-    "En espera",
-    "Ausencia y predicciones", 
-    "La pantalla de bloqueo\nse activa cuando la cámara\n detecta uno o más rostros",
-    "Por favor,\nacércate para activar la interacción", 
-    "Es necesario un rostro\n dentro del rango de la cámara", 
-    "Será necesario que te quites el cubrebocas\n y mantengas 1.5 m de distancia", 
-    "Es posible acceder\na la versión web de esta aplicación",
-    "También hay un repositorio\nque conduce a los módulos\nque conforman esta aplicación",
-    "Ausencia y predicciones",
-    "La cámara reconoce rostros\nno hay datos almacenados"    
-]
-*/
-// y hacer coincidir el índice con los audios
-
 var voz = new Tone.Players({
   "aun": "audio/voces/aun.mp3",
   // "snare":"samples/505/snare.mp3"
 }).toDestination();
+*/ 
 
 var fondos = new Tone.Players({
     "0": "audio/fondos/0.mp3",
@@ -314,6 +266,8 @@ let cuboGBool = false;
 let loopOf, loopRod, loopTxt, loopTres; 
 
 // Textos generales 
+
+
 
 loopOf = new Tone.Loop((time) => {
     if(boolText){
@@ -375,6 +329,8 @@ loopTres = new Tone.Loop((time) => {
     }
 }, "4");
 
+
+
 Tone.Transport.start();
 
 let blinkRate;
@@ -432,6 +388,7 @@ let triangulos = [];
 let vit;
 let trimaterial; 
 
+
 var hydra = new Hydra({
     canvas: document.getElementById("myCanvas"),
     detectAudio: false
@@ -439,12 +396,12 @@ var hydra = new Hydra({
     
 const elCanvas = document.getElementById( 'myCanvas');
 elCanvas.style.display = 'none'; 
+
 let arre = []; 
 vit = new THREE.CanvasTexture(elCanvas);
 
-let silueta; 
 
-// Tone.start().then( (x) => init());
+let silueta; 
 
 // /////////// Camara
 
@@ -534,7 +491,6 @@ async function renderPrediction() {
     }
     
     if (predictions.length > 0) {
-
 	predictions.forEach((prediction) => {
 	    keypoints = prediction.scaledMesh;
 
@@ -543,7 +499,7 @@ async function renderPrediction() {
 		    TRIANGULATION[i * 3], TRIANGULATION[i * 3 + 1],
 		    TRIANGULATION[i * 3 + 2],
 		].map((index) => keypoints[index]);		
-		arre.push(points);
+		arre.push(points); // si hay más predicciones este array es más grande
 	    }
 	    
 	    let time = Date.now() * 0.0005;
@@ -847,8 +803,8 @@ async function init() {
     }
     
     var quad_uvs =[0.0, 0.0,1.0, 0.0, 1.0, 1.0];
-    
-    for(let i = 0; i < triCantidad; i++){
+
+    for(let i = 0; i < triCantidad*3; i++){
 	
 	triGeometry[i] = new THREE.BufferGeometry();
 	triGeometry[i].setAttribute( 'position', new THREE.Float32BufferAttribute( triPosiciones, 3 ) );
@@ -857,12 +813,14 @@ async function init() {
 	triangulos[i] = new THREE.Mesh( triGeometry[i], trimaterial  );
 	
     }
-    
+
+    /*
     for(let i = 0; i < triCantidad; i++){
 	scene.add(triangulos[i]);
 	triangulos[i].position.z = -4;
 	triangulos[i].rotation.y = Math.PI*2;
     }
+    */ 
 
     const geometryPlane = new THREE.PlaneGeometry( camWidth/camSz, camHeight/camSz );
     const materialPlane = new THREE.MeshBasicMaterial( {color: 0x000000, side: THREE.DoubleSide} );
@@ -870,7 +828,8 @@ async function init() {
     blackPlane.position.z = -10;
 
     silueta = new THREE.TextureLoader().load( 'img/siluetaNeg.png' )
-    
+
+    sonido(); 
     detonar();
     
 }
@@ -983,26 +942,36 @@ function titulo1(){
     // text.material.color = new THREE.Color(0xffffff);
     // text.material = trimaterial; 
     cuboGBool = false;
-   
+
+    /*
     if (predictions.length > 0) {
 	for (let i = 0; i < planeB.length; i++) {
 	    scene.remove( planeB[i] );
 	}
     }
+    */ 
     
     let cuentaPlane = 0;
-   
+
+    /*
     if (predictions.length > 0) {
 	predictions.forEach((prediction) => {
 	    scene.add( planeB[cuentaPlane] );
 	    cuentaPlane++;
 	});
-    }
-    
-    for(let i = 0; i < triCantidad; i++){	    
-	scene.remove(triangulos[i]);
-    }
 
+    }
+    */
+
+    let tritotal = 0; 
+    if (predictions.length > 0) {
+	predictions.forEach((prediction) => {
+	    for(let i = 0; i < triCantidad; i++){	    
+		scene.remove(triangulos[tritotal]);
+		tritotal++; 
+	    }
+	})
+    }
     
 }
 
@@ -1064,10 +1033,23 @@ function initsc1() {
 	});
     }
     */
-    
+
+    /*
     for(let i = 0; i < triCantidad; i++){	    
 	scene.add(triangulos[i]);
     }
+    */
+
+    let tritotal = 0; 
+    if (predictions.length > 0) {
+	predictions.forEach((prediction) => {
+	    for(let i = 0; i < triCantidad; i++){	    
+		scene.add(triangulos[tritotal]);
+		tritotal++; 
+	    }
+	})
+    }
+
     
     pitchShift.pitch = -4 ; // cambios dinámicos para el futuro 
    
@@ -1089,24 +1071,26 @@ function animsc1() {
 
     // Necesitamos agregar algo para que sea el número de posiciones * la cantidad de rostros 
 
-    predictions.forEach(prediction => {
+    // let tritotal = 0;
+    let triconta = 0;
 
-	arre = arre.flat(2);
-	let triconta = 0;
-	for(let j = 0; j < triCantidad; j++){	
-	    let d = perlin.noise(
-		arre[triconta*3] * perlinValue + time2,
-		arre[(triconta*3)+1] * perlinValue + time2,
-		arre[(triconta*3)+2] * perlinValue + time2) *  0.125; 
-	    for(let i = 0; i < 3; i++){
-		triGeometry[j].attributes.position.setX( i, (arre[triconta*3] * 0.12 -wCor)*(1.1+d) ); 
-		triGeometry[j].attributes.position.setY( i, (arre[(triconta*3)+1] * 0.12 - hCor) * (1.1+d) );
-		triGeometry[j].attributes.position.setZ( i, (arre[(triconta*3)+2] * 0.05) * (1+d) );
-   		triconta++; 
+    if (predictions.length > 0) {
+	predictions.forEach((prediction) => {	
+	    arre = arre.flat(2);
+	    for(let j = 0; j < triCantidad; j++){	
+		let d = perlin.noise(
+		    arre[triconta*3] * perlinValue + time2,
+		    arre[(triconta*3)+1] * perlinValue + time2,
+		    arre[(triconta*3)+2] * perlinValue + time2) *  0.125; 
+		for(let i = 0; i < 3; i++){
+		    triGeometry[j].attributes.position.setX( i, (arre[triconta*3] * 0.12 -wCor)*(1.1+d) ); 
+		    triGeometry[j].attributes.position.setY( i, (arre[(triconta*3)+1] * 0.12 - hCor) * (1.1+d) );
+		    triGeometry[j].attributes.position.setZ( i, (arre[(triconta*3)+2] * 0.05) * (1+d) );
+   		    triconta++; 
+		}
 	    }
-	}
-    })
-			
+	})
+    }		
     // capa blend
 
     /*
@@ -1159,7 +1143,7 @@ function titulo2(){
 	);
     }
 
-    scene.remove( cuboGrande ); 
+    // scene.remove( cuboGrande ); 
     scene.remove( planeVideo ); 
     text.material.color = new THREE.Color(0xffffff); 
     cuboGBool = false;
@@ -1297,9 +1281,11 @@ function animsc2() {
 }
 
 function rmsc2() {
-   for (let i = 0; i < planeB.length; i++) {
-	scene.remove( planeB[i] );
-    }
+    /*
+      for (let i = 0; i < planeB.length; i++) {
+      scene.remove( planeB[i] );
+      }
+    */
 }
 
 
@@ -1358,7 +1344,6 @@ function initsc3() {
 	matPoints[0].material = THREE.AdditiveBlending; 
 	break; 
     }
-    
     
     // scene.add( blackPlane); 
     // cuboGBool = true; 
@@ -1460,9 +1445,11 @@ function animsc3() {
 }
 
 function rmsc3() {
+    /*
    for (let i = 0; i < planeB.length; i++) {
 	scene.remove( planeB[i] );
     }
+    */
 }
 
 function reinicio(){
@@ -2052,6 +2039,126 @@ function loadFont(){
     loader.load( 'fonts/techno.json', function ( response ) {
 	antifont = response;
     } );
+}
+
+function sonido(){
+
+    
+    line = new Tone.Player('audio/fondos/line.mp3').toDestination(); 
+    antiKick = new Tone.Player('audio/perc/antiKick.mp3').toDestination();
+    respawn = new Tone.Player('audio/perc/respawn.mp3').toDestination(); 
+    out = new Tone.Player('audio/perc/out.mp3').toDestination(); 
+    intro = new Tone.Player('audio/fondos/espera.mp3').toDestination();
+    intro.loop = true; 
+    
+    intro.volume.value = -6;
+    respawn.volume.value = -6;
+    out.volume.value = -6;
+    line.volume.value = -6;
+    
+    outline = new Tone.Player('audio/fondos/outline.mp3').toDestination(); 
+    outline.volume.value = -6;
+
+/*
+const panner = new Tone.Panner3D({
+	panningModel: 'HRTF',
+    });
+
+*/
+
+// let aKurd = [ 24, 26, 30, 36, 38, 40, 46 ];
+
+let hira = [ 24, 26, 27, 31, 32 ];
+
+// console.log( hira ); 
+
+hira.push(hira[4] + ( hira[1] - hira[0] ));
+hira.shift();
+
+
+freeverb = new Tone.Reverb().toDestination();
+// freeverb.dampening = 50;
+freeverb.decay = 5.2;
+freeverb.preDelay = 0.5;
+freeverb.wet = 0.1
+
+distortion = new Tone.Distortion(0.15);
+
+distortion.connect(freeverb);
+
+pitchShift = new Tone.PitchShift().connect(distortion);
+pitchShift.pitch = 12;
+pitchShift.windowSize = 0.2;
+pitchShift.sampleTIme = 0.85; 
+
+mic = new Tone.UserMedia(2);
+openmic; 
+
+    panner = new Tone.Panner(0).connect(distortion) ;
+    
+
+    if(boolMic){
+	mic.open().then(() => {
+	    openmic = true;
+	    mic.connect( panner ); 
+	});
+    }
+
+/*
+const kick = new Tone.MembraneSynth({
+    envelope: {
+	sustain: 0,
+	attack: 0.002,
+	decay: 0.05
+    },
+    octaves: 10,
+    pitchDecay: 0.01,
+}).connect(panner);
+*/
+
+    if(boolSynth){
+	const kick = new Tone.MembraneSynth({
+	    pitchDecay: 0.008,
+	    octaves: 12,
+	    envelope: {
+		attack: 0.0006,
+		decay: 0.5,
+		sustain: 0
+	    }
+	}).connect(panner);
+	
+	let pbRate = [0.25, 6/4, 2.5/4, 0.5, 2, 3/2, 5/4];
+	
+	randDiv = Math.floor(Math.random() * 4) + 1; 
+	console.log(randDiv+'n' ); 
+	
+	loopS = new Tone.Loop((time) => {
+	    
+	    let rand = Math.floor(Math.random() * 5); 
+	    let hiraNote = Tone.Frequency(hira[rand]+12, "midi").toNote();
+	    // console.log(hiraNote); 
+	    kick.triggerAttackRelease(hiraNote, '4n', time );
+	    //synth.triggerAttack(hiraNote, now );
+	    //synth.triggerRelease(now + 1)
+	    
+	    loopS.playbackRate = pbRate[Math.floor(Math.random() * pbRate.length)] / 2; 
+	    console.log(randDiv+'n' ); 
+	    hira.push(hira[4] + ( hira[1] - hira[0] ));
+	    hira.shift();
+	    console.log(hira[0]);
+	    
+	    if(hira[0] > 70 ){
+		hira = [ hira[0]-48, hira[1]-48, hira[2]-48, hira[3]-48, hira[4]-48 ];
+	    }
+	    
+	}, '4n' ).start(0); 
+
+	
+    Tone.Transport.bpm.rampTo(50, 20);
+
+    }
+
+    
 }
 
 video = document.getElementById( 'video' );
