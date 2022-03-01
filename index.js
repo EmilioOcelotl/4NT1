@@ -22,8 +22,8 @@ import { GUI } from './jsm/libs/dat.gui.module.js';
 
 let boolText = true; 
 let boolGui = false; 
-let boolStats = true; 
-let boolMic = false; 
+let boolStats = false; 
+let boolMic = true; 
 let numCasos = 13; 
 let boton = false;
 let irises = false; // costoso. Evaluar 
@@ -31,16 +31,14 @@ let boolSynth = false;
 
 // con boton
 
-/*
 document.querySelector('button').addEventListener('click', async () => {
     // console.log('audio is ready')   
     await Tone.start();   
     init();
 })
-*/ 
 
-Tone.start().then( (x) => init());
 
+// Tone.start().then( (x) => init());
 
 // sin botón ( modo exhibición ) 
 
@@ -716,7 +714,7 @@ async function init() {
     
     var quad_uvs =[0.0, 0.0,1.0, 0.0, 1.0, 1.0];
 
-    for(let i = 0; i < triCantidad*3; i++){
+    for(let i = 0; i < triCantidad; i++){
 	
 	triGeometry[i] = new THREE.BufferGeometry();
 	triGeometry[i].setAttribute( 'position', new THREE.Float32BufferAttribute( triPosiciones, 3 ) );
@@ -2073,28 +2071,25 @@ let hira = [ 24, 26, 27, 31, 32 ];
 hira.push(hira[4] + ( hira[1] - hira[0] ));
 hira.shift();
 
+    /*
+    freeverb = new Tone.Reverb().toDestination();
+    // freeverb.dampening = 50;
+    freeverb.decay = 5.2;
+    freeverb.preDelay = 0.5;
+    // freeverb.wet = 0.1
+    */
 
-freeverb = new Tone.Reverb().toDestination();
-// freeverb.dampening = 50;
-freeverb.decay = 5.2;
-freeverb.preDelay = 0.5;
-freeverb.wet = 0.1
-
-distortion = new Tone.Distortion(0.15);
-
-distortion.connect(freeverb);
-
-pitchShift = new Tone.PitchShift().connect(distortion);
-pitchShift.pitch = 12;
-pitchShift.windowSize = 0.2;
-pitchShift.sampleTIme = 0.85; 
-
-mic = new Tone.UserMedia(2);
-openmic; 
-
-    panner = new Tone.Panner(0).connect(distortion) ;
+    distortion = new Tone.Distortion(0.15).toDestination() ;
     
+    pitchShift = new Tone.PitchShift().connect(distortion);
+    pitchShift.pitch = -4;
+    pitchShift.windowSize = 0.2;
+    pitchShift.sampleTIme = 0.85; 
 
+    mic = new Tone.UserMedia(2);
+
+    panner = new Tone.Panner(0).connect(pitchShift) ;
+    
     if(boolMic){
 	mic.open().then(() => {
 	    openmic = true;
