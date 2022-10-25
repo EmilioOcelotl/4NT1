@@ -1,7 +1,10 @@
 
 /////////// 4NT1 /////////////////
 
+import '@tensorflow/tfjs-backend-webgl';
+import '@tensorflow-models/face-detection';
 import * as faceLandmarksDetection from '@tensorflow-models/face-landmarks-detection';
+import * as faceMesh from '@mediapipe/face_mesh';
 import * as tf from '@tensorflow/tfjs-core';
 import '@tensorflow/tfjs-backend-webgl';
 import * as THREE from 'three';
@@ -37,6 +40,7 @@ document.querySelector('button').addEventListener('click', async () => {
     init();
 })
 
+let detector; 
 
 // Tone.start().then( (x) => init());
 
@@ -366,12 +370,19 @@ async function setupCamera() {
 
 async function renderPrediction() {
 
+    // ahora predictions se llama estimate faces
+
+    predictions = await detector.estimateFaces(video);
+
+    /*
     predictions = await model.estimateFaces({
 	input: video,
 	returnTensors: false,
 	flipHorizontal: false,
 	predictIrises: irises,
     });
+
+    */
     
     if( buscando && exBool ){
 	fin = Date.now();
@@ -402,11 +413,14 @@ async function renderPrediction() {
     
     if (predictions.length > 0) {
 	predictions.forEach((prediction) => {
-	    keypoints = prediction.scaledMesh;
 
+	    //keypoints = prediction.scaledMesh;
+	    keypoints = prediction.keypoints.map((keypoint) => [keypoint.x, keypoint.y, keypoint.z]); 
+	    
 	    for (let i = 0; i < TRIANGULATION.length / 3; i++) {
 		points = [
-		    TRIANGULATION[i * 3], TRIANGULATION[i * 3 + 1],
+		    TRIANGULATION[i * 3],
+		    TRIANGULATION[i * 3 + 1],
 		    TRIANGULATION[i * 3 + 2],
 		].map((index) => keypoints[index]);		
 		arre.push(points); // si hay más predicciones este array es más grande
@@ -485,6 +499,7 @@ async function renderPrediction() {
 	});
     }
 
+    /*
    if (predictions.length > 0) {
 	const {annotations} = predictions[0]; // solo agarra una prediccion
 	const [topX, topY] = annotations['midwayBetweenEyes'][0];
@@ -499,7 +514,8 @@ async function renderPrediction() {
 	text.position.y = txtPosY;	
 	text2.position.x = txtPosX2;
 	text2.position.y = txtPosY2;
-    }
+	}
+    */
     
     // panner.positionX.value = degree *2; // degree reducido
 
@@ -691,13 +707,23 @@ async function init() {
     composer.addPass( afterimagePass );
     afterimagePass.uniforms['damp'].value = 0.85;
 
+
+    /*
     model = await faceLandmarksDetection.load(
 	faceLandmarksDetection.SupportedPackages.mediapipeFacemesh, // cambiar 
 	{maxFaces: 3,
 	 shouldLoadIrisModel: true, // Hay que cargar un poco más de archivos 
 	 // maxContinuousChecks: 120
 	});
+    */
 
+    model = faceLandmarksDetection.SupportedModels.MediaPipeFaceMesh;
+    const detectorConfig = {
+	runtime: 'mediapipe', // or 'tfjs'
+	solutionPath: 'https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh',
+    }
+    detector = await faceLandmarksDetection.createDetector(model, detectorConfig);
+    
     trimaterial = new THREE.MeshBasicMaterial( {
 	color: 0xffffff,
 	side: THREE.DoubleSide,
@@ -721,6 +747,7 @@ async function init() {
 	triGeometry[i].setAttribute( 'uv', new THREE.Float32BufferAttribute( quad_uvs, 2))
 	triGeometry[i].usage = THREE.DynamicDrawUsage; 
 	triangulos[i] = new THREE.Mesh( triGeometry[i], trimaterial  );
+	//triangulos[i].rotation.y = Math.PI*2; 
 	
     }
 
@@ -993,7 +1020,7 @@ function animsc1() {
 		    arre[(triconta*3)+1] * perlinValue + time2,
 		    arre[(triconta*3)+2] * perlinValue + time2) *  0.125; 
 		for(let i = 0; i < 3; i++){
-		    triGeometry[j].attributes.position.setX( i, (arre[triconta*3] * 0.12 -wCor)*(1.1+d) ); 
+	    triGeometry[j].attributes.position.setX( i, (arre[triconta*3] * 0.12 -wCor)*(1.1+d) ); 
 		    triGeometry[j].attributes.position.setY( i, (arre[(triconta*3)+1] * 0.12 - hCor) * (1.1+d) );
 		    triGeometry[j].attributes.position.setZ( i, (arre[(triconta*3)+2] * 0.05) * (1+d) );
    		    triconta++; 

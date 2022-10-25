@@ -206,13 +206,14 @@ right:0;
 <video id="video" style="display:none" autoplay playsinline></video>
 -->
 
-<video id="video" autoplay playsinline style="
-				      display:none;
-				      transform: rotateY(180deg);
-				      -webkit-transform:rotateY(180deg);
-				      -moz-transform:rotateY(180deg);
-				      width: auto; 
-				      height: auto; 
+<video id="video" playsinline style="
+				     display:none;
+				               -webkit-transform: scaleX(-1);
+          transform: scaleX(-1);
+          visibility: hidden;
+          width: auto;
+          height: auto;
+
 				      ">
 </video>
 
