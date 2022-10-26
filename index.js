@@ -43,7 +43,6 @@ document.querySelector('button').addEventListener('click', async () => {
 let detector; 
 
 // Tone.start().then( (x) => init());
-
 // sin botón ( modo exhibición ) 
 
 var txtsc1=[];  
@@ -1973,7 +1972,7 @@ function getIsVoluntaryBlink(blinkDetected) {
 
 function loadFont(){
     const loader = new THREE.FontLoader();
-    loader.load( 'fonts/techno.json', function ( response ) {
+    loader.load( 'fonts/cimatics.json', function ( response ) {
 	antifont = response;
     } );
 }
